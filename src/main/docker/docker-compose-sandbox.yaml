@@ -1,0 +1,26 @@
+version: "3"
+services:
+  ms-invoices-sandbox:
+    container_name: ms-invoices-sandbox
+    image: 'ms-invoices:sandbox'
+    links:
+      - 'ms-invoices-wiremock-sandbox:wiremock'
+    restart: always
+    build:
+      context: ../../..
+      dockerfile: src/main/docker/Dockerfile
+    ports:
+      - '9061:8080'
+    environment:
+      SPRING_PROFILES_ACTIVE: 'sandbox'
+    depends_on:
+      - ms-invoices-wiremock-sandbox
+
+  ms-invoices-wiremock-sandbox:
+    container_name: ms-invoices-wiremock-sandbox
+    image: wiremock/wiremock
+    restart: always
+    expose:
+      - '8080'
+    volumes:
+      - $PWD/src/test/resources/wiremock:/home/wiremock

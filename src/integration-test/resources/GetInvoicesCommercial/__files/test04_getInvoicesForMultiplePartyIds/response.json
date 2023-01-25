@@ -1,0 +1,95 @@
+{
+	"invoices": [
+		{
+			"dueDate": "2019-11-08",
+			"totalAmount": 6237.0,
+			"amountVatIncluded": 6236.78,
+			"amountVatExcluded": 4989.42,
+			"vatEligibleAmount": 4989.42,
+			"rounding": 0.22,
+			"vat": 4989.42,
+			"reversedVat": false,
+			"pdfAvailable": false,
+			"currency": "sek",
+			"invoiceDate": "2019-10-09",
+			"invoiceNumber": "137993598",
+			"invoiceStatus": "SENT",
+			"ocrNumber": "137993598",
+			"organizationNumber": "5564786647",
+			"invoiceName": "137993598.pdf",
+			"invoiceType": "NORMAL",
+			"invoiceDescription": "El",
+			"invoiceAddress": {
+				"street": "Fakturagatan 2",
+				"postcode": "90002",
+				"city": "Sundsvall",
+				"careOf": "2 Enterprise AB, fakturaavdelningen"
+			},
+			"facilityId": "735999109215204886",
+			"invoiceOrigin": "COMMERCIAL"
+		},
+		{
+			"dueDate": "2019-11-13",
+			"totalAmount": 148.0,
+			"amountVatIncluded": 147.84,
+			"amountVatExcluded": 147.84,
+			"vatEligibleAmount": 0.0,
+			"rounding": 0.16,
+			"vat": 0.0,
+			"reversedVat": false,
+			"pdfAvailable": false,
+			"currency": "sek",
+			"invoiceDate": "2019-10-14",
+			"invoiceNumber": "767917693",
+			"invoiceStatus": "SENT",
+			"ocrNumber": "767917693",
+			"organizationNumber": "5564786647",
+			"invoiceName": "767917693.pdf",
+			"invoiceType": "NORMAL",
+			"invoiceDescription": "Fjärrvärme",
+			"invoiceAddress": {
+				"street": "Fakturagatan 1",
+				"postcode": "90001",
+				"city": "Sundsvall",
+				"careOf": "1 Enterprise AB, internfakturering"
+			},
+			"facilityId": "735999109242413886",
+			"invoiceOrigin": "COMMERCIAL"
+		},
+		{
+			"dueDate": "2019-11-08",
+			"totalAmount": 2454.0,
+			"amountVatIncluded": 2453.85,
+			"amountVatExcluded": 1963.08,
+			"vatEligibleAmount": 1963.08,
+			"rounding": 0.15,
+			"vat": 1963.08,
+			"reversedVat": false,
+			"pdfAvailable": false,
+			"currency": "sek",
+			"invoiceDate": "2019-10-09",
+			"invoiceNumber": "137994091",
+			"invoiceStatus": "SENT",
+			"ocrNumber": "137994091",
+			"organizationNumber": "5565027223",
+			"invoiceName": "137994091.pdf",
+			"invoiceType": "NORMAL",
+			"invoiceDescription": "Fjärrvärme",
+			"invoiceAddress": {
+				"street": "Fakturagatan 2",
+				"postcode": "90002",
+				"city": "Sundsvall",
+				"careOf": "2 Enterprise AB, fakturaavdelningen"
+			},
+			"facilityId": "735848103876774877",
+			"invoiceOrigin": "COMMERCIAL"
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 4,
+		"totalRecords": 4,
+		"totalPages": 1
+	}
+}

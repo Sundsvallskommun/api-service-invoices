@@ -1,0 +1,5 @@
+{
+	"title": "Bad Gateway",
+	"status": 502,
+	"detail": "datawarehousereader error: {detail=No invoicedetails found for invoicenumber '666', status=404 Not Found, title=Not Found}"
+}

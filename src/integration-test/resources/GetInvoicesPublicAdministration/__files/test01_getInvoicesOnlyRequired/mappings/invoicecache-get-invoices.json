@@ -1,0 +1,30 @@
+{
+	"name": "invoicecache-get-invoices",
+	"request": {
+		"method": "GET",
+		"urlPath": "/api-invoicecache/getInvoices",
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
+		"queryParameters": {
+			"limit": {
+				"equalTo": "100"
+			},
+			"page": {
+				"equalTo": "1"
+			},
+			"partyIds": {
+				"equalTo": "AC653C32-B26C-47E8-8C2E-3B18C1B5879C"
+			}
+		}
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test01_getInvoicesOnlyRequired/responses/invoicecache-get-invoices-response.json"
+	}
+}

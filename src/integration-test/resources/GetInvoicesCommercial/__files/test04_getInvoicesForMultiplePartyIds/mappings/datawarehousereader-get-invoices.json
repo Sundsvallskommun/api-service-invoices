@@ -1,0 +1,40 @@
+{
+	"name": "datawarehousereader-get-invoices",
+	"request": {
+		"method": "GET",
+		"urlPath": "/api-datawarehousereader/invoices",
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
+		"queryParameters": {
+			"limit": {
+				"equalTo": "100"
+			},
+			"page": {
+				"equalTo": "1"
+			},
+			"customerNumber": {
+				"or": [
+					{
+						"equalTo": "39315"
+					},
+					{
+						"equalTo": "67881"
+					},
+					{
+						"equalTo": "15008"
+					}
+				]
+			}
+		}
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"status": 200,
+		"bodyFileName": "test04_getInvoicesForMultiplePartyIds/responses/datawarehousereader-get-invoices-response.json"
+	}
+}

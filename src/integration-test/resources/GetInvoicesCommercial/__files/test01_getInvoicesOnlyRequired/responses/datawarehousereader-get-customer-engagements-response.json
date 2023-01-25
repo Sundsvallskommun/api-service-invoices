@@ -1,0 +1,18 @@
+{
+	"customerEngagements": [
+		{
+			"partyId": "AC653C32-B26C-47E8-8C2E-3B18C1B5879C",
+			"customerType": "Enterprise",
+			"customerNumber": "600606",
+			"organizationNumber": "5565027223",
+			"organizationName": "Sundsvall Elnät"
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 1,
+		"totalRecords": 1,
+		"totalPages": 1
+	}
+}

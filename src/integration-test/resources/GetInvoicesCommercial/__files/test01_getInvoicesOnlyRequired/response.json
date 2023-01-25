@@ -1,0 +1,95 @@
+{
+	"invoices": [
+		{
+			"dueDate": "2019-10-29",
+			"totalAmount": 12060.0,
+			"amountVatIncluded": 12059.99,
+			"amountVatExcluded": 9647.99,
+			"vatEligibleAmount": 9647.99,
+			"rounding": 0.01,
+			"vat": 9647.99,
+			"reversedVat": false,
+			"pdfAvailable": false,
+			"currency": "sek",
+			"invoiceDate": "2019-10-09",
+			"invoiceNumber": "137968392",
+			"invoiceStatus": "SENT",
+			"ocrNumber": "137968392",
+			"organizationNumber": "5565027223",
+			"invoiceName": "137968392.pdf",
+			"invoiceType": "NORMAL",
+			"invoiceDescription": "El",
+			"invoiceAddress": {
+				"street": "DB79B, FE 11040",
+				"postcode": "83882",
+				"city": "FRÖSÖN",
+				"careOf": "Fastighets AB"
+			},
+			"facilityId": "735999109144",
+			"invoiceOrigin": "COMMERCIAL"
+		},
+		{
+			"dueDate": "2019-10-29",
+			"totalAmount": 48631.0,
+			"amountVatIncluded": 48631.01,
+			"amountVatExcluded": 38904.81,
+			"vatEligibleAmount": 38904.81,
+			"rounding": -0.01,
+			"vat": 38904.81,
+			"reversedVat": false,
+			"pdfAvailable": false,
+			"currency": "sek",
+			"invoiceDate": "2019-10-09",
+			"invoiceNumber": "137968293",
+			"invoiceStatus": "SENT",
+			"ocrNumber": "137968293",
+			"organizationNumber": "5565027223",
+			"invoiceName": "137968293.pdf",
+			"invoiceType": "NORMAL",
+			"invoiceDescription": "El",
+			"invoiceAddress": {
+				"street": "DB79B, FE 11040",
+				"postcode": "83882",
+				"city": "FRÖSÖN",
+				"careOf": "Fastighets AB"
+			},
+			"facilityId": "735999109140",
+			"invoiceOrigin": "COMMERCIAL"
+		},
+		{
+			"dueDate": "2019-10-29",
+			"totalAmount": 1357.0,
+			"amountVatIncluded": 1357.36,
+			"amountVatExcluded": 1085.89,
+			"vatEligibleAmount": 1085.89,
+			"rounding": -0.36,
+			"vat": 1085.89,
+			"reversedVat": false,
+			"pdfAvailable": false,
+			"currency": "sek",
+			"invoiceDate": "2019-10-09",
+			"invoiceNumber": "137968194",
+			"invoiceStatus": "SENT",
+			"ocrNumber": "137968194",
+			"organizationNumber": "5565027223",
+			"invoiceName": "137968194.pdf",
+			"invoiceType": "NORMAL",
+			"invoiceDescription": "El",
+			"invoiceAddress": {
+				"street": "DB79B, FE 11040",
+				"postcode": "83882",
+				"city": "FRÖSÖN",
+				"careOf": "Fastighets AB"
+			},
+			"facilityId": "735999109261",
+			"invoiceOrigin": "COMMERCIAL"
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 3,
+		"totalRecords": 3,
+		"totalPages": 1
+	}
+}

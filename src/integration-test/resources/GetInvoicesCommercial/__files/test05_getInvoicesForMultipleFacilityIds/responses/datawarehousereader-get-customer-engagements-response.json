@@ -1,0 +1,25 @@
+{
+	"customerEngagements": [
+		{
+			"partyId": "ac653c32-b26c-47e8-8c2e-4d18c1b5879c",
+			"customerType": "Enterprise",
+			"customerNumber": "39315",
+			"organizationNumber": "5564786647",
+			"organizationName": "Sundsvall Energi AB"
+		},
+		{
+			"partyId": "ac653c32-b26c-47e8-8c2e-4d18c1b5879c",
+			"customerType": "Enterprise",
+			"customerNumber": "40117",
+			"organizationNumber": "5565027223",
+			"organizationName": "Sundsvall Elnät"
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 2,
+		"totalRecords": 2,
+		"totalPages": 1
+	}
+}

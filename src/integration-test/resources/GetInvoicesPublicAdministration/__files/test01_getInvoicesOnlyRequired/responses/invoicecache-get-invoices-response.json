@@ -1,0 +1,57 @@
+{
+	"invoices": [
+		{
+			"customerName": "Fritjofs Blommor",
+			"customerType": "XH",
+			"invoiceNumber": "53489546",
+			"invoiceStatus": "PAID",
+			"ocrNumber": "8907136421",
+			"partyId": "AC653C32-B26C-47E8-8C2E-3B18C1B5879C",
+			"invoiceDescription": "Avdelning 44",
+			"invoiceDueDate": "2022-09-30",
+			"invoiceDate": "2022-09-01",
+			"paidAmount": 4995,
+			"totalAmount": 4995,
+			"invoiceName": "Faktura_53489546.pdf",
+			"vat": 999,
+			"amountVatExcluded": 3996,
+			"invoiceType": "NORMAL",
+			"invoiceAddress": {
+				"city": "Sundsvall",
+				"street": "Storgatan 10",
+				"postcode": "85740",
+				"careOf": "John Doe"
+			}
+		},
+		{
+			"customerName": "Fritjofs Blommor",
+			"customerType": "XH",
+			"invoiceNumber": "53489547",
+			"invoiceStatus": "PAID",
+			"ocrNumber": "8907136422",
+			"partyId": "AC653C32-B26C-47E8-8C2E-3B18C1B5879C",
+			"invoiceDescription": "Avdelning 44",
+			"invoiceDueDate": "2022-10-30",
+			"invoiceDate": "2022-10-01",
+			"paidAmount": 4995,
+			"totalAmount": 4995,
+			"invoiceName": "Faktura_53489547.pdf",
+			"vat": 999,
+			"amountVatExcluded": 3996,
+			"invoiceType": "NORMAL",
+			"invoiceAddress": {
+				"city": "Sundsvall",
+				"street": "Storgatan 10",
+				"postcode": "85740",
+				"careOf": "John Doe"
+			}
+		}
+	],
+	"_meta": {
+		"page": 1,
+		"limit": 100,
+		"count": 2,
+		"totalRecords": 2,
+		"totalPages": 1
+	}
+}
