@@ -25,6 +25,7 @@ import org.zalando.problem.ThrowableProblem;
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
+import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.Invoice;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
@@ -66,7 +67,14 @@ class InvoicesServiceTest {
 		final var customerNumbers = List.of(customerNumber_1, customerNumber_2);
 		final var organizationNumber = "5565027223";
 		final var invoiceName = "invoiceName";
-		final var dataWarehouseReaderParameters = new InvoiceParameters().invoiceName(invoiceName).customerNumber(customerNumbers).organizationNumber("5565027223").facilityId(null);
+		final var invoiceDate = "invoiceDate";
+		final var dataWarehouseReaderParameters = new InvoiceParameters()
+			.invoiceName(invoiceName)
+			.customerNumber(customerNumbers)
+			.organizationNumber(organizationNumber)
+			.facilityId(null)
+			.sortBy(List.of(invoiceDate))
+			.sortDirection(Direction.DESC);
 
 		when(dataWarehouseReaderClientMock.getCustomerEngagements(partyIds)).thenReturn(customerEngagementResponseMock);
 		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(List.of(customerEngagementMock, customerEngagementMock));
@@ -91,7 +99,14 @@ class InvoicesServiceTest {
 		final var customerNumbers = List.of(customerNumber);
 		final var organizationNumber = "5565027223";
 		final var invoiceName = "invoiceName";
-		final var dataWarehouseReaderParameters = new InvoiceParameters().invoiceName(invoiceName).customerNumber(customerNumbers).organizationNumber("5565027223").facilityId(null);
+		final var invoiceDate = "invoiceDate";
+		final var dataWarehouseReaderParameters = new InvoiceParameters()
+			.invoiceName(invoiceName)
+			.customerNumber(customerNumbers)
+			.organizationNumber(organizationNumber)
+			.facilityId(null)
+			.sortBy(List.of(invoiceDate))
+			.sortDirection(Direction.DESC);
 
 		when(dataWarehouseReaderClientMock.getCustomerEngagements(partyIds)).thenReturn(customerEngagementResponseMock);
 		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(List.of(customerEngagementMock));
