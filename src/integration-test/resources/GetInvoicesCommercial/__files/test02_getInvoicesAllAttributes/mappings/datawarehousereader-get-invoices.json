@@ -53,6 +53,12 @@
 			},
 			"organizationNumber": {
 				"equalTo": "5564786647"
+			},
+			"sortBy": {
+				"equalTo": "invoiceDate"
+			},
+			"sortDirection": {
+				"equalTo": "DESC"
 			}
 		}
 	},

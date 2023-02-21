@@ -11,6 +11,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
+import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.invoicecache.InvoiceRequest;
 import se.sundsvall.invoices.api.model.Address;
@@ -52,7 +53,9 @@ public class InvoiceMapper {
 			.invoiceStatus(toDataWarehouseReaderInvoiceStatus(invoiceParameters.getInvoiceStatus()))
 			.ocrNumber(toLong(invoiceParameters.getOcrNumber()))
 			.page(invoiceParameters.getPage())
-			.limit(invoiceParameters.getLimit());
+			.limit(invoiceParameters.getLimit())
+			.sortBy(List.of("invoiceDate"))
+			.sortDirection(Direction.DESC);
 	}
 
 	public static List<InvoiceDetail> toInvoiceDetails(List<generated.se.sundsvall.datawarehousereader.InvoiceDetail> dataWarehouseReaderInvoiceDetails) {
