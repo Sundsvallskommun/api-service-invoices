@@ -67,12 +67,13 @@ class InvoicesServiceTest {
 		final var customerNumbers = List.of(customerNumber_1, customerNumber_2);
 		final var organizationNumber = "5565027223";
 		final var invoiceName = "invoiceName";
+		final var invoiceDate = "invoiceDate";
 		final var dataWarehouseReaderParameters = new InvoiceParameters()
 			.invoiceName(invoiceName)
 			.customerNumber(customerNumbers)
-			.organizationNumber("5565027223")
+			.organizationNumber(organizationNumber)
 			.facilityId(null)
-			.sortBy(List.of("invoiceDate"))
+			.sortBy(List.of(invoiceDate))
 			.sortDirection(Direction.DESC);
 
 		when(dataWarehouseReaderClientMock.getCustomerEngagements(partyIds)).thenReturn(customerEngagementResponseMock);
@@ -98,12 +99,13 @@ class InvoicesServiceTest {
 		final var customerNumbers = List.of(customerNumber);
 		final var organizationNumber = "5565027223";
 		final var invoiceName = "invoiceName";
+		final var invoiceDate = "invoiceDate";
 		final var dataWarehouseReaderParameters = new InvoiceParameters()
 			.invoiceName(invoiceName)
 			.customerNumber(customerNumbers)
-			.organizationNumber("5565027223")
+			.organizationNumber(organizationNumber)
 			.facilityId(null)
-			.sortBy(List.of("invoiceDate"))
+			.sortBy(List.of(invoiceDate))
 			.sortDirection(Direction.DESC);
 
 		when(dataWarehouseReaderClientMock.getCustomerEngagements(partyIds)).thenReturn(customerEngagementResponseMock);
