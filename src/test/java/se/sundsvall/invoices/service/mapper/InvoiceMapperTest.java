@@ -15,6 +15,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
@@ -70,6 +71,7 @@ class InvoiceMapperTest {
 	private static final Integer DATAWAREHOUSEREADER_LIMIT = 50;
 	private static final Integer DATAWAREHOUSEREADER_PAGE = 5;
 	private static final Boolean DATAWAREHOUSEREADER_PDF_AVAILABLE = false;
+	private static final String SORT_BY = "invoiceDate";
 
 	private static final String INVOICECACHE_INVOICE_NUMBER = "4321";
 	private static final InvoiceStatusEnum INVOICECACHE_INVOICE_STATUS = InvoiceStatusEnum.PAID;
@@ -409,7 +411,9 @@ class InvoiceMapperTest {
 			InvoiceParameters::getOcrNumber,
 			InvoiceParameters::getOrganizationGroup,
 			InvoiceParameters::getOrganizationNumber,
-			InvoiceParameters::getPage)
+			InvoiceParameters::getPage,
+			InvoiceParameters::getSortBy,
+			InvoiceParameters::getSortDirection)
 			.containsExactly(
 				null,
 				CUSTOMER_NUMBERS,
@@ -427,7 +431,9 @@ class InvoiceMapperTest {
 				DATAWAREHOUSEREADER_OCR_NUMBER,
 				DATAWAREHOUSEREADER_ORGANIZATION_GROUP,
 				DATAWAREHOUSEREADER_ORGANIZATION_NUMBER,
-				DATAWAREHOUSEREADER_PAGE);
+				DATAWAREHOUSEREADER_PAGE,
+				List.of(SORT_BY),
+				Direction.DESC);
 	}
 
 	@Test

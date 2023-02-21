@@ -17,6 +17,12 @@
 			},
 			"customerNumber": {
 				"equalTo": "600606"
+			},
+			"sortBy": {
+				"equalTo": "invoiceDate"
+			},
+			"sortDirection": {
+				"equalTo": "DESC"
 			}
 		}
 	},

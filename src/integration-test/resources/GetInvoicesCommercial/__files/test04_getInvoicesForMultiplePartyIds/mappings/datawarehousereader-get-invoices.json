@@ -27,6 +27,12 @@
 						"equalTo": "15008"
 					}
 				]
+			},
+			"sortBy": {
+				"equalTo": "invoiceDate"
+			},
+			"sortDirection": {
+				"equalTo": "DESC"
 			}
 		}
 	},
