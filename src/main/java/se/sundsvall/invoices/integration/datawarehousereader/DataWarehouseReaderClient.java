@@ -16,11 +16,9 @@ import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import generated.se.sundsvall.datawarehousereader.InvoiceDetail;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import se.sundsvall.invoices.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration;
 
 @FeignClient(name = CLIENT_REGISTRATION_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class)
-@CircuitBreaker(name = CLIENT_REGISTRATION_ID)
 public interface DataWarehouseReaderClient {
 
 	/**

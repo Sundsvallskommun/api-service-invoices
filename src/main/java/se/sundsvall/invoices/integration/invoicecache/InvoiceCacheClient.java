@@ -10,11 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import generated.se.sundsvall.invoicecache.InvoiceRequest;
 import generated.se.sundsvall.invoicecache.InvoicesResponse;
-import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import se.sundsvall.invoices.integration.invoicecache.configuration.InvoiceCacheConfiguration;
 
 @FeignClient(name = CLIENT_REGISTRATION_ID, url = "${integration.invoicecache.url}", configuration = InvoiceCacheConfiguration.class)
-@CircuitBreaker(name = CLIENT_REGISTRATION_ID)
 public interface InvoiceCacheClient {
 
 	/**
