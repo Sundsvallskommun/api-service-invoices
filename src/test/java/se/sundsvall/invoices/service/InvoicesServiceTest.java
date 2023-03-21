@@ -31,7 +31,7 @@ import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
-import generated.se.sundsvall.invoicecache.InvoiceRequest;
+import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
 import generated.se.sundsvall.invoicecache.InvoicesResponse;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
@@ -152,7 +152,7 @@ class InvoicesServiceTest {
 		final var partyIds = List.of(randomUUID().toString(), randomUUID().toString());
 		final var ocrNumber = "111111";
 		final var invoiceNumber = "123";
-		final var invoiceCacheParameters = new InvoiceRequest().invoiceNumbers(List.of(invoiceNumber)).ocrNumber(ocrNumber).partyIds(partyIds);
+		final var invoiceCacheParameters = new InvoiceFilterRequest().invoiceNumbers(List.of(invoiceNumber)).ocrNumber(ocrNumber).partyIds(partyIds);
 
 		when(invoiceCacheClientMock.getInvoices(invoiceCacheParameters)).thenReturn(createInvoiceCacheInvoicesResponse());
 
@@ -171,7 +171,7 @@ class InvoicesServiceTest {
 		final var partyIds = List.of(randomUUID().toString(), randomUUID().toString());
 		final var ocrNumber = "111111";
 		final var invoiceNumber = "123";
-		final var invoiceCacheParameters = new InvoiceRequest().invoiceNumbers(List.of(invoiceNumber)).ocrNumber(ocrNumber).partyIds(partyIds);
+		final var invoiceCacheParameters = new InvoiceFilterRequest().invoiceNumbers(List.of(invoiceNumber)).ocrNumber(ocrNumber).partyIds(partyIds);
 
 		when(invoiceCacheClientMock.getInvoices(invoiceCacheParameters)).thenReturn(createInvoiceCacheInvoicesResponse().invoices(emptyList()));
 
@@ -242,11 +242,11 @@ class InvoicesServiceTest {
 			.invoices(List.of(
 				new generated.se.sundsvall.invoicecache.Invoice()
 					.invoiceName(invoiceName)
-					.invoiceType(InvoiceTypeEnum.CREDIT)
+					.invoiceType(InvoiceTypeEnum.CREDIT_INVOICE)
 					.invoiceStatus(InvoiceStatusEnum.PAID),
 				new generated.se.sundsvall.invoicecache.Invoice()
 					.invoiceName(invoiceName)
-					.invoiceType(InvoiceTypeEnum.NORMAL)
+					.invoiceType(InvoiceTypeEnum.INVOICE)
 					.invoiceStatus(InvoiceStatusEnum.PAID)))
 			.meta(createInvoiceCacheMetaData());
 	}

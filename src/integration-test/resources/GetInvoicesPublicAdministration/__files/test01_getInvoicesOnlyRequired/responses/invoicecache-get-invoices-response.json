@@ -15,7 +15,7 @@
 			"invoiceName": "Faktura_53489546.pdf",
 			"vat": 999,
 			"amountVatExcluded": 3996,
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceAddress": {
 				"city": "Sundsvall",
 				"street": "Storgatan 10",
@@ -38,7 +38,7 @@
 			"invoiceName": "Faktura_53489547.pdf",
 			"vat": 999,
 			"amountVatExcluded": 3996,
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceAddress": {
 				"city": "Sundsvall",
 				"street": "Storgatan 10",
