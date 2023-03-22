@@ -188,7 +188,7 @@ public class InvoiceMapper {
 			.withInvoices(toInvoicesFromInvoiceCache(invoiceCacheInvoiceResponse.getInvoices()));
 	}
 
-	public static generated.se.sundsvall.invoicecache.InvoiceFilterRequest toInvoiceCacheParameters(InvoicesParameters invoiceParameters) {
+public static InvoiceFilterRequest toInvoiceCacheParameters(InvoicesParameters invoiceParameters) {
 		return new InvoiceFilterRequest()
 			.invoiceNumbers(Optional.ofNullable(invoiceParameters.getInvoiceNumber()).stream().toList())
 			.invoiceDateFrom(invoiceParameters.getInvoiceDateFrom())
