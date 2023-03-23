@@ -11,6 +11,7 @@ import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceParameters;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceDetails;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoicesResponse;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
 
 import java.util.List;
 import java.util.Optional;
@@ -24,6 +25,7 @@ import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
+import se.sundsvall.invoices.api.model.PdfInvoice;
 import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
 import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
 import se.sundsvall.invoices.service.mapper.InvoiceMapper;
@@ -58,5 +60,9 @@ public class InvoicesService {
 			return toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(parseLong(invoiceNumber)));
 		}
 		return toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(organizationNumber, parseLong(invoiceNumber)));
+	}
+
+	public PdfInvoice getPdfInvoice(String organizationNumber, String invoiceNumber) {
+		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(organizationNumber, invoiceNumber));
 	}
 }

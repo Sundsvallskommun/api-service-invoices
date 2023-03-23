@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -20,6 +22,7 @@ import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
+import generated.se.sundsvall.invoicecache.InvoicePdf;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -471,6 +474,39 @@ class InvoiceMapperTest {
 				OCR_NUMBER,
 				PAGE,
 				PARTY_IDS);
+	}
+
+	@Test
+	void toPdfInvoice() {
+		final var name = "name";
+		final var content = "filecontent".getBytes(StandardCharsets.UTF_8);
+		final var invoicePdf = new InvoicePdf()
+			.name(name)
+			.content(Base64.getEncoder().encodeToString(content));
+
+		final var pdfInvoice = InvoiceMapper.toPdfInvoice(invoicePdf);
+
+		assertThat(pdfInvoice).isNotNull();
+		assertThat(pdfInvoice.getFileName()).isEqualTo(name);
+		assertThat(pdfInvoice.getFile()).isEqualTo(content);
+	}
+
+	@Test
+	void toPdfInvoiceWithoutContent() {
+		final var name = "name";
+		final var invoicePdf = new InvoicePdf()
+			.name(name);
+
+		final var pdfInvoice = InvoiceMapper.toPdfInvoice(invoicePdf);
+
+		assertThat(pdfInvoice).isNotNull();
+		assertThat(pdfInvoice.getFileName()).isEqualTo(name);
+		assertThat(pdfInvoice.getFile()).isNull();
+	}
+
+	@Test
+	void toPdfInvoiceFromNull() {
+		assertThat(InvoiceMapper.toPdfInvoice(null)).isNull();
 	}
 
 	@ParameterizedTest
