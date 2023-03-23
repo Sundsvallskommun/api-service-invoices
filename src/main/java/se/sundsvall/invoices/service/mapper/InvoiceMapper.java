@@ -13,7 +13,7 @@ import java.util.Optional;
 
 import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
-import generated.se.sundsvall.invoicecache.InvoiceRequest;
+import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -188,8 +188,8 @@ public class InvoiceMapper {
 			.withInvoices(toInvoicesFromInvoiceCache(invoiceCacheInvoiceResponse.getInvoices()));
 	}
 
-	public static generated.se.sundsvall.invoicecache.InvoiceRequest toInvoiceCacheParameters(InvoicesParameters invoiceParameters) {
-		return new InvoiceRequest()
+public static InvoiceFilterRequest toInvoiceCacheParameters(InvoicesParameters invoiceParameters) {
+		return new InvoiceFilterRequest()
 			.invoiceNumbers(Optional.ofNullable(invoiceParameters.getInvoiceNumber()).stream().toList())
 			.invoiceDateFrom(invoiceParameters.getInvoiceDateFrom())
 			.invoiceDateTo(invoiceParameters.getInvoiceDateTo())
@@ -239,12 +239,15 @@ public class InvoiceMapper {
 	static InvoiceStatus toInvoiceStatus(generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum invoiceStatusEnum) {
 		return Optional.ofNullable(invoiceStatusEnum)
 			.map(invoiceStatus -> switch (invoiceStatus) {
-				case PAID -> InvoiceStatus.PAID;
-				case UNPAID -> InvoiceStatus.SENT;
-				case PARTIALLY_PAID -> InvoiceStatus.PARTIALLY_PAID;
-				case DEBT_COLLECTION -> InvoiceStatus.DEBT_COLLECTION;
-				case PAID_TOO_MUCH -> InvoiceStatus.PAID_TOO_MUCH;
-				case UNKNOWN -> null;
+			case PAID -> InvoiceStatus.PAID;
+			case UNPAID -> InvoiceStatus.SENT;
+			case SENT -> InvoiceStatus.SENT;
+			case PARTIALLY_PAID -> InvoiceStatus.PARTIALLY_PAID;
+			case DEBT_COLLECTION -> InvoiceStatus.DEBT_COLLECTION;
+			case PAID_TOO_MUCH -> InvoiceStatus.PAID_TOO_MUCH;
+			case REMINDER -> InvoiceStatus.REMINDER;
+			case VOID -> InvoiceStatus.WRITTEN_OFF;
+			case UNKNOWN -> InvoiceStatus.UNKNOWN;
 			})
 			.orElse(null);
 	}
@@ -252,8 +255,10 @@ public class InvoiceMapper {
 	static InvoiceType toInvoiceType(generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum invoiceTypeEnum) {
 		return Optional.ofNullable(invoiceTypeEnum)
 			.map(invoiceType -> switch (invoiceType) {
-				case NORMAL -> InvoiceType.NORMAL;
-				case CREDIT -> InvoiceType.CREDIT;
+			case INVOICE -> InvoiceType.NORMAL;
+			case CREDIT_INVOICE -> InvoiceType.CREDIT;
+			case FINAL_INVOICE -> InvoiceType.STOP;
+			default -> InvoiceType.UNKNOWN;
 			})
 			.orElse(null);
 	}
