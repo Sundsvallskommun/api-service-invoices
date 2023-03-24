@@ -2,7 +2,7 @@
 	"name": "invoicecache-get-invoices",
 	"request": {
 		"method": "GET",
-		"urlPath": "/api-invoicecache/getInvoices",
+		"urlPath": "/api-invoicecache/invoices",
 		"headers": {
 			"Authorization": {
 				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"

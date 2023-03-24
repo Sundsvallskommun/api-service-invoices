@@ -4,7 +4,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
@@ -19,7 +21,8 @@ import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
-import generated.se.sundsvall.invoicecache.InvoiceRequest;
+import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
+import generated.se.sundsvall.invoicecache.InvoicePdf;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -83,7 +86,7 @@ class InvoiceMapperTest {
 	private static final BigDecimal INVOICECACHE_VAT = BigDecimal.valueOf(13.41d);
 	private static final BigDecimal INVOICECACHE_AMOUNT_VAT_EXCLUDED = BigDecimal.valueOf(13.37f);
 	private static final String INVOICECACHE_INVOICE_NAME = "invoiceName";
-	private static final InvoiceTypeEnum INVOICECACHE_INVOICE_TYPE = InvoiceTypeEnum.NORMAL;
+	private static final InvoiceTypeEnum INVOICECACHE_INVOICE_TYPE = InvoiceTypeEnum.INVOICE;
 	private static final generated.se.sundsvall.invoicecache.Address INVOICECACHE_ADDRESS = new generated.se.sundsvall.invoicecache.Address()
 		.careOf("careOf")
 		.street("street")
@@ -452,15 +455,15 @@ class InvoiceMapperTest {
 		final var invoiceCacheParameters = InvoiceMapper.toInvoiceCacheParameters(invoicesParameters);
 
 		assertThat(invoiceCacheParameters).extracting(
-			InvoiceRequest::getDueDateFrom,
-			InvoiceRequest::getDueDateTo,
-			InvoiceRequest::getInvoiceDateFrom,
-			InvoiceRequest::getInvoiceDateTo,
-			InvoiceRequest::getInvoiceNumbers,
-			InvoiceRequest::getLimit,
-			InvoiceRequest::getOcrNumber,
-			InvoiceRequest::getPage,
-			InvoiceRequest::getPartyIds)
+			InvoiceFilterRequest::getDueDateFrom,
+			InvoiceFilterRequest::getDueDateTo,
+			InvoiceFilterRequest::getInvoiceDateFrom,
+			InvoiceFilterRequest::getInvoiceDateTo,
+			InvoiceFilterRequest::getInvoiceNumbers,
+			InvoiceFilterRequest::getLimit,
+			InvoiceFilterRequest::getOcrNumber,
+			InvoiceFilterRequest::getPage,
+			InvoiceFilterRequest::getPartyIds)
 			.containsExactly(
 				DUE_DATE_FROM,
 				DUE_DATE_TO,
@@ -471,6 +474,39 @@ class InvoiceMapperTest {
 				OCR_NUMBER,
 				PAGE,
 				PARTY_IDS);
+	}
+
+	@Test
+	void toPdfInvoice() {
+		final var name = "name";
+		final var content = "filecontent".getBytes(StandardCharsets.UTF_8);
+		final var invoicePdf = new InvoicePdf()
+			.name(name)
+			.content(Base64.getEncoder().encodeToString(content));
+
+		final var pdfInvoice = InvoiceMapper.toPdfInvoice(invoicePdf);
+
+		assertThat(pdfInvoice).isNotNull();
+		assertThat(pdfInvoice.getFileName()).isEqualTo(name);
+		assertThat(pdfInvoice.getFile()).isEqualTo(content);
+	}
+
+	@Test
+	void toPdfInvoiceWithoutContent() {
+		final var name = "name";
+		final var invoicePdf = new InvoicePdf()
+			.name(name);
+
+		final var pdfInvoice = InvoiceMapper.toPdfInvoice(invoicePdf);
+
+		assertThat(pdfInvoice).isNotNull();
+		assertThat(pdfInvoice.getFileName()).isEqualTo(name);
+		assertThat(pdfInvoice.getFile()).isNull();
+	}
+
+	@Test
+	void toPdfInvoiceFromNull() {
+		assertThat(InvoiceMapper.toPdfInvoice(null)).isNull();
 	}
 
 	@ParameterizedTest
@@ -559,15 +595,22 @@ class InvoiceMapperTest {
 			Arguments.of(InvoiceStatusEnum.PAID, InvoiceStatus.PAID),
 			Arguments.of(InvoiceStatusEnum.PAID_TOO_MUCH, InvoiceStatus.PAID_TOO_MUCH),
 			Arguments.of(InvoiceStatusEnum.PARTIALLY_PAID, InvoiceStatus.PARTIALLY_PAID),
-			Arguments.of(InvoiceStatusEnum.UNKNOWN, null),
+			Arguments.of(InvoiceStatusEnum.REMINDER, InvoiceStatus.REMINDER),
+			Arguments.of(InvoiceStatusEnum.SENT, InvoiceStatus.SENT),
+			Arguments.of(InvoiceStatusEnum.UNKNOWN, InvoiceStatus.UNKNOWN),
 			Arguments.of(InvoiceStatusEnum.UNPAID, InvoiceStatus.SENT),
+			Arguments.of(InvoiceStatusEnum.VOID, InvoiceStatus.WRITTEN_OFF),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toInvoiceTypeFromInvoiceCacheStatusArguments() {
 		return Stream.of(
-			Arguments.of(InvoiceTypeEnum.CREDIT, InvoiceType.CREDIT),
-			Arguments.of(InvoiceTypeEnum.NORMAL, InvoiceType.NORMAL),
+			Arguments.of(InvoiceTypeEnum.CONSOLIDATED_INVOICE, InvoiceType.UNKNOWN),
+			Arguments.of(InvoiceTypeEnum.CREDIT_INVOICE, InvoiceType.CREDIT),
+			Arguments.of(InvoiceTypeEnum.DIRECT_DEBIT, InvoiceType.UNKNOWN),
+			Arguments.of(InvoiceTypeEnum.FINAL_INVOICE, InvoiceType.STOP),
+			Arguments.of(InvoiceTypeEnum.INVOICE, InvoiceType.NORMAL),
+			Arguments.of(InvoiceTypeEnum.REMINDER, InvoiceType.UNKNOWN),
 			Arguments.of(null, null));
 	}
 }

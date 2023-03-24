@@ -7,13 +7,17 @@ import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Optional;
 
 import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
-import generated.se.sundsvall.invoicecache.InvoiceRequest;
+import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
+import generated.se.sundsvall.invoicecache.InvoicePdf;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -22,8 +26,11 @@ import se.sundsvall.invoices.api.model.InvoiceType;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.MetaData;
+import se.sundsvall.invoices.api.model.PdfInvoice;
 
 public class InvoiceMapper {
+
+	private static final Decoder DECODER = Base64.getDecoder();
 
 	private InvoiceMapper() {}
 
@@ -188,8 +195,8 @@ public class InvoiceMapper {
 			.withInvoices(toInvoicesFromInvoiceCache(invoiceCacheInvoiceResponse.getInvoices()));
 	}
 
-	public static generated.se.sundsvall.invoicecache.InvoiceRequest toInvoiceCacheParameters(InvoicesParameters invoiceParameters) {
-		return new InvoiceRequest()
+public static InvoiceFilterRequest toInvoiceCacheParameters(InvoicesParameters invoiceParameters) {
+		return new InvoiceFilterRequest()
 			.invoiceNumbers(Optional.ofNullable(invoiceParameters.getInvoiceNumber()).stream().toList())
 			.invoiceDateFrom(invoiceParameters.getInvoiceDateFrom())
 			.invoiceDateTo(invoiceParameters.getInvoiceDateTo())
@@ -239,12 +246,15 @@ public class InvoiceMapper {
 	static InvoiceStatus toInvoiceStatus(generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum invoiceStatusEnum) {
 		return Optional.ofNullable(invoiceStatusEnum)
 			.map(invoiceStatus -> switch (invoiceStatus) {
-				case PAID -> InvoiceStatus.PAID;
-				case UNPAID -> InvoiceStatus.SENT;
-				case PARTIALLY_PAID -> InvoiceStatus.PARTIALLY_PAID;
-				case DEBT_COLLECTION -> InvoiceStatus.DEBT_COLLECTION;
-				case PAID_TOO_MUCH -> InvoiceStatus.PAID_TOO_MUCH;
-				case UNKNOWN -> null;
+			case PAID -> InvoiceStatus.PAID;
+			case UNPAID -> InvoiceStatus.SENT;
+			case SENT -> InvoiceStatus.SENT;
+			case PARTIALLY_PAID -> InvoiceStatus.PARTIALLY_PAID;
+			case DEBT_COLLECTION -> InvoiceStatus.DEBT_COLLECTION;
+			case PAID_TOO_MUCH -> InvoiceStatus.PAID_TOO_MUCH;
+			case REMINDER -> InvoiceStatus.REMINDER;
+			case VOID -> InvoiceStatus.WRITTEN_OFF;
+			case UNKNOWN -> InvoiceStatus.UNKNOWN;
 			})
 			.orElse(null);
 	}
@@ -252,8 +262,10 @@ public class InvoiceMapper {
 	static InvoiceType toInvoiceType(generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum invoiceTypeEnum) {
 		return Optional.ofNullable(invoiceTypeEnum)
 			.map(invoiceType -> switch (invoiceType) {
-				case NORMAL -> InvoiceType.NORMAL;
-				case CREDIT -> InvoiceType.CREDIT;
+			case INVOICE -> InvoiceType.NORMAL;
+			case CREDIT_INVOICE -> InvoiceType.CREDIT;
+			case FINAL_INVOICE -> InvoiceType.STOP;
+			default -> InvoiceType.UNKNOWN;
 			})
 			.orElse(null);
 	}
@@ -264,6 +276,16 @@ public class InvoiceMapper {
 			.withTotalPages(invoiceCacheMetaData.getTotalPages())
 			.withTotalRecords(invoiceCacheMetaData.getTotalRecords())
 			.withPage(invoiceCacheMetaData.getPage());
+	}
+
+	public static PdfInvoice toPdfInvoice(InvoicePdf invoicePdf) {
+		return ofNullable(invoicePdf)
+			.map(i -> PdfInvoice.create()
+				.withFileName(i.getName())
+				.withFile(ofNullable(i.getContent())
+					.map(c -> DECODER.decode(c.getBytes(StandardCharsets.UTF_8)))
+					.orElse(null)))
+			.orElse(null);
 	}
 
 	/*********************************

@@ -7,10 +7,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -18,6 +16,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.zalando.problem.Status;
 
 import se.sundsvall.invoices.Application;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -37,6 +36,7 @@ import se.sundsvall.invoices.api.model.InvoiceStatus;
 import se.sundsvall.invoices.api.model.InvoiceType;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
+import se.sundsvall.invoices.api.model.PdfInvoice;
 import se.sundsvall.invoices.service.InvoicesService;
 
 @SpringBootTest(classes = Application.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
@@ -175,21 +175,24 @@ class InvoicesResourceTest {
 		verify(invoicesServiceMock).getInvoiceDetails(ORGANIZATION_NUMBER, INVOICE_NUMBER);
 	}
 
-	@Test
-	void getPdfInvoice() {
+	@ParameterizedTest
+	@EnumSource(value = InvoiceOrigin.class)
+	void getPdfInvoice(InvoiceOrigin origin) {
 
-		webTestClient.get()
+		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER)).thenReturn(PdfInvoice.create());
+
+		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL, "organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", INVOICE_NUMBER)))
+				.build(Map.of("invoiceOrigin", origin, "organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", INVOICE_NUMBER)))
 			.exchange()
-			.expectStatus().is5xxServerError()
-			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
-			.expectBody()
-			.jsonPath("$.title").isEqualTo(Status.NOT_IMPLEMENTED.getReasonPhrase())
-			.jsonPath("$.status").isEqualTo(Status.NOT_IMPLEMENTED.getStatusCode())
-			.jsonPath("$.detail").isEqualTo("Get invoice in pdf-format is not implemented yet");
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(PdfInvoice.class)
+			.returnResult()
+			.getResponseBody();
 
-		verifyNoInteractions(invoicesServiceMock);
+		assertThat(response).isNotNull().isEqualTo(PdfInvoice.create());
+		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER);
 	}
 
 	private MultiValueMap<String, String> createParameterMap(Integer page, Integer limit, List<String> facilityIds, String invoiceNumber, LocalDate invoiceDateFrom,

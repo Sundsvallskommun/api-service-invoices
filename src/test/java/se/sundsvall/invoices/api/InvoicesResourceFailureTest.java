@@ -246,6 +246,46 @@ class InvoicesResourceFailureTest {
 		verifyNoInteractions(invoicesServiceMock);
 	}
 
+	@Test
+	void getPdfInvoiceDetailsInvalidOrganizationNumber() {
+		webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
+				.build(Map.of(
+					"invoiceOrigin", InvoiceOrigin.COMMERCIAL,
+					"organizationNumber", "not-valid",
+					"invoiceNumber", INVOICE_NUMBER)))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody()
+			.jsonPath("$.title").isEqualTo("Constraint Violation")
+			.jsonPath("$.status").isEqualTo(BAD_REQUEST.value())
+			.jsonPath("$.violations[0].field").isEqualTo("getPdfInvoice.organizationNumber")
+			.jsonPath("$.violations[0].message").isEqualTo("must match the regular expression ^([1235789][\\d][2-9]\\d{7})$");
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getPdfInvoiceDetailsNoInvoiceNumber() {
+		webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
+				.build(Map.of(
+					"invoiceOrigin", InvoiceOrigin.COMMERCIAL,
+					"organizationNumber", ORGANIZATION_NUMBER,
+					"invoiceNumber", " ")))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody()
+			.jsonPath("$.title").isEqualTo("Constraint Violation")
+			.jsonPath("$.status").isEqualTo(BAD_REQUEST.value())
+			.jsonPath("$.violations[0].field").isEqualTo("getPdfInvoice.invoiceNumber")
+			.jsonPath("$.violations[0].message").isEqualTo("must not be blank");
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
 	private MultiValueMap<String, String> createParameterMap(String invoiceDateFrom, String invoiceType, String invoiceStatus, String organizationNumber, List<String> partyIds) {
 
 		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();

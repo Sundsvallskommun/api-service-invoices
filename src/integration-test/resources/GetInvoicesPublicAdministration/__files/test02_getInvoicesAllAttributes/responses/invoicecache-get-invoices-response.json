@@ -15,7 +15,7 @@
 			"invoiceName": "Faktura_766763197.pdf",
 			"vat": 999,
 			"amountVatExcluded": 3996,
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceAddress": {
 				"city": "Sundsvall",
 				"street": "Storgatan 10",
