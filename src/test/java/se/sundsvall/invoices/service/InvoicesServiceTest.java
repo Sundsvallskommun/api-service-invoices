@@ -13,6 +13,8 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
@@ -32,6 +34,7 @@ import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
+import generated.se.sundsvall.invoicecache.InvoicePdf;
 import generated.se.sundsvall.invoicecache.InvoicesResponse;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
@@ -219,6 +222,23 @@ class InvoicesServiceTest {
 		assertThat(invoiceDetails.get(0)).hasFieldOrPropertyWithValue("quantity", expectedInvoiceDetail.getQuantity());
 		verify(dataWarehouseReaderClientMock).getInvoiceDetails(organizationNumber, Long.parseLong(invoiceNumber));
 		verify(dataWarehouseReaderClientMock, never()).getInvoiceDetails(anyLong());
+	}
+
+	@Test
+	void getPdfInvoice() {
+		final var organizationNumber = "5523456789";
+		final var invoiceNumber = "111222";
+		final var invoiceName = "invoiceName";
+		final var content = "content".getBytes(StandardCharsets.UTF_8);
+
+		when(invoiceCacheClientMock.getInvoicePdf(organizationNumber, invoiceNumber)).thenReturn(new InvoicePdf().name(invoiceName).content(Base64.getEncoder().encodeToString(content)));
+
+		final var pdfInvoice = invoicesService.getPdfInvoice(organizationNumber, invoiceNumber);
+
+		assertThat(pdfInvoice).isNotNull();
+		assertThat(pdfInvoice.getFileName()).isEqualTo(invoiceName);
+		assertThat(pdfInvoice.getFile()).isEqualTo(content);
+		verify(invoiceCacheClientMock).getInvoicePdf(organizationNumber, invoiceNumber);
 	}
 
 	private InvoiceResponse createDataWarehouseReaderInvoiceResponse() {

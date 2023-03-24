@@ -14,7 +14,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 
 import io.swagger.v3.oas.annotations.Hidden;
@@ -93,10 +92,8 @@ public class InvoicesResource {
 	public ResponseEntity<PdfInvoice> getPdfInvoice(
 		@Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @PathVariable(name = "organizationNumber") @ValidOrganizationNumber String organizationNumber,
 		@PathVariable(name = "invoiceOrigin") InvoiceOrigin invoiceOrigin,
-		@Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @PathVariable("invoiceNumber") String invoiceNumber) {
+		@Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank @PathVariable("invoiceNumber") String invoiceNumber) {
 
-		// TODO Implement Service layer and integration towards db-layer
-		throw Problem.valueOf(Status.NOT_IMPLEMENTED, "Get invoice in pdf-format is not implemented yet");
+		return ok(invoicesService.getPdfInvoice(organizationNumber, invoiceNumber));
 	}
-
 }

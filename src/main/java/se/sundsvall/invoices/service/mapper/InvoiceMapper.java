@@ -7,13 +7,17 @@ import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
 
 import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
+import java.util.Base64;
+import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Optional;
 
 import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
+import generated.se.sundsvall.invoicecache.InvoicePdf;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -22,8 +26,11 @@ import se.sundsvall.invoices.api.model.InvoiceType;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.MetaData;
+import se.sundsvall.invoices.api.model.PdfInvoice;
 
 public class InvoiceMapper {
+
+	private static final Decoder DECODER = Base64.getDecoder();
 
 	private InvoiceMapper() {}
 
@@ -269,6 +276,16 @@ public static InvoiceFilterRequest toInvoiceCacheParameters(InvoicesParameters i
 			.withTotalPages(invoiceCacheMetaData.getTotalPages())
 			.withTotalRecords(invoiceCacheMetaData.getTotalRecords())
 			.withPage(invoiceCacheMetaData.getPage());
+	}
+
+	public static PdfInvoice toPdfInvoice(InvoicePdf invoicePdf) {
+		return ofNullable(invoicePdf)
+			.map(i -> PdfInvoice.create()
+				.withFileName(i.getName())
+				.withFile(ofNullable(i.getContent())
+					.map(c -> DECODER.decode(c.getBytes(StandardCharsets.UTF_8)))
+					.orElse(null)))
+			.orElse(null);
 	}
 
 	/*********************************
