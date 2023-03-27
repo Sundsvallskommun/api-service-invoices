@@ -65,7 +65,7 @@ public class PdfInvoice {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("PdfInvoiceResponseInvoice [fileName=").append(fileName).append(", file-size=").append(Optional.of(Arrays.toString(file)).orElse("").length()).append("]");
+		builder.append("PdfInvoice [fileName=").append(fileName).append(", file-size=").append(file == null ? 0 : file.length).append("]");
 		return builder.toString();
 	}
 }
