@@ -15,7 +15,7 @@
 			"invoiceStatus": "PAID",
 			"ocrNumber": "766763197",
 			"invoiceName": "Faktura_766763197.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceAddress": {
 				"street": "Storgatan 10",
 				"postcode": "85740",

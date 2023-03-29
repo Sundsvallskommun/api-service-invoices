@@ -149,10 +149,10 @@ public class InvoiceMapper {
 	static InvoiceType toInvoiceType(String dataWarehouseReaderInvoiceType) {
 		return Optional.ofNullable(dataWarehouseReaderInvoiceType)
 			.map(invoiceType -> switch (invoiceType) {
-				case "Faktura" -> InvoiceType.NORMAL;
-				case "Kreditfaktura" -> InvoiceType.CREDIT;
-				case "Startfaktura" -> InvoiceType.START;
-				case "Slutfaktura" -> InvoiceType.STOP;
+				case "Faktura" -> InvoiceType.INVOICE;
+				case "Kreditfaktura" -> InvoiceType.CREDIT_INVOICE;
+				case "Startfaktura" -> InvoiceType.START_INVOICE;
+				case "Slutfaktura" -> InvoiceType.FINAL_INVOICE;
 				default -> InvoiceType.UNKNOWN;
 			})
 			.orElse(null);
@@ -176,10 +176,10 @@ public class InvoiceMapper {
 	static String toDataWarehouseReaderInvoiceType(InvoiceType invoiceType) {
 		return ofNullable(invoiceType)
 			.map(type -> switch (type) {
-				case NORMAL -> "Faktura";
-				case CREDIT -> "Kreditfaktura";
-				case START -> "Startfaktura";
-				case STOP -> "Slutfaktura";
+				case INVOICE -> "Faktura";
+				case CREDIT_INVOICE -> "Kreditfaktura";
+				case START_INVOICE -> "Startfaktura";
+				case FINAL_INVOICE -> "Slutfaktura";
 				case UNKNOWN -> null;
 			})
 			.orElse(null);
@@ -262,9 +262,9 @@ public static InvoiceFilterRequest toInvoiceCacheParameters(InvoicesParameters i
 	static InvoiceType toInvoiceType(generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum invoiceTypeEnum) {
 		return Optional.ofNullable(invoiceTypeEnum)
 			.map(invoiceType -> switch (invoiceType) {
-			case INVOICE -> InvoiceType.NORMAL;
-			case CREDIT_INVOICE -> InvoiceType.CREDIT;
-			case FINAL_INVOICE -> InvoiceType.STOP;
+			case INVOICE -> InvoiceType.INVOICE;
+			case CREDIT_INVOICE -> InvoiceType.CREDIT_INVOICE;
+			case FINAL_INVOICE -> InvoiceType.FINAL_INVOICE;
 			default -> InvoiceType.UNKNOWN;
 			})
 			.orElse(null);

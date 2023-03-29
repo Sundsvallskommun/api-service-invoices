@@ -110,7 +110,7 @@ class InvoiceMapperTest {
 	private static final String INVOICE_NAME = "invoiceName";
 	private static final String INVOICE_NUMBER = "4321";
 	private static final InvoiceStatus INVOICE_STATUS = InvoiceStatus.PAID;
-	private static final InvoiceType INVOICE_TYPE = InvoiceType.NORMAL;
+	private static final InvoiceType INVOICE_TYPE = InvoiceType.INVOICE;
 	private static final String OCR_NUMBER = "1234";
 	private static final boolean REVERSED_VAT = false;
 	private static final float ROUNDING = 13.39f;
@@ -547,20 +547,20 @@ class InvoiceMapperTest {
 
 	private static Stream<Arguments> toInvoiceTypeArguments() {
 		return Stream.of(
-			Arguments.of("Kreditfaktura", InvoiceType.CREDIT),
-			Arguments.of("Faktura", InvoiceType.NORMAL),
-			Arguments.of("Startfaktura", InvoiceType.START),
-			Arguments.of("Slutfaktura", InvoiceType.STOP),
+			Arguments.of("Kreditfaktura", InvoiceType.CREDIT_INVOICE),
+			Arguments.of("Faktura", InvoiceType.INVOICE),
+			Arguments.of("Startfaktura", InvoiceType.START_INVOICE),
+			Arguments.of("Slutfaktura", InvoiceType.FINAL_INVOICE),
 			Arguments.of("something-unknown", InvoiceType.UNKNOWN),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toDataWarehouseReaderInvoiceTypeArguments() {
 		return Stream.of(
-			Arguments.of(InvoiceType.CREDIT, "Kreditfaktura"),
-			Arguments.of(InvoiceType.NORMAL, "Faktura"),
-			Arguments.of(InvoiceType.START, "Startfaktura"),
-			Arguments.of(InvoiceType.STOP, "Slutfaktura"),
+			Arguments.of(InvoiceType.CREDIT_INVOICE, "Kreditfaktura"),
+			Arguments.of(InvoiceType.INVOICE, "Faktura"),
+			Arguments.of(InvoiceType.START_INVOICE, "Startfaktura"),
+			Arguments.of(InvoiceType.FINAL_INVOICE, "Slutfaktura"),
 			Arguments.of(InvoiceType.UNKNOWN, null),
 			Arguments.of(null, null));
 	}
@@ -606,10 +606,10 @@ class InvoiceMapperTest {
 	private static Stream<Arguments> toInvoiceTypeFromInvoiceCacheStatusArguments() {
 		return Stream.of(
 			Arguments.of(InvoiceTypeEnum.CONSOLIDATED_INVOICE, InvoiceType.UNKNOWN),
-			Arguments.of(InvoiceTypeEnum.CREDIT_INVOICE, InvoiceType.CREDIT),
+			Arguments.of(InvoiceTypeEnum.CREDIT_INVOICE, InvoiceType.CREDIT_INVOICE),
 			Arguments.of(InvoiceTypeEnum.DIRECT_DEBIT, InvoiceType.UNKNOWN),
-			Arguments.of(InvoiceTypeEnum.FINAL_INVOICE, InvoiceType.STOP),
-			Arguments.of(InvoiceTypeEnum.INVOICE, InvoiceType.NORMAL),
+			Arguments.of(InvoiceTypeEnum.FINAL_INVOICE, InvoiceType.FINAL_INVOICE),
+			Arguments.of(InvoiceTypeEnum.INVOICE, InvoiceType.INVOICE),
 			Arguments.of(InvoiceTypeEnum.REMINDER, InvoiceType.UNKNOWN),
 			Arguments.of(null, null));
 	}

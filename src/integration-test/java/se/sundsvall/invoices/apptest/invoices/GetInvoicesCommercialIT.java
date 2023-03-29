@@ -35,7 +35,7 @@ class GetInvoicesCommercialIT extends AbstractAppTest {
 				"&invoiceDateFrom=2019-10-01" +
 				"&invoiceDateTo=2019-10-31" +
 				"&invoiceName=766763197.pdf" +
-				"&invoiceType=NORMAL" +
+				"&invoiceType=INVOICE" +
 				"&invoiceStatus=SENT" +
 				"&ocrNumber=766763197" +
 				"&dueDateFrom=2019-10-01" +

@@ -58,7 +58,7 @@ class InvoicesResourceTest {
 	private static final LocalDate INVOICE_DATE_FROM = LocalDate.now().minusYears(2);
 	private static final LocalDate INVOICE_DATE_TO = LocalDate.now().minusYears(1);
 	private static final String INVOICE_NAME = "invoiceName";
-	private static final InvoiceType INVOICE_TYPE = InvoiceType.NORMAL;
+	private static final InvoiceType INVOICE_TYPE = InvoiceType.INVOICE;
 	private static final InvoiceStatus INVOICE_STATUS = InvoiceStatus.PAID;
 	private static final String OCR_NUMBER = "444";
 	private static final LocalDate DUE_DATE_FROM = LocalDate.now().minusMonths(1);

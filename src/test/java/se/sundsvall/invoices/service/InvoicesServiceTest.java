@@ -87,8 +87,8 @@ class InvoicesServiceTest {
 		final var invoicesResponse = invoicesService.getInvoices(InvoiceOrigin.COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumber(organizationNumber).withPartyId(partyIds));
 
 		assertThat(invoicesResponse.getInvoices()).hasSize(2);
-		assertThat(invoicesResponse.getInvoices().get(0).getInvoiceType()).isEqualTo(InvoiceType.NORMAL);
-		assertThat(invoicesResponse.getInvoices().get(1).getInvoiceType()).isEqualTo(InvoiceType.CREDIT);
+		assertThat(invoicesResponse.getInvoices().get(0).getInvoiceType()).isEqualTo(InvoiceType.INVOICE);
+		assertThat(invoicesResponse.getInvoices().get(1).getInvoiceType()).isEqualTo(InvoiceType.CREDIT_INVOICE);
 		verify(dataWarehouseReaderClientMock).getCustomerEngagements(partyIds);
 		verify(dataWarehouseReaderClientMock).getInvoices(dataWarehouseReaderParameters);
 		verifyNoInteractions(invoiceCacheClientMock);
@@ -162,8 +162,8 @@ class InvoicesServiceTest {
 		final var invoicesResponse = invoicesService.getInvoices(InvoiceOrigin.PUBLIC_ADMINISTRATION, InvoicesParameters.create().withOcrNumber(ocrNumber).withInvoiceNumber(invoiceNumber).withPartyId(partyIds));
 
 		assertThat(invoicesResponse.getInvoices()).hasSize(2);
-		assertThat(invoicesResponse.getInvoices().get(0).getInvoiceType()).isEqualTo(InvoiceType.CREDIT);
-		assertThat(invoicesResponse.getInvoices().get(1).getInvoiceType()).isEqualTo(InvoiceType.NORMAL);
+		assertThat(invoicesResponse.getInvoices().get(0).getInvoiceType()).isEqualTo(InvoiceType.CREDIT_INVOICE);
+		assertThat(invoicesResponse.getInvoices().get(1).getInvoiceType()).isEqualTo(InvoiceType.INVOICE);
 		verify(invoiceCacheClientMock).getInvoices(invoiceCacheParameters);
 		verifyNoInteractions(dataWarehouseReaderClientMock);
 	}

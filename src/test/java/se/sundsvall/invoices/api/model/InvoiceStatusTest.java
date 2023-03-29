@@ -17,7 +17,7 @@ class InvoiceStatusTest {
 
 	@Test
 	void values() {
-		assertThat(InvoiceStatus.values()).containsExactly(
+		assertThat(InvoiceStatus.values()).containsExactlyInAnyOrder(
 			PAID, PARTIALLY_PAID, PAID_TOO_MUCH, CREDITED, DEBT_COLLECTION, REMINDER, WRITTEN_OFF, SENT, UNKNOWN);
 	}
 }
