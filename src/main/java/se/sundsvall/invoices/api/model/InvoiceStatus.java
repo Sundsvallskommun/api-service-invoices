@@ -10,6 +10,7 @@ public enum InvoiceStatus {
 	DEBT_COLLECTION,
 	PAID_TOO_MUCH,
 	REMINDER,
+	VOID,
 	CREDITED,
 	WRITTEN_OFF,
 	UNKNOWN;

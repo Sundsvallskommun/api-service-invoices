@@ -551,7 +551,10 @@ class InvoiceMapperTest {
 			Arguments.of("Faktura", InvoiceType.INVOICE),
 			Arguments.of("Startfaktura", InvoiceType.START_INVOICE),
 			Arguments.of("Slutfaktura", InvoiceType.FINAL_INVOICE),
-			Arguments.of("something-unknown", InvoiceType.UNKNOWN),
+			Arguments.of("Kvittning", InvoiceType.OFFSET_INVOICE),
+			Arguments.of("Internfaktura", InvoiceType.INTERNAL_INVOICE),
+			Arguments.of("Samlingsfaktura", InvoiceType.CONSOLIDATED_INVOICE),
+			Arguments.of("Samlingsfaktura-unknown", InvoiceType.UNKNOWN),
 			Arguments.of(null, null));
 	}
 
@@ -561,6 +564,9 @@ class InvoiceMapperTest {
 			Arguments.of(InvoiceType.INVOICE, "Faktura"),
 			Arguments.of(InvoiceType.START_INVOICE, "Startfaktura"),
 			Arguments.of(InvoiceType.FINAL_INVOICE, "Slutfaktura"),
+			Arguments.of(InvoiceType.OFFSET_INVOICE, "Kvittning"),
+			Arguments.of(InvoiceType.INTERNAL_INVOICE, "Internfaktura"),
+			Arguments.of(InvoiceType.CONSOLIDATED_INVOICE, "Samlingsfaktura"),
 			Arguments.of(InvoiceType.UNKNOWN, null),
 			Arguments.of(null, null));
 	}
@@ -573,6 +579,7 @@ class InvoiceMapperTest {
 			Arguments.of(InvoiceStatus.REMINDER, "Påminnelse"),
 			Arguments.of(InvoiceStatus.WRITTEN_OFF, "Avskriven"),
 			Arguments.of(InvoiceStatus.SENT, "Skickad"),
+			Arguments.of(InvoiceStatus.VOID, "Makulerad"),
 			Arguments.of(InvoiceStatus.UNKNOWN, null),
 			Arguments.of(null, null));
 	}
@@ -585,6 +592,7 @@ class InvoiceMapperTest {
 			Arguments.of("Påminnelse", InvoiceStatus.REMINDER),
 			Arguments.of("Avskriven", InvoiceStatus.WRITTEN_OFF),
 			Arguments.of("Skickad", InvoiceStatus.SENT),
+			Arguments.of("Makulerad", InvoiceStatus.VOID),
 			Arguments.of("something-unknown", InvoiceStatus.UNKNOWN),
 			Arguments.of(null, null));
 	}
@@ -599,18 +607,19 @@ class InvoiceMapperTest {
 			Arguments.of(InvoiceStatusEnum.SENT, InvoiceStatus.SENT),
 			Arguments.of(InvoiceStatusEnum.UNKNOWN, InvoiceStatus.UNKNOWN),
 			Arguments.of(InvoiceStatusEnum.UNPAID, InvoiceStatus.SENT),
-			Arguments.of(InvoiceStatusEnum.VOID, InvoiceStatus.WRITTEN_OFF),
+			Arguments.of(InvoiceStatusEnum.VOID, InvoiceStatus.VOID),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toInvoiceTypeFromInvoiceCacheStatusArguments() {
 		return Stream.of(
-			Arguments.of(InvoiceTypeEnum.CONSOLIDATED_INVOICE, InvoiceType.UNKNOWN),
+			Arguments.of(InvoiceTypeEnum.CONSOLIDATED_INVOICE, InvoiceType.CONSOLIDATED_INVOICE),
 			Arguments.of(InvoiceTypeEnum.CREDIT_INVOICE, InvoiceType.CREDIT_INVOICE),
-			Arguments.of(InvoiceTypeEnum.DIRECT_DEBIT, InvoiceType.UNKNOWN),
+			Arguments.of(InvoiceTypeEnum.DIRECT_DEBIT, InvoiceType.DIRECT_DEBIT),
 			Arguments.of(InvoiceTypeEnum.FINAL_INVOICE, InvoiceType.FINAL_INVOICE),
 			Arguments.of(InvoiceTypeEnum.INVOICE, InvoiceType.INVOICE),
-			Arguments.of(InvoiceTypeEnum.REMINDER, InvoiceType.UNKNOWN),
+			Arguments.of(InvoiceTypeEnum.REMINDER, InvoiceType.REMINDER),
+			Arguments.of(InvoiceTypeEnum.SELF_INVOICE, InvoiceType.SELF_INVOICE),
 			Arguments.of(null, null));
 	}
 }
