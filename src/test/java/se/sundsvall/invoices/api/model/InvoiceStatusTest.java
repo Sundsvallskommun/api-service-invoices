@@ -9,6 +9,7 @@ import static se.sundsvall.invoices.api.model.InvoiceStatus.PARTIALLY_PAID;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.REMINDER;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.SENT;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.UNKNOWN;
+import static se.sundsvall.invoices.api.model.InvoiceStatus.VOID;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.WRITTEN_OFF;
 
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,16 @@ class InvoiceStatusTest {
 
 	@Test
 	void values() {
-		assertThat(InvoiceStatus.values()).containsExactly(
-			PAID, PARTIALLY_PAID, PAID_TOO_MUCH, CREDITED, DEBT_COLLECTION, REMINDER, WRITTEN_OFF, SENT, UNKNOWN);
+		assertThat(InvoiceStatus.values()).containsExactlyInAnyOrder(
+			PAID,
+			SENT,
+			PARTIALLY_PAID,
+			DEBT_COLLECTION,
+			PAID_TOO_MUCH,
+			REMINDER,
+			VOID,
+			CREDITED,
+			WRITTEN_OFF,
+			UNKNOWN);
 	}
 }

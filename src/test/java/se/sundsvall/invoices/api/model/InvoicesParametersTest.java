@@ -41,7 +41,7 @@ class InvoicesParametersTest {
         final var facilityId = List.of("facilityId-1", "facilityId-2");
         final var invoiceNumber = "invoiceNumber";
         final var invoiceName = "invoiceName";
-        final var invoiceType = InvoiceType.CREDIT;
+        final var invoiceType = InvoiceType.CREDIT_INVOICE;
         final var invoiceStatus = InvoiceStatus.DEBT_COLLECTION;
         final var invoiceDateFrom = LocalDate.now().minusDays(30);
         final var invoiceDateTo = LocalDate.now();

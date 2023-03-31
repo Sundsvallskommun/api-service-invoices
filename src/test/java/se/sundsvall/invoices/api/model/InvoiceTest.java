@@ -53,7 +53,7 @@ class InvoiceTest {
 		final var invoiceStatus = InvoiceStatus.PAID;
 		final var ocrNumber = "ocrNumber";
 		final var invoiceName = "invoiceName";
-		final var invoiceType = InvoiceType.NORMAL;
+		final var invoiceType = InvoiceType.INVOICE;
 		final var invoiceDescription = "invoiceDescription";
 		final var invoiceAddress = Address.create();
 		final var facilityId = "facilityId";
