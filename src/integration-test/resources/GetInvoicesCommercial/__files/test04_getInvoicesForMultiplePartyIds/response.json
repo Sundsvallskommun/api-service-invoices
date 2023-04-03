@@ -17,7 +17,7 @@
 			"ocrNumber": "137993598",
 			"organizationNumber": "5564786647",
 			"invoiceName": "137993598.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "El",
 			"invoiceAddress": {
 				"street": "Fakturagatan 2",
@@ -45,7 +45,7 @@
 			"ocrNumber": "767917693",
 			"organizationNumber": "5564786647",
 			"invoiceName": "767917693.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "Fjärrvärme",
 			"invoiceAddress": {
 				"street": "Fakturagatan 1",
@@ -73,7 +73,7 @@
 			"ocrNumber": "137994091",
 			"organizationNumber": "5565027223",
 			"invoiceName": "137994091.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "Fjärrvärme",
 			"invoiceAddress": {
 				"street": "Fakturagatan 2",

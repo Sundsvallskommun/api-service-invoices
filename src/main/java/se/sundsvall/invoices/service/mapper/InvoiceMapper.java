@@ -141,6 +141,7 @@ public class InvoiceMapper {
 				case "Påminnelse" -> InvoiceStatus.REMINDER;
 				case "Avskriven" -> InvoiceStatus.WRITTEN_OFF;
 				case "Skickad" -> InvoiceStatus.SENT;
+				case "Makulerad" -> InvoiceStatus.VOID;
 				default -> InvoiceStatus.UNKNOWN;
 			})
 			.orElse(null);
@@ -149,10 +150,13 @@ public class InvoiceMapper {
 	static InvoiceType toInvoiceType(String dataWarehouseReaderInvoiceType) {
 		return Optional.ofNullable(dataWarehouseReaderInvoiceType)
 			.map(invoiceType -> switch (invoiceType) {
-				case "Faktura" -> InvoiceType.NORMAL;
-				case "Kreditfaktura" -> InvoiceType.CREDIT;
-				case "Startfaktura" -> InvoiceType.START;
-				case "Slutfaktura" -> InvoiceType.STOP;
+				case "Faktura" -> InvoiceType.INVOICE;
+				case "Kreditfaktura" -> InvoiceType.CREDIT_INVOICE;
+				case "Startfaktura" -> InvoiceType.START_INVOICE;
+				case "Slutfaktura" -> InvoiceType.FINAL_INVOICE;
+				case "Kvittning" -> InvoiceType.OFFSET_INVOICE;
+				case "Internfaktura" -> InvoiceType.INTERNAL_INVOICE;
+				case "Samlingsfaktura" -> InvoiceType.CONSOLIDATED_INVOICE;
 				default -> InvoiceType.UNKNOWN;
 			})
 			.orElse(null);
@@ -167,7 +171,7 @@ public class InvoiceMapper {
 				case WRITTEN_OFF -> "Avskriven";
 				case SENT -> "Skickad";
 				case REMINDER -> "Påminnelse";
-				case UNKNOWN -> null;
+				case VOID -> "Makulerad";
 				default -> null;
 			})
 			.orElse(null);
@@ -176,11 +180,14 @@ public class InvoiceMapper {
 	static String toDataWarehouseReaderInvoiceType(InvoiceType invoiceType) {
 		return ofNullable(invoiceType)
 			.map(type -> switch (type) {
-				case NORMAL -> "Faktura";
-				case CREDIT -> "Kreditfaktura";
-				case START -> "Startfaktura";
-				case STOP -> "Slutfaktura";
-				case UNKNOWN -> null;
+				case INVOICE -> "Faktura";
+				case CREDIT_INVOICE -> "Kreditfaktura";
+				case START_INVOICE -> "Startfaktura";
+				case FINAL_INVOICE -> "Slutfaktura";
+				case OFFSET_INVOICE -> "Kvittning";
+				case INTERNAL_INVOICE -> "Internfaktura";
+				case CONSOLIDATED_INVOICE -> "Samlingsfaktura";
+				default -> null;
 			})
 			.orElse(null);
 	}
@@ -253,7 +260,7 @@ public static InvoiceFilterRequest toInvoiceCacheParameters(InvoicesParameters i
 			case DEBT_COLLECTION -> InvoiceStatus.DEBT_COLLECTION;
 			case PAID_TOO_MUCH -> InvoiceStatus.PAID_TOO_MUCH;
 			case REMINDER -> InvoiceStatus.REMINDER;
-			case VOID -> InvoiceStatus.WRITTEN_OFF;
+			case VOID -> InvoiceStatus.VOID;
 			case UNKNOWN -> InvoiceStatus.UNKNOWN;
 			})
 			.orElse(null);
@@ -262,10 +269,13 @@ public static InvoiceFilterRequest toInvoiceCacheParameters(InvoicesParameters i
 	static InvoiceType toInvoiceType(generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum invoiceTypeEnum) {
 		return Optional.ofNullable(invoiceTypeEnum)
 			.map(invoiceType -> switch (invoiceType) {
-			case INVOICE -> InvoiceType.NORMAL;
-			case CREDIT_INVOICE -> InvoiceType.CREDIT;
-			case FINAL_INVOICE -> InvoiceType.STOP;
-			default -> InvoiceType.UNKNOWN;
+			case INVOICE -> InvoiceType.INVOICE;
+			case CREDIT_INVOICE -> InvoiceType.CREDIT_INVOICE;
+			case FINAL_INVOICE -> InvoiceType.FINAL_INVOICE;
+			case DIRECT_DEBIT -> InvoiceType.DIRECT_DEBIT;
+			case SELF_INVOICE -> InvoiceType.SELF_INVOICE;
+			case REMINDER -> InvoiceType.REMINDER;
+			case CONSOLIDATED_INVOICE -> InvoiceType.CONSOLIDATED_INVOICE;
 			})
 			.orElse(null);
 	}

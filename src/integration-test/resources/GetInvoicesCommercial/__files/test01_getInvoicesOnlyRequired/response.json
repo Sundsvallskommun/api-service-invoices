@@ -17,7 +17,7 @@
 			"ocrNumber": "137968392",
 			"organizationNumber": "5565027223",
 			"invoiceName": "137968392.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "El",
 			"invoiceAddress": {
 				"street": "DB79B, FE 11040",
@@ -45,7 +45,7 @@
 			"ocrNumber": "137968293",
 			"organizationNumber": "5565027223",
 			"invoiceName": "137968293.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "El",
 			"invoiceAddress": {
 				"street": "DB79B, FE 11040",
@@ -73,7 +73,7 @@
 			"ocrNumber": "137968194",
 			"organizationNumber": "5565027223",
 			"invoiceName": "137968194.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "El",
 			"invoiceAddress": {
 				"street": "DB79B, FE 11040",

@@ -17,7 +17,7 @@
 			"ocrNumber": "767180995",
 			"organizationNumber": "5565027223",
 			"invoiceName": "767180995.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "El",
 			"invoiceAddress": {
 				"street": "Fakturor",
@@ -45,7 +45,7 @@
 			"ocrNumber": "137993598",
 			"organizationNumber": "5565027223",
 			"invoiceName": "137993598.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "El",
 			"invoiceAddress": {
 				"street": "Fakturor",
@@ -73,7 +73,7 @@
 			"ocrNumber": "767917693",
 			"organizationNumber": "5564786647",
 			"invoiceName": "767917693.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "Fjärrvärme",
 			"invoiceAddress": {
 				"street": "Fakturor",
@@ -101,7 +101,7 @@
 			"ocrNumber": "137994091",
 			"organizationNumber": "5564786647",
 			"invoiceName": "137994091.pdf",
-			"invoiceType": "NORMAL",
+			"invoiceType": "INVOICE",
 			"invoiceDescription": "Fjärrvärme",
 			"invoiceAddress": {
 				"street": "Fakturor",
