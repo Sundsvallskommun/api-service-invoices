@@ -2,7 +2,7 @@ package se.sundsvall.invoices.integration.datawarehousereader;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static se.sundsvall.invoices.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration.CLIENT_REGISTRATION_ID;
+import static se.sundsvall.invoices.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration.CLIENT_ID;
 
 import java.util.List;
 
@@ -18,7 +18,7 @@ import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import se.sundsvall.invoices.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration;
 
-@FeignClient(name = CLIENT_REGISTRATION_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class)
+@FeignClient(name = CLIENT_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class)
 public interface DataWarehouseReaderClient {
 
 	/**
@@ -38,20 +38,6 @@ public interface DataWarehouseReaderClient {
 	 */
 	@GetMapping(path = "invoices", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
 	InvoiceResponse getInvoices(@SpringQueryMap InvoiceParameters invoiceParameters);
-
-	/**
-	 * Get invoice-details of an invoice. Method is deprecated in favour of <code>
-	 * List<InvoiceDetail> getInvoiceDetails(@PathVariable(name = "invoiceNumber") String organizationNumber, @PathVariable(name = "invoiceNumber") long invoiceNumber)
-	 * </code>
-	 *
-	 * @param invoiceNumber id of invoice.
-	 * @return a list of invoices
-	 *
-	 * @deprecated Use getInvoiceDetails(String organizationNumber, long invoiceNumber) instead.
-	 */
-	@Deprecated(since = "20221108", forRemoval = true)
-	@GetMapping(path = "invoices/{invoiceNumber}/details/", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
-	List<InvoiceDetail> getInvoiceDetails(@PathVariable(name = "invoiceNumber") long invoiceNumber);
 
 	/**
 	 * Get invoice-details of an invoice issued by a specific organization.

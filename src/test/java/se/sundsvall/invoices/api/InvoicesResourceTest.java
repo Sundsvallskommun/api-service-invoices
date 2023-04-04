@@ -45,7 +45,6 @@ class InvoicesResourceTest {
 
 	private static final String INVOICES_PATH = "/{invoiceOrigin}";
 	private static final String DETAILS_PATH = "/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
-	private static final String DEPRECATED_DETAILS_PATH = "/details/{invoiceNumber}";
 	private static final String PDF_PATH = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 
 	private static final int DEFAULT_PAGE = 1;
@@ -93,7 +92,7 @@ class InvoicesResourceTest {
 			.getResponseBody();
 
 		verify(invoicesServiceMock).getInvoices(eq(InvoiceOrigin.COMMERCIAL), parametersCaptor.capture());
-		InvoicesParameters parameters = parametersCaptor.getValue();
+		final InvoicesParameters parameters = parametersCaptor.getValue();
 		assertThat(parameters.getDueDateFrom()).isEqualTo(DUE_DATE_FROM);
 		assertThat(parameters.getDueDateTo()).isEqualTo(DUE_DATE_TO);
 		assertThat(parameters.getFacilityId()).isEqualTo(FACILITY_IDS);
@@ -129,31 +128,12 @@ class InvoicesResourceTest {
 			.getResponseBody();
 
 		verify(invoicesServiceMock).getInvoices(eq(InvoiceOrigin.COMMERCIAL), parametersCaptor.capture());
-		InvoicesParameters parameters = parametersCaptor.getValue();
+		final InvoicesParameters parameters = parametersCaptor.getValue();
 		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
 		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);
 		assertThat(parameters.getPartyId()).isEqualTo(PARTY_IDS);
 		assertThat(parameters).hasAllNullFieldsOrPropertiesExcept("limit", "page", "partyId");
 		assertThat(response).isNotNull().isEqualTo(InvoicesResponse.create());
-	}
-
-	@Test
-	void getDeprecatedInvoiceDetails() {
-
-		when(invoicesServiceMock.getInvoiceDetails(null, INVOICE_NUMBER)).thenReturn(List.of(InvoiceDetail.create()));
-
-		final var response = webTestClient.get()
-			.uri(uriBuilder -> uriBuilder.path(DEPRECATED_DETAILS_PATH)
-				.build(Map.of("invoiceNumber", INVOICE_NUMBER)))
-			.exchange()
-			.expectStatus().isOk()
-			.expectHeader().contentType(APPLICATION_JSON)
-			.expectBody(InvoiceDetailsResponse.class)
-			.returnResult()
-			.getResponseBody();
-
-		assertThat(response).isNotNull().isEqualTo(InvoiceDetailsResponse.create().withDetails(List.of(InvoiceDetail.create())));
-		verify(invoicesServiceMock).getInvoiceDetails(null, INVOICE_NUMBER);
 	}
 
 	@Test
@@ -177,9 +157,29 @@ class InvoicesResourceTest {
 
 	@ParameterizedTest
 	@EnumSource(value = InvoiceOrigin.class)
-	void getPdfInvoice(InvoiceOrigin origin) {
+	void getPdfInvoice(final InvoiceOrigin origin) {
 
-		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER)).thenReturn(PdfInvoice.create());
+		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE)).thenReturn(PdfInvoice.create());
+
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PDF_PATH).queryParam("invoiceType", INVOICE_TYPE)
+				.build(Map.of("invoiceOrigin", origin, "organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", INVOICE_NUMBER)))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(PdfInvoice.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response).isNotNull().isEqualTo(PdfInvoice.create());
+		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE);
+	}
+
+	@ParameterizedTest
+	@EnumSource(value = InvoiceOrigin.class)
+	void getPdfInvoiceInvoiceTypeMissing(final InvoiceOrigin origin) {
+
+		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, null)).thenReturn(PdfInvoice.create());
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
@@ -192,16 +192,16 @@ class InvoicesResourceTest {
 			.getResponseBody();
 
 		assertThat(response).isNotNull().isEqualTo(PdfInvoice.create());
-		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER);
+		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, null);
 	}
 
-	private MultiValueMap<String, String> createParameterMap(Integer page, Integer limit, List<String> facilityIds, String invoiceNumber, LocalDate invoiceDateFrom,
+	private MultiValueMap<String, String> createParameterMap(final Integer page, final Integer limit, final List<String> facilityIds, final String invoiceNumber, final LocalDate invoiceDateFrom,
 
-		LocalDate invoiceDateTo, String invoiceName, InvoiceType invoiceType, InvoiceStatus invoiceStatus,
-		String ocrNumber, LocalDate dueDateFrom, LocalDate dueDateTo, String organizationGroup,
-		String organizationNumber, List<String> partyIds) {
+		final LocalDate invoiceDateTo, final String invoiceName, final InvoiceType invoiceType, final InvoiceStatus invoiceStatus,
+		final String ocrNumber, final LocalDate dueDateFrom, final LocalDate dueDateTo, final String organizationGroup,
+		final String organizationNumber, final List<String> partyIds) {
 
-		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
 		ofNullable(page).ifPresent(p -> parameters.add("page", valueOf(p)));
 		ofNullable(limit).ifPresent(p -> parameters.add("limit", valueOf(p)));

@@ -4,11 +4,11 @@ import static java.lang.Long.parseLong;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
-import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.zalando.problem.Problem.valueOf;
 import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceParameters;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceDetails;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoicesResponse;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
+import se.sundsvall.invoices.api.model.InvoiceType;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.PdfInvoice;
@@ -39,14 +40,14 @@ public class InvoicesService {
 	@Autowired
 	private InvoiceCacheClient invoiceCacheClient;
 
-	public InvoicesResponse getInvoices(InvoiceOrigin invoiceOrigin, InvoicesParameters invoiceParameters) {
+	public InvoicesResponse getInvoices(final InvoiceOrigin invoiceOrigin, final InvoicesParameters invoiceParameters) {
 		return switch (invoiceOrigin) {
 			case COMMERCIAL -> toInvoicesResponse(dataWarehouseReaderClient.getInvoices(toDataWarehouseReaderInvoiceParameters(getCustomerNumbers(invoiceParameters.getPartyId()), invoiceParameters)));
 			case PUBLIC_ADMINISTRATION -> toInvoicesResponse(invoiceCacheClient.getInvoices(InvoiceMapper.toInvoiceCacheParameters(invoiceParameters)));
 		};
 	}
 
-	private List<String> getCustomerNumbers(List<String> partyIds) {
+	private List<String> getCustomerNumbers(final List<String> partyIds) {
 		return dataWarehouseReaderClient.getCustomerEngagements(partyIds).getCustomerEngagements().stream()
 			.map(CustomerEngagement::getCustomerNumber)
 			.distinct()
@@ -55,14 +56,11 @@ public class InvoicesService {
 			.orElseThrow(() -> valueOf(NOT_FOUND, format(ERROR_NO_ENGAGEMENT_FOUND, partyIds)));
 	}
 
-	public List<InvoiceDetail> getInvoiceDetails(String organizationNumber, String invoiceNumber) {
-		if (isBlank(organizationNumber)) {
-			return toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(parseLong(invoiceNumber)));
-		}
+	public List<InvoiceDetail> getInvoiceDetails(final String organizationNumber, final String invoiceNumber) {
 		return toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(organizationNumber, parseLong(invoiceNumber)));
 	}
 
-	public PdfInvoice getPdfInvoice(String organizationNumber, String invoiceNumber) {
-		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(organizationNumber, invoiceNumber));
+	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType) {
+		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
 	}
 }
