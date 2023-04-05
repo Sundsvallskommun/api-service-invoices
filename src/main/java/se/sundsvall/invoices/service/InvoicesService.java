@@ -4,7 +4,7 @@ import static java.lang.Long.parseLong;
 import static java.lang.String.format;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
-import static org.zalando.problem.Problem.valueOf;
+import static org.zalando.problem.Status.NOT_FOUND;
 import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceParameters;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
@@ -18,7 +18,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.zalando.problem.Status;
+import org.zalando.problem.Problem;
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -53,7 +53,7 @@ public class InvoicesService {
 			.distinct()
 			.collect(collectingAndThen(toList(), Optional::of))
 			.filter(ObjectUtils::isNotEmpty)
-			.orElseThrow(() -> valueOf(Status.NOT_FOUND, format(ERROR_NO_ENGAGEMENT_FOUND, partyIds)));
+			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(ERROR_NO_ENGAGEMENT_FOUND, partyIds)));
 	}
 
 	public List<InvoiceDetail> getInvoiceDetails(final String organizationNumber, final String invoiceNumber) {
