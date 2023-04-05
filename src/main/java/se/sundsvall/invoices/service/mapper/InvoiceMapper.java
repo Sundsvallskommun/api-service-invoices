@@ -16,6 +16,7 @@ import java.util.Optional;
 
 import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
+import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
 import generated.se.sundsvall.invoicecache.InvoicePdf;
 import se.sundsvall.invoices.api.model.Address;
@@ -204,16 +205,15 @@ public class InvoiceMapper {
 		return Optional.ofNullable(invoiceType)
 			.map(type -> switch (type)
 			{
-				case INVOICE -> generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.INVOICE;
-				case CREDIT_INVOICE -> generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.CREDIT_INVOICE;
-				case FINAL_INVOICE -> generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.FINAL_INVOICE;
-				case DIRECT_DEBIT -> generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.DIRECT_DEBIT;
-				case SELF_INVOICE -> generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.SELF_INVOICE;
-				case REMINDER -> generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.REMINDER;
-				case CONSOLIDATED_INVOICE -> generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.CONSOLIDATED_INVOICE;
+				case INVOICE -> InvoiceTypeEnum.INVOICE;
+				case CREDIT_INVOICE -> InvoiceTypeEnum.CREDIT_INVOICE;
+				case FINAL_INVOICE -> InvoiceTypeEnum.FINAL_INVOICE;
+				case DIRECT_DEBIT -> InvoiceTypeEnum.DIRECT_DEBIT;
+				case SELF_INVOICE -> InvoiceTypeEnum.SELF_INVOICE;
+				case REMINDER -> InvoiceTypeEnum.REMINDER;
+				case CONSOLIDATED_INVOICE -> InvoiceTypeEnum.CONSOLIDATED_INVOICE;
 				default -> null;
-			})
-			.orElse(null);
+			}).orElse(null);
 	}
 
 	public static InvoicesResponse toInvoicesResponse(final generated.se.sundsvall.invoicecache.InvoicesResponse invoiceCacheInvoiceResponse) {
