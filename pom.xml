@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-invoices</artifactId>
-	<version>7.0</version>
+	<version>7.1</version>
 	<name>api-service-invoices</name>
 	<description>Service for listing invoice-data</description>
 	<properties>

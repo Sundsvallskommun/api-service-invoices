@@ -31,7 +31,6 @@ import se.sundsvall.invoices.service.InvoicesService;
 class InvoicesResourceFailureTest {
 
 	private static final String INVOICES_PATH = "/{invoiceOrigin}";
-	private static final String DEPRECATED_DETAILS_PATH = "/details/{invoiceNumber}";
 	private static final String DETAILS_PATH = "/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 
@@ -176,22 +175,6 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
-	void getDeprecatedInvoiceDetailsNoInvoiceNumber() {
-		webTestClient.get().uri(uriBuilder -> uriBuilder.path(DEPRECATED_DETAILS_PATH)
-			.build(Map.of("organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", " ")))
-			.exchange()
-			.expectStatus().isBadRequest()
-			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
-			.expectBody()
-			.jsonPath("$.title").isEqualTo("Constraint Violation")
-			.jsonPath("$.status").isEqualTo(BAD_REQUEST.value())
-			.jsonPath("$.violations[0].field").isEqualTo("getDeprecatedInvoiceDetails.invoiceNumber")
-			.jsonPath("$.violations[0].message").isEqualTo("must not be blank");
-
-		verifyNoInteractions(invoicesServiceMock);
-	}
-
-	@Test
 	void getInvoiceDetailsNoInvoiceNumber() {
 		webTestClient.get().uri(uriBuilder -> uriBuilder.path(DETAILS_PATH)
 			.build(Map.of("organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", " ")))
@@ -286,9 +269,9 @@ class InvoicesResourceFailureTest {
 		verifyNoInteractions(invoicesServiceMock);
 	}
 
-	private MultiValueMap<String, String> createParameterMap(String invoiceDateFrom, String invoiceType, String invoiceStatus, String organizationNumber, List<String> partyIds) {
+	private MultiValueMap<String, String> createParameterMap(final String invoiceDateFrom, final String invoiceType, final String invoiceStatus, final String organizationNumber, final List<String> partyIds) {
 
-		MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		ofNullable(invoiceDateFrom).ifPresent(p -> parameters.add("invoiceDateFrom", p));
 		ofNullable(invoiceType).ifPresent(p -> parameters.add("invoiceType", p));
 		ofNullable(invoiceStatus).ifPresent(p -> parameters.add("invoiceStatus", p));

@@ -40,5 +40,6 @@ class InvoicesResponseTest {
 	@Test
 	void testNoDirtOnCreatedBean() {
 		assertThat(InvoicesResponse.create()).hasAllNullFieldsOrProperties();
+		assertThat(new InvoicesResponse()).hasAllNullFieldsOrProperties();
 	}
 }

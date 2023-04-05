@@ -12,14 +12,14 @@ import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 @Import(FeignConfiguration.class)
 public class InvoiceCacheConfiguration {
 
-	public static final String CLIENT_REGISTRATION_ID = "invoicecache";
+	public static final String CLIENT_ID = "invoicecache";
 
 	@Bean
 	FeignBuilderCustomizer feignBuilderCustomizer(ClientRegistrationRepository clientRepository, InvoiceCacheProperties properties) {
 		return FeignMultiCustomizer.create()
-			.withErrorDecoder(new ProblemErrorDecoder(CLIENT_REGISTRATION_ID))
+			.withErrorDecoder(new ProblemErrorDecoder(CLIENT_ID))
 			.withRequestTimeoutsInSeconds(properties.connectTimeout(), properties.readTimeout())
-			.withRetryableOAuth2InterceptorForClientRegistration(clientRepository.findByRegistrationId(CLIENT_REGISTRATION_ID))
+			.withRetryableOAuth2InterceptorForClientRegistration(clientRepository.findByRegistrationId(CLIENT_ID))
 			.composeCustomizersToOne();
 	}
 }

@@ -85,7 +85,6 @@ class InvoiceMapperTest {
 	private static final BigDecimal INVOICECACHE_TOTAL_AMOUNT = BigDecimal.valueOf(13.40f);
 	private static final BigDecimal INVOICECACHE_VAT = BigDecimal.valueOf(13.41d);
 	private static final BigDecimal INVOICECACHE_AMOUNT_VAT_EXCLUDED = BigDecimal.valueOf(13.37f);
-	private static final String INVOICECACHE_INVOICE_NAME = "invoiceName";
 	private static final InvoiceTypeEnum INVOICECACHE_INVOICE_TYPE = InvoiceTypeEnum.INVOICE;
 	private static final generated.se.sundsvall.invoicecache.Address INVOICECACHE_ADDRESS = new generated.se.sundsvall.invoicecache.Address()
 		.careOf("careOf")
@@ -243,7 +242,6 @@ class InvoiceMapperTest {
 		invoiceCacheInvoice.setInvoiceDueDate(INVOICECACHE_DUE_DATE);
 		invoiceCacheInvoice.setInvoiceDate(INVOICECACHE_INVOICE_DATE);
 		invoiceCacheInvoice.setInvoiceDescription(INVOICECACHE_DESCRIPTION);
-		invoiceCacheInvoice.setInvoiceName(INVOICECACHE_INVOICE_NAME);
 		invoiceCacheInvoice.setInvoiceNumber(INVOICECACHE_INVOICE_NUMBER);
 		invoiceCacheInvoice.setInvoiceStatus(INVOICECACHE_INVOICE_STATUS);
 		invoiceCacheInvoice.setInvoiceType(INVOICECACHE_INVOICE_TYPE);
@@ -280,7 +278,6 @@ class InvoiceMapperTest {
 				Invoice::getFacilityId,
 				Invoice::getInvoiceDate,
 				Invoice::getInvoiceDescription,
-				Invoice::getInvoiceName,
 				Invoice::getInvoiceNumber,
 				Invoice::getInvoiceStatus,
 				Invoice::getInvoiceType,
@@ -301,7 +298,6 @@ class InvoiceMapperTest {
 				null,
 				INVOICE_DATE,
 				INVOICE_DESCRIPTION,
-				INVOICE_NAME,
 				INVOICE_NUMBER,
 				INVOICE_STATUS,
 				INVOICE_TYPE,
@@ -439,6 +435,12 @@ class InvoiceMapperTest {
 				Direction.DESC);
 	}
 
+	@ParameterizedTest
+	@MethodSource("toInvoiceCacheInvoiceTypeArguments")
+	void toInvoiceCacheInvoiceType(final InvoiceType source, final generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum target) {
+		assertThat(InvoiceMapper.toInvoiceCacheInvoiceType(source)).isEqualTo(target);
+	}
+
 	@Test
 	void toInvoiceCacheParameters() {
 		final var invoicesParameters = new InvoicesParameters()
@@ -511,38 +513,54 @@ class InvoiceMapperTest {
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceTypeArguments")
-	void toInvoiceType(String source, InvoiceType target) {
+	void toInvoiceType(final String source, final InvoiceType target) {
 		assertThat(InvoiceMapper.toInvoiceType(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toDataWarehouseReaderInvoiceTypeArguments")
-	void toDataWarehouseReaderInvoiceType(InvoiceType source, String target) {
+	void toDataWarehouseReaderInvoiceType(final InvoiceType source, final String target) {
 		assertThat(InvoiceMapper.toDataWarehouseReaderInvoiceType(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toDataWarehouseReaderInvoiceStatusArguments")
-	void toDataWarehouseReaderInvoiceStatus(InvoiceStatus source, String target) {
+	void toDataWarehouseReaderInvoiceStatus(final InvoiceStatus source, final String target) {
 		assertThat(InvoiceMapper.toDataWarehouseReaderInvoiceStatus(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceStatusFromDatawarehouseReaderStatusArguments")
-	void toInvoiceStatusFromDatawarehouseReaderStatus(String source, InvoiceStatus target) {
+	void toInvoiceStatusFromDatawarehouseReaderStatus(final String source, final InvoiceStatus target) {
 		assertThat(InvoiceMapper.toInvoiceStatus(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceStatusFromInvoiceCacheStatusArguments")
-	void toInvoiceStatusFromInvoiceCacheStatus(InvoiceStatusEnum source, InvoiceStatus target) {
+	void toInvoiceStatusFromInvoiceCacheStatus(final InvoiceStatusEnum source, final InvoiceStatus target) {
 		assertThat(InvoiceMapper.toInvoiceStatus(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceTypeFromInvoiceCacheStatusArguments")
-	void toInvoiceTypeFromInvoiceCacheType(InvoiceTypeEnum source, InvoiceType target) {
+	void toInvoiceTypeFromInvoiceCacheType(final InvoiceTypeEnum source, final InvoiceType target) {
 		assertThat(InvoiceMapper.toInvoiceType(source)).isEqualTo(target);
+	}
+
+	private static Stream<Arguments> toInvoiceCacheInvoiceTypeArguments() {
+		return Stream.of(
+			Arguments.of(InvoiceType.CONSOLIDATED_INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.CONSOLIDATED_INVOICE),
+			Arguments.of(InvoiceType.CREDIT_INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.CREDIT_INVOICE),
+			Arguments.of(InvoiceType.DIRECT_DEBIT, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.DIRECT_DEBIT),
+			Arguments.of(InvoiceType.FINAL_INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.FINAL_INVOICE),
+			Arguments.of(InvoiceType.INTERNAL_INVOICE, null),
+			Arguments.of(InvoiceType.INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.INVOICE),
+			Arguments.of(InvoiceType.OFFSET_INVOICE, null),
+			Arguments.of(InvoiceType.REMINDER, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.REMINDER),
+			Arguments.of(InvoiceType.SELF_INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.SELF_INVOICE),
+			Arguments.of(InvoiceType.START_INVOICE, null),
+			Arguments.of(InvoiceType.UNKNOWN, null),
+			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toInvoiceTypeArguments() {

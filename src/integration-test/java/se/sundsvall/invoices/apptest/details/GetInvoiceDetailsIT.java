@@ -41,17 +41,4 @@ class GetInvoiceDetailsIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
-
-	@Test
-	@Deprecated(since = "20221108", forRemoval = true)
-	void test3_getDeprecatedInvoiceDetailsSuccess() {
-		final var invoiceNumber = "111222";
-
-		setupCall()
-			.withServicePath("/details/" + invoiceNumber)
-			.withHttpMethod(GET)
-			.withExpectedResponseStatus(OK)
-			.withExpectedResponse(RESPONSE_FILE)
-			.sendRequestAndVerifyResponse();
-	}
 }

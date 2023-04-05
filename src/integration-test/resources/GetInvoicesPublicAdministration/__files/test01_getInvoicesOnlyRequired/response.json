@@ -14,7 +14,6 @@
 			"invoiceNumber": "53489546",
 			"invoiceStatus": "PAID",
 			"ocrNumber": "8907136421",
-			"invoiceName": "Faktura_53489546.pdf",
 			"invoiceType": "INVOICE",
 			"invoiceAddress": {
 				"street": "Storgatan 10",
@@ -38,7 +37,6 @@
 			"invoiceNumber": "53489547",
 			"invoiceStatus": "PAID",
 			"ocrNumber": "8907136422",
-			"invoiceName": "Faktura_53489547.pdf",
 			"invoiceType": "INVOICE",
 			"invoiceAddress": {
 				"street": "Storgatan 10",

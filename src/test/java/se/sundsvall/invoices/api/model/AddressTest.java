@@ -46,5 +46,6 @@ class AddressTest {
 	@Test
 	void testNoDirtOnCreatedBean() {
 		assertThat(Address.create()).hasAllNullFieldsOrProperties();
+		assertThat(new Address()).hasAllNullFieldsOrProperties();
 	}
 }
