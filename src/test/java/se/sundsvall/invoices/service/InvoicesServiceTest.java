@@ -6,11 +6,11 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.when;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
 
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
@@ -140,7 +140,7 @@ class InvoicesServiceTest {
 		when(dataWarehouseReaderClientMock.getCustomerEngagements(partyIds)).thenReturn(customerEngagementResponseMock);
 		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(emptyList());
 
-		ThrowableProblem e = assertThrows(ThrowableProblem.class, () -> invoicesService.getInvoices(invoiceOrigin, invoiceParameters));
+		final ThrowableProblem e = assertThrows(ThrowableProblem.class, () -> invoicesService.getInvoices(invoiceOrigin, invoiceParameters));
 
 		assertThat(e.getStatus()).isEqualTo(Status.NOT_FOUND);
 		assertThat(e.getMessage()).isEqualTo("Not Found: No engagements found for partyIds: '" + partyIds + "'");
@@ -186,25 +186,6 @@ class InvoicesServiceTest {
 	}
 
 	@Test
-	void getInvoiceDetailsWithoutOrganizationNumberSuccess() {
-
-		final var invoiceNumber = "111222";
-		final var expectedInvoiceDetail = new InvoiceDetail();
-		expectedInvoiceDetail.setAmount(10.45f);
-		expectedInvoiceDetail.setQuantity(2);
-
-		when(dataWarehouseReaderClientMock.getInvoiceDetails(Long.parseLong(invoiceNumber))).thenReturn(List.of(createDataWarehouseReaderInvoiceDetail(invoiceNumber)));
-
-		final var invoiceDetails = invoicesService.getInvoiceDetails(null, invoiceNumber);
-
-		assertThat(invoiceDetails).hasSize(1);
-		assertThat(invoiceDetails.get(0)).hasFieldOrPropertyWithValue("amount", expectedInvoiceDetail.getAmount());
-		assertThat(invoiceDetails.get(0)).hasFieldOrPropertyWithValue("quantity", expectedInvoiceDetail.getQuantity());
-		verify(dataWarehouseReaderClientMock).getInvoiceDetails(Long.parseLong(invoiceNumber));
-		verify(dataWarehouseReaderClientMock, never()).getInvoiceDetails(any(), anyLong());
-	}
-
-	@Test
 	void getInvoiceDetailsSuccess() {
 
 		final var organizationNumber = "5523456789";
@@ -221,7 +202,6 @@ class InvoicesServiceTest {
 		assertThat(invoiceDetails.get(0)).hasFieldOrPropertyWithValue("amount", expectedInvoiceDetail.getAmount());
 		assertThat(invoiceDetails.get(0)).hasFieldOrPropertyWithValue("quantity", expectedInvoiceDetail.getQuantity());
 		verify(dataWarehouseReaderClientMock).getInvoiceDetails(organizationNumber, Long.parseLong(invoiceNumber));
-		verify(dataWarehouseReaderClientMock, never()).getInvoiceDetails(anyLong());
 	}
 
 	@Test
@@ -229,16 +209,17 @@ class InvoicesServiceTest {
 		final var organizationNumber = "5523456789";
 		final var invoiceNumber = "111222";
 		final var invoiceName = "invoiceName";
+		final var invoiceType = InvoiceType.CREDIT_INVOICE;
 		final var content = "content".getBytes(StandardCharsets.UTF_8);
 
-		when(invoiceCacheClientMock.getInvoicePdf(organizationNumber, invoiceNumber)).thenReturn(new InvoicePdf().name(invoiceName).content(Base64.getEncoder().encodeToString(content)));
+		when(invoiceCacheClientMock.getInvoicePdf(organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType))).thenReturn(new InvoicePdf().name(invoiceName).content(Base64.getEncoder().encodeToString(content)));
 
-		final var pdfInvoice = invoicesService.getPdfInvoice(organizationNumber, invoiceNumber);
+		final var pdfInvoice = invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType);
 
 		assertThat(pdfInvoice).isNotNull();
 		assertThat(pdfInvoice.getFileName()).isEqualTo(invoiceName);
 		assertThat(pdfInvoice.getFile()).isEqualTo(content);
-		verify(invoiceCacheClientMock).getInvoicePdf(organizationNumber, invoiceNumber);
+		verify(invoiceCacheClientMock).getInvoicePdf(organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType));
 	}
 
 	private InvoiceResponse createDataWarehouseReaderInvoiceResponse() {
@@ -257,15 +238,12 @@ class InvoicesServiceTest {
 	}
 
 	private InvoicesResponse createInvoiceCacheInvoicesResponse() {
-		final var invoiceName = "invoiceName";
 		return new generated.se.sundsvall.invoicecache.InvoicesResponse()
 			.invoices(List.of(
 				new generated.se.sundsvall.invoicecache.Invoice()
-					.invoiceName(invoiceName)
 					.invoiceType(InvoiceTypeEnum.CREDIT_INVOICE)
 					.invoiceStatus(InvoiceStatusEnum.PAID),
 				new generated.se.sundsvall.invoicecache.Invoice()
-					.invoiceName(invoiceName)
 					.invoiceType(InvoiceTypeEnum.INVOICE)
 					.invoiceStatus(InvoiceStatusEnum.PAID)))
 			.meta(createInvoiceCacheMetaData());
@@ -289,7 +267,7 @@ class InvoicesServiceTest {
 			.totalRecords(1000L);
 	}
 
-	private generated.se.sundsvall.datawarehousereader.InvoiceDetail createDataWarehouseReaderInvoiceDetail(String invoiceNumber) {
+	private generated.se.sundsvall.datawarehousereader.InvoiceDetail createDataWarehouseReaderInvoiceDetail(final String invoiceNumber) {
 		return new generated.se.sundsvall.datawarehousereader.InvoiceDetail()
 			.invoiceNumber(Long.valueOf(invoiceNumber))
 			.amount(BigDecimal.valueOf(10.45d))

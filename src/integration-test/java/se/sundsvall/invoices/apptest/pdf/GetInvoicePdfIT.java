@@ -41,4 +41,17 @@ class GetInvoicePdfIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
+
+	@Test
+	void test03_getInvoicePdfFilteredByInvoiceType() {
+		final var organizationNumber = "5565257545";
+		final var invoiceNumber = "111222";
+
+		setupCall()
+			.withServicePath(PATH_PREFIX + organizationNumber + "/" + invoiceNumber + PATH_SUFFIX + "?invoiceType=INVOICE")
+			.withHttpMethod(GET)
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
 }

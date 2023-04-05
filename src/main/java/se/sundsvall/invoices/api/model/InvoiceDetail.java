@@ -52,11 +52,11 @@ public class InvoiceDetail {
 		return amount;
 	}
 
-	public void setAmount(float amount) {
+	public void setAmount(final float amount) {
 		this.amount = amount;
 	}
 
-	public InvoiceDetail withAmount(float amount) {
+	public InvoiceDetail withAmount(final float amount) {
 		this.amount = amount;
 		return this;
 	}
@@ -65,11 +65,11 @@ public class InvoiceDetail {
 		return amountVatExcluded;
 	}
 
-	public void setAmountVatExcluded(float amountVatExcluded) {
+	public void setAmountVatExcluded(final float amountVatExcluded) {
 		this.amountVatExcluded = amountVatExcluded;
 	}
 
-	public InvoiceDetail withAmountVatExcluded(float amountVatExcluded) {
+	public InvoiceDetail withAmountVatExcluded(final float amountVatExcluded) {
 		this.amountVatExcluded = amountVatExcluded;
 		return this;
 	}
@@ -78,11 +78,11 @@ public class InvoiceDetail {
 		return vat;
 	}
 
-	public void setVat(float vat) {
+	public void setVat(final float vat) {
 		this.vat = vat;
 	}
 
-	public InvoiceDetail withVat(float vat) {
+	public InvoiceDetail withVat(final float vat) {
 		this.vat = vat;
 		return this;
 	}
@@ -91,11 +91,11 @@ public class InvoiceDetail {
 		return vatRate;
 	}
 
-	public void setVatRate(float vatRate) {
+	public void setVatRate(final float vatRate) {
 		this.vatRate = vatRate;
 	}
 
-	public InvoiceDetail withVatRate(float vatRate) {
+	public InvoiceDetail withVatRate(final float vatRate) {
 		this.vatRate = vatRate;
 		return this;
 	}
@@ -104,11 +104,11 @@ public class InvoiceDetail {
 		return quantity;
 	}
 
-	public void setQuantity(float quantity) {
+	public void setQuantity(final float quantity) {
 		this.quantity = quantity;
 	}
 
-	public InvoiceDetail withQuantity(float quantity) {
+	public InvoiceDetail withQuantity(final float quantity) {
 		this.quantity = quantity;
 		return this;
 	}
@@ -117,11 +117,11 @@ public class InvoiceDetail {
 		return unit;
 	}
 
-	public void setUnit(String unit) {
+	public void setUnit(final String unit) {
 		this.unit = unit;
 	}
 
-	public InvoiceDetail withUnit(String unit) {
+	public InvoiceDetail withUnit(final String unit) {
 		this.unit = unit;
 		return this;
 	}
@@ -130,11 +130,11 @@ public class InvoiceDetail {
 		return unitPrice;
 	}
 
-	public void setUnitPrice(float unitPrice) {
+	public void setUnitPrice(final float unitPrice) {
 		this.unitPrice = unitPrice;
 	}
 
-	public InvoiceDetail withUnitPrice(float unitPrice) {
+	public InvoiceDetail withUnitPrice(final float unitPrice) {
 		this.unitPrice = unitPrice;
 		return this;
 	}
@@ -143,11 +143,11 @@ public class InvoiceDetail {
 		return description;
 	}
 
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
 
-	public InvoiceDetail withDescription(String description) {
+	public InvoiceDetail withDescription(final String description) {
 		this.description = description;
 		return this;
 	}
@@ -156,11 +156,11 @@ public class InvoiceDetail {
 		return productCode;
 	}
 
-	public void setProductCode(String productCode) {
+	public void setProductCode(final String productCode) {
 		this.productCode = productCode;
 	}
 
-	public InvoiceDetail withProductCode(String productCode) {
+	public InvoiceDetail withProductCode(final String productCode) {
 		this.productCode = productCode;
 		return this;
 	}
@@ -169,11 +169,11 @@ public class InvoiceDetail {
 		return productName;
 	}
 
-	public void setProductName(String productName) {
+	public void setProductName(final String productName) {
 		this.productName = productName;
 	}
 
-	public InvoiceDetail withProductName(String productName) {
+	public InvoiceDetail withProductName(final String productName) {
 		this.productName = productName;
 		return this;
 	}
@@ -182,11 +182,11 @@ public class InvoiceDetail {
 		return fromDate;
 	}
 
-	public void setFromDate(LocalDate fromDate) {
+	public void setFromDate(final LocalDate fromDate) {
 		this.fromDate = fromDate;
 	}
 
-	public InvoiceDetail withFromDate(LocalDate fromDate) {
+	public InvoiceDetail withFromDate(final LocalDate fromDate) {
 		this.fromDate = fromDate;
 		return this;
 	}
@@ -195,51 +195,40 @@ public class InvoiceDetail {
 		return toDate;
 	}
 
-	public void setToDate(LocalDate toDate) {
+	public void setToDate(final LocalDate toDate) {
 		this.toDate = toDate;
 	}
 
-	public InvoiceDetail withToDate(LocalDate toDate) {
+	public InvoiceDetail withToDate(final LocalDate toDate) {
 		this.toDate = toDate;
 		return this;
 	}
 
 	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		InvoiceDetail detail = (InvoiceDetail) o;
-		return Objects.equals(this.amount, detail.amount) &&
-			Objects.equals(this.amountVatExcluded, detail.amountVatExcluded) &&
-			Objects.equals(this.vat, detail.vat) &&
-			Objects.equals(this.vatRate, detail.vatRate) &&
-			Objects.equals(this.quantity, detail.quantity) &&
-			Objects.equals(this.unit, detail.unit) &&
-			Objects.equals(this.unitPrice, detail.unitPrice) &&
-			Objects.equals(this.description, detail.description) &&
-			Objects.equals(this.productCode, detail.productCode) &&
-			Objects.equals(this.productName, detail.productName) &&
-			Objects.equals(this.fromDate, detail.fromDate) &&
-			Objects.equals(this.toDate, detail.toDate);
+	public int hashCode() {
+		return Objects.hash(amount, amountVatExcluded, description, fromDate, productCode, productName, quantity, toDate, unit, unitPrice, vat, vatRate);
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(amount, amountVatExcluded, vat, vatRate, quantity, unit, unitPrice, description, productCode, productName, fromDate, toDate);
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof InvoiceDetail other)) {
+			return false;
+		}
+		return (Float.floatToIntBits(amount) == Float.floatToIntBits(other.amount)) && (Float.floatToIntBits(amountVatExcluded) == Float.floatToIntBits(other.amountVatExcluded)) && Objects.equals(description, other.description) && Objects.equals(fromDate,
+			other.fromDate) && Objects.equals(productCode, other.productCode) && Objects.equals(productName, other.productName) && (Float.floatToIntBits(quantity) == Float.floatToIntBits(other.quantity)) && Objects.equals(toDate, other.toDate) && Objects
+				.equals(unit, other.unit) && (Float.floatToIntBits(unitPrice) == Float.floatToIntBits(other.unitPrice)) && (Float.floatToIntBits(vat) == Float.floatToIntBits(other.vat)) && (Float.floatToIntBits(vatRate) == Float.floatToIntBits(
+					other.vatRate));
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("InvoiceDetailsResponseDetails [amount=").append(amount).append(", amountVatExcluded=").append(amountVatExcluded)
-			.append(", vat=").append(vat).append(", vatRate=").append(vatRate).append(", quantity=").append(quantity)
-			.append(", unit=").append(unit).append(", unitPrice=").append(unitPrice).append(", description=").append(description)
-			.append(", productCode=").append(productCode).append(", productName=").append(productName)
-			.append(", fromDate=").append(fromDate).append(", toDate=").append(toDate).append("]");
+		final StringBuilder builder = new StringBuilder();
+		builder.append("InvoiceDetail [amount=").append(amount).append(", amountVatExcluded=").append(amountVatExcluded).append(", vat=").append(vat).append(", vatRate=").append(vatRate).append(", quantity=").append(quantity).append(", unit=").append(unit)
+			.append(", unitPrice=").append(unitPrice).append(", description=").append(description).append(", productCode=").append(productCode).append(", productName=").append(productName).append(", fromDate=").append(fromDate).append(", toDate=").append(
+				toDate).append("]");
 		return builder.toString();
 	}
 }

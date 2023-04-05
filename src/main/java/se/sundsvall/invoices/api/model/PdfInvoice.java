@@ -2,7 +2,6 @@ package se.sundsvall.invoices.api.model;
 
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Optional;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -22,11 +21,11 @@ public class PdfInvoice {
 		return fileName;
 	}
 
-	public void setFileName(String fileName) {
+	public void setFileName(final String fileName) {
 		this.fileName = fileName;
 	}
 
-	public PdfInvoice withFileName(String fileName) {
+	public PdfInvoice withFileName(final String fileName) {
 		this.fileName = fileName;
 		return this;
 	}
@@ -35,36 +34,38 @@ public class PdfInvoice {
 		return file;
 	}
 
-	public void setFile(byte[] file) {
+	public void setFile(final byte[] file) {
 		this.file = file;
 	}
 
-	public PdfInvoice withFile(byte[] file) {
+	public PdfInvoice withFile(final byte[] file) {
 		this.file = file;
 		return this;
 	}
 
 	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
 		}
-		if (o == null || getClass() != o.getClass()) {
+		if (!(obj instanceof PdfInvoice other)) {
 			return false;
 		}
-		PdfInvoice pdfInvoiceResponseInvoice = (PdfInvoice) o;
-		return Objects.equals(this.fileName, pdfInvoiceResponseInvoice.fileName) &&
-			Arrays.equals(this.file, pdfInvoiceResponseInvoice.file);
+		return Arrays.equals(file, other.file) && Objects.equals(fileName, other.fileName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fileName, Arrays.hashCode(file));
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + Arrays.hashCode(file);
+		result = (prime * result) + Objects.hash(fileName);
+		return result;
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("PdfInvoice [fileName=").append(fileName).append(", file-size=").append(file == null ? 0 : file.length).append("]");
 		return builder.toString();
 	}
