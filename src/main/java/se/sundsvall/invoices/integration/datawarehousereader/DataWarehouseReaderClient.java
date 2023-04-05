@@ -24,7 +24,7 @@ public interface DataWarehouseReaderClient {
 	/**
 	 * Get customer engagements matching sent in partyIds
 	 *
-	 * @param partyIds
+	 * @param partyIds a List of partyIds.
 	 * @return a customerEngagementResponse
 	 */
 	@GetMapping(path = "customer/engagements", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })

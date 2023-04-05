@@ -16,6 +16,8 @@ import java.util.Optional;
 
 import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
+import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
+import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
 import generated.se.sundsvall.invoicecache.InvoicePdf;
@@ -39,13 +41,13 @@ public class InvoiceMapper {
 	 * DATAWAREHOUSEREADER (i.e.commercial) MAPPING
 	 ***************************************************************/
 
-	public static InvoicesResponse toInvoicesResponse(final generated.se.sundsvall.datawarehousereader.InvoiceResponse dataWarehouseReaderInvoiceResponse) {
+	public static InvoicesResponse toInvoicesResponse(final InvoiceResponse dataWarehouseReaderInvoiceResponse) {
 		return InvoicesResponse.create()
 			.withMetaData(toMetaData(dataWarehouseReaderInvoiceResponse.getMeta()))
 			.withInvoices(toInvoicesFromDatawarehouseReader(dataWarehouseReaderInvoiceResponse.getInvoices()));
 	}
 
-	public static generated.se.sundsvall.datawarehousereader.InvoiceParameters toDataWarehouseReaderInvoiceParameters(final List<String> customerNumbers, final InvoicesParameters invoiceParameters) {
+	public static InvoiceParameters toDataWarehouseReaderInvoiceParameters(final List<String> customerNumbers, final InvoicesParameters invoiceParameters) {
 		return new InvoiceParameters()
 			.customerNumber(customerNumbers)
 			.facilityId(invoiceParameters.getFacilityId())
@@ -201,7 +203,7 @@ public class InvoiceMapper {
 	 * INVOICECACHE (i.e. public administration) MAPPING
 	 ***************************************************************/
 
-	public static generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum toInvoiceCacheInvoiceType(final InvoiceType invoiceType) {
+	public static InvoiceTypeEnum toInvoiceCacheInvoiceType(final InvoiceType invoiceType) {
 		return Optional.ofNullable(invoiceType)
 			.map(type -> switch (type)
 			{
@@ -269,7 +271,7 @@ public class InvoiceMapper {
 			.orElse(null);
 	}
 
-	static InvoiceStatus toInvoiceStatus(final generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum invoiceStatusEnum) {
+	static InvoiceStatus toInvoiceStatus(final InvoiceStatusEnum invoiceStatusEnum) {
 		return Optional.ofNullable(invoiceStatusEnum)
 			.map(invoiceStatus -> switch (invoiceStatus)
 			{
@@ -286,7 +288,7 @@ public class InvoiceMapper {
 			.orElse(null);
 	}
 
-	static InvoiceType toInvoiceType(final generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum invoiceTypeEnum) {
+	static InvoiceType toInvoiceType(final InvoiceTypeEnum invoiceTypeEnum) {
 		return Optional.ofNullable(invoiceTypeEnum)
 			.map(invoiceType -> switch (invoiceType)
 			{

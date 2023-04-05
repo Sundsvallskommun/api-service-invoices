@@ -44,21 +44,23 @@ public class PdfInvoice {
 	}
 
 	@Override
-	public boolean equals(final java.lang.Object o) {
-		if (this == o) {
+	public boolean equals(final Object obj) {
+		if (this == obj) {
 			return true;
 		}
-		if ((o == null) || (getClass() != o.getClass())) {
+		if (!(obj instanceof PdfInvoice other)) {
 			return false;
 		}
-		final PdfInvoice pdfInvoiceResponseInvoice = (PdfInvoice) o;
-		return Objects.equals(this.fileName, pdfInvoiceResponseInvoice.fileName) &&
-			Arrays.equals(this.file, pdfInvoiceResponseInvoice.file);
+		return Arrays.equals(file, other.file) && Objects.equals(fileName, other.fileName);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(fileName, Arrays.hashCode(file));
+		final int prime = 31;
+		int result = 1;
+		result = (prime * result) + Arrays.hashCode(file);
+		result = (prime * result) + Objects.hash(fileName);
+		return result;
 	}
 
 	@Override

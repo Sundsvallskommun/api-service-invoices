@@ -15,7 +15,7 @@ public class InvoiceDetailsResponse {
 		return new InvoiceDetailsResponse();
 	}
 
-	public InvoiceDetailsResponse withDetails(List<InvoiceDetail> details) {
+	public InvoiceDetailsResponse withDetails(final List<InvoiceDetail> details) {
 		this.details = details;
 		return this;
 	}
@@ -24,20 +24,8 @@ public class InvoiceDetailsResponse {
 		return details;
 	}
 
-	public void setDetails(List<InvoiceDetail> details) {
+	public void setDetails(final List<InvoiceDetail> details) {
 		this.details = details;
-	}
-
-	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		InvoiceDetailsResponse invoiceDetailsResponse = (InvoiceDetailsResponse) o;
-		return Objects.equals(this.details, invoiceDetailsResponse.details);
 	}
 
 	@Override
@@ -46,8 +34,19 @@ public class InvoiceDetailsResponse {
 	}
 
 	@Override
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof InvoiceDetailsResponse other)) {
+			return false;
+		}
+		return Objects.equals(details, other.details);
+	}
+
+	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("InvoiceDetailsResponse [details=").append(details).append("]");
 		return builder.toString();
 	}

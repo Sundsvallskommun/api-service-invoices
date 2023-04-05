@@ -26,11 +26,11 @@ public class Address {
 		return street;
 	}
 
-	public void setStreet(String street) {
+	public void setStreet(final String street) {
 		this.street = street;
 	}
 
-	public Address withStreet(String street) {
+	public Address withStreet(final String street) {
 		this.street = street;
 		return this;
 	}
@@ -39,11 +39,11 @@ public class Address {
 		return postcode;
 	}
 
-	public void setPostcode(String postcode) {
+	public void setPostcode(final String postcode) {
 		this.postcode = postcode;
 	}
 
-	public Address withPostcode(String postcode) {
+	public Address withPostcode(final String postcode) {
 		this.postcode = postcode;
 		return this;
 	}
@@ -52,11 +52,11 @@ public class Address {
 		return city;
 	}
 
-	public void setCity(String city) {
+	public void setCity(final String city) {
 		this.city = city;
 	}
 
-	public Address withCity(String city) {
+	public Address withCity(final String city) {
 		this.city = city;
 		return this;
 	}
@@ -65,38 +65,34 @@ public class Address {
 		return careOf;
 	}
 
-	public void setCareOf(String careOf) {
+	public void setCareOf(final String careOf) {
 		this.careOf = careOf;
 	}
 
-	public Address withCareOf(String careOf) {
+	public Address withCareOf(final String careOf) {
 		this.careOf = careOf;
 		return this;
 	}
 
 	@Override
-	public boolean equals(java.lang.Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (o == null || getClass() != o.getClass()) {
-			return false;
-		}
-		Address address = (Address) o;
-		return Objects.equals(this.street, address.street) &&
-			Objects.equals(this.postcode, address.postcode) &&
-			Objects.equals(this.city, address.city) &&
-			Objects.equals(this.careOf, address.careOf);
+	public int hashCode() {
+		return Objects.hash(careOf, city, postcode, street);
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(street, postcode, city, careOf);
+	public boolean equals(final Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Address other)) {
+			return false;
+		}
+		return Objects.equals(careOf, other.careOf) && Objects.equals(city, other.city) && Objects.equals(postcode, other.postcode) && Objects.equals(street, other.street);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
+		final StringBuilder builder = new StringBuilder();
 		builder.append("Address [street=").append(street).append(", postcode=").append(postcode).append(", city=").append(city)
 			.append(", careOf=").append(careOf).append("]");
 		return builder.toString();
