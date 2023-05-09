@@ -4,7 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 
-import javax.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotEmpty;
 
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
