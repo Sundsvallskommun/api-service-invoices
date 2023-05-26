@@ -20,6 +20,7 @@
 		<published.container.port.test>9060</published.container.port.test>
 		<published.container.port.production>9060</published.container.port.production>
 		<sandbox.db>false</sandbox.db>
+		<app.jvm.xmx.mb>512</app.jvm.xmx.mb>
   		<!-- Service properties -->
 		<openapi-generator-maven-plugin.version>6.6.0</openapi-generator-maven-plugin.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
