@@ -22,7 +22,7 @@
 		<sandbox.db>false</sandbox.db>
 		<app.jvm.xmx.mb>512</app.jvm.xmx.mb>
   		<!-- Service properties -->
-		<openapi-generator-maven-plugin.version>7.0.0</openapi-generator-maven-plugin.version>
+		<openapi-generator-maven-plugin.version>7.0.1</openapi-generator-maven-plugin.version>
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<generated-sources-java-path>src/main/java</generated-sources-java-path>
 	</properties>
