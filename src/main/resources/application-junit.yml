@@ -1,0 +1,21 @@
+integration:
+  datawarehousereader:
+    url: http://dataWarehouseReaderUrl
+  invoicecache:
+    url: http://invoiceCacheUrl
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          datawarehousereader:
+            token-uri: http://tokenUrl
+          invoicecache:
+            token-uri: http://tokenUrl
+        registration:
+          datawarehousereader:
+            client-id: the-client-id
+            client-secret: the-client-secret
+          invoicecache:
+            client-id: the-client-id
+            client-secret: the-client-secret
