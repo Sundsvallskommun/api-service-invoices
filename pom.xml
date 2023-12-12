@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>se.sundsvall.dept44</groupId>
 		<artifactId>dept44-service-parent</artifactId>
-		<version>3.4</version>
+		<version>4.0</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>se.sundsvall</groupId>
@@ -18,7 +18,6 @@
 		<docker.image.name>ms-invoices</docker.image.name>
 		<published.container.port.test>9060</published.container.port.test>
 		<published.container.port.production>9060</published.container.port.production>
-		 
 		<app.jvm.xmx.mb>512</app.jvm.xmx.mb>
   		<!-- Service properties -->
 		<openapi-generator-maven-plugin.version>7.1.0</openapi-generator-maven-plugin.version>

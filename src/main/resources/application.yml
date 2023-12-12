@@ -1,0 +1,42 @@
+integration:
+  datawarehousereader:
+    connectTimeout: 10
+    readTimeout: 20
+  invoicecache:
+    connectTimeout: 10
+    readTimeout: 20
+logbook:
+  exclusionfilters:
+    json-path:
+      '$..file': '[base64]'
+      '$..content': '[base64]'
+logging:
+  level:
+    root: INFO
+openapi:
+  name: ${spring.application.name}
+  title: ${spring.application.name}
+  version: '@project.version@'
+resilience4j:
+  circuitbreaker:
+    instances:
+      datawarehousereader:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+      invoicecache:
+        ignoreExceptions: se.sundsvall.dept44.exception.ClientProblem
+spring:
+  application:
+    name: api-invoices
+  security:
+    oauth2:
+      client:
+        registration:
+          datawarehousereader:
+            authorization-grant-type: client_credentials
+            provider: datawarehousereader
+          invoicecache:
+            authorization-grant-type: client_credentials
+            provider: invoicecache
+springdoc:
+  swagger-ui:
+    operationsSorter: method
