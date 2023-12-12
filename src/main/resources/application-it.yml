@@ -1,0 +1,21 @@
+integration:
+  datawarehousereader:
+    url: http://localhost:${wiremock.server.port:}/api-datawarehousereader
+  invoicecache:
+    url: http://localhost:${wiremock.server.port:}/api-invoicecache
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          datawarehousereader:
+            token-uri: http://localhost:${wiremock.server.port:}/api-gateway/token
+          invoicecache:
+            token-uri: http://localhost:${wiremock.server.port:}/api-gateway/token
+        registration:
+          datawarehousereader:
+            client-id: the-client-id
+            client-secret: the-client-secret
+          invoicecache:
+            client-id: the-client-id
+            client-secret: the-client-secret
