@@ -6,10 +6,12 @@ integration:
     connectTimeout: 10
     readTimeout: 20
 logbook:
-  exclusionfilters:
+  body-filters:
     json-path:
-      '$..file': '[base64]'
-      '$..content': '[base64]'
+     - key: '$..file'
+       value: '[base64]'
+     - key: '$..content'
+       value: '[base64]'
 logging:
   level:
     root: INFO
