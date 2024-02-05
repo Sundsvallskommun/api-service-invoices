@@ -8,10 +8,9 @@ integration:
 logbook:
   body-filters:
     json-path:
-     - key: '$..file'
+     - key: "['file','content']"
        value: '[base64]'
-     - key: '$..content'
-       value: '[base64]'
+
 logging:
   level:
     root: INFO
