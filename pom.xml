@@ -14,10 +14,6 @@
 	<name>api-service-invoices</name>
 	<description>Service for listing invoice-data</description>
 	<properties>
-		<!-- Pipeline properties -->
-		<docker.image.name>ms-invoices</docker.image.name>
-		<published.container.port.test>9060</published.container.port.test>
-		<published.container.port.production>9060</published.container.port.production>
 		<app.jvm.xmx.mb>512</app.jvm.xmx.mb>
   		<!-- Service properties -->
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
