@@ -120,12 +120,12 @@ public class InvoiceMapper {
 			.withQuantity(ofNullable(dataWarehouseReaderInvoiceDetail.getQuantity()).orElse(0D).floatValue());
 	}
 
-	private static MetaData toMetaData(final generated.se.sundsvall.datawarehousereader.MetaData dataWarehouseReaderMetaData) {
-		return MetaData.create().withCount(dataWarehouseReaderMetaData.getCount())
-			.withLimit(dataWarehouseReaderMetaData.getLimit())
-			.withTotalPages(dataWarehouseReaderMetaData.getTotalPages())
-			.withTotalRecords(dataWarehouseReaderMetaData.getTotalRecords())
-			.withPage(dataWarehouseReaderMetaData.getPage());
+	private static MetaData toMetaData(final generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData pagingAndSortingMetaData) {
+		return MetaData.create().withCount(pagingAndSortingMetaData.getCount())
+			.withLimit(pagingAndSortingMetaData.getLimit())
+			.withTotalPages(pagingAndSortingMetaData.getTotalPages())
+			.withTotalRecords(pagingAndSortingMetaData.getTotalRecords())
+			.withPage(pagingAndSortingMetaData.getPage());
 	}
 
 	private static Address toAddress(final generated.se.sundsvall.datawarehousereader.Invoice dataWarehouseReaderInvoice) {

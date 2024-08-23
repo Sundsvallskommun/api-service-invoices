@@ -1,19 +1,18 @@
 package se.sundsvall.invoices.apptest.details;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.BAD_GATEWAY;
-import static org.springframework.http.HttpStatus.OK;
-
 import org.junit.jupiter.api.Test;
-
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.invoices.Application;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static org.springframework.http.HttpStatus.OK;
+
 @WireMockAppTestSuite(files = "classpath:/GetInvoiceDetails/", classes = Application.class)
 class GetInvoiceDetailsIT extends AbstractAppTest {
 	private static final String DETAILS_RESOURCE = "/details";
-	private static final String DETAILS_PATH = "/COMMERCIAL/";
+	private static final String DETAILS_PATH = "/2281/COMMERCIAL/";
 	private static final String RESPONSE_FILE = "response.json";
 
 	@Test

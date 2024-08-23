@@ -1,18 +1,5 @@
 package se.sundsvall.invoices.api;
 
-import static java.util.Optional.ofNullable;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.groups.Tuple.tuple;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static org.zalando.problem.Status.BAD_REQUEST;
-
-import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,23 +11,32 @@ import org.springframework.util.MultiValueMap;
 import org.zalando.problem.Problem;
 import org.zalando.problem.violations.ConstraintViolationProblem;
 import org.zalando.problem.violations.Violation;
-
 import se.sundsvall.invoices.Application;
-import se.sundsvall.invoices.api.model.InvoiceOrigin;
-import se.sundsvall.invoices.api.model.InvoicesParameters;
-import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.service.InvoicesService;
+
+import java.util.List;
+
+import static java.util.Optional.ofNullable;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.groups.Tuple.tuple;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static org.zalando.problem.Status.BAD_REQUEST;
+import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class InvoicesResourceFailureTest {
 
-	private static final String INVOICES_PATH = "/{invoiceOrigin}";
-	private static final String DETAILS_PATH = "/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
-	private static final String PDF_PATH = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
+	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
+	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
+	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 	private static final String INVOICE_NUMBER = "333";
 	private static final String ORGANIZATION_NUMBER = "5565732223";
 	private static final List<String> PARTY_IDS = List.of(randomUUID().toString());
+	private static final String MUNICIPALITY_ID = "2281";
 
 	@MockBean
 	private InvoicesService invoicesServiceMock;
@@ -51,17 +47,11 @@ class InvoicesResourceFailureTest {
 	@Test
 	void getInvoicesMissingPartyId() {
 
-		// Arrange
-		final var invoicesParameters = InvoicesParameters.create();
-		final var invoiceOrigin = InvoiceOrigin.COMMERCIAL;
-
-		when(invoicesServiceMock.getInvoices(invoiceOrigin, invoicesParameters)).thenReturn(InvoicesResponse.create());
-
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(null, null, null, null, null))
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL)))
+				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -86,7 +76,7 @@ class InvoicesResourceFailureTest {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(null, null, null, null, List.of("invalid-uuid")))
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL)))
+				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -111,7 +101,7 @@ class InvoicesResourceFailureTest {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(null, null, null, "190010301234", PARTY_IDS))
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL)))
+				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -130,13 +120,38 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
+	void getInvoicesInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
+				.queryParams(createParameterMap(null, null, null, null, PARTY_IDS))
+				.build("invalid-municipality-id", COMMERCIAL))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getInvoices.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
 	void getInvoicesWrongFormatOfInvoiceDate() {
 
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap("22-01-01", null, null, null, PARTY_IDS))
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL)))
+				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -162,7 +177,7 @@ class InvoicesResourceFailureTest {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(null, "Not valid", null, null, PARTY_IDS))
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL)))
+				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -188,7 +203,7 @@ class InvoicesResourceFailureTest {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(null, null, "Not valid", null, PARTY_IDS))
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL)))
+				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -212,7 +227,7 @@ class InvoicesResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(DETAILS_PATH)
-			.build(Map.of("organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", " ")))
+			.build(MUNICIPALITY_ID, ORGANIZATION_NUMBER, " "))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -235,7 +250,7 @@ class InvoicesResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(DETAILS_PATH)
-			.build(Map.of("organizationNumber", " ", "invoiceNumber", INVOICE_NUMBER)))
+			.build(MUNICIPALITY_ID, " ", INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -254,15 +269,35 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
+	void getInvoiceDetailsInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(DETAILS_PATH)
+				.build("invalid-municipality-id", ORGANIZATION_NUMBER, INVOICE_NUMBER))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getInvoiceDetails.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
 	void getPdfInvoiceNotValidInvoiceOrigin() {
 
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
-				.build(Map.of(
-					"invoiceOrigin", "not-valid",
-					"organizationNumber", ORGANIZATION_NUMBER,
-					"invoiceNumber", INVOICE_NUMBER)))
+				.build(MUNICIPALITY_ID, "not-valid", ORGANIZATION_NUMBER, INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -285,10 +320,7 @@ class InvoicesResourceFailureTest {
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
-				.build(Map.of(
-					"invoiceOrigin", InvoiceOrigin.COMMERCIAL,
-					"organizationNumber", "not-valid",
-					"invoiceNumber", INVOICE_NUMBER)))
+				.build(MUNICIPALITY_ID, COMMERCIAL, "not-valid", INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -312,10 +344,7 @@ class InvoicesResourceFailureTest {
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
-				.build(Map.of(
-					"invoiceOrigin", InvoiceOrigin.COMMERCIAL,
-					"organizationNumber", ORGANIZATION_NUMBER,
-					"invoiceNumber", " ")))
+				.build(MUNICIPALITY_ID, COMMERCIAL, ORGANIZATION_NUMBER, " "))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -329,6 +358,30 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::getField, Violation::getMessage)
 			.containsExactly(tuple("getPdfInvoice.invoiceNumber", "must not be blank"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getPdfInvoiceDetailsInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
+				.build("invalid-municipality-id", COMMERCIAL, ORGANIZATION_NUMBER, INVOICE_NUMBER))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::getField, Violation::getMessage)
+			.containsExactly(tuple("getPdfInvoice.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
