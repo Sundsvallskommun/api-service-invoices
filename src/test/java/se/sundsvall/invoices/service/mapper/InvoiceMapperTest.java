@@ -164,12 +164,12 @@ class InvoiceMapperTest {
 		dataWarehouseReaderInvoice.setPdfAvailable(DATAWAREHOUSEREADER_PDF_AVAILABLE);
 		dataWarehouseReaderInvoice.setVatEligibleAmount(DATAWAREHOUSEREADER_VAT_ELIGIBLE_AMOUNT);
 
-		final var dataWarehouseReaderMetaData = new generated.se.sundsvall.datawarehousereader.MetaData();
-		dataWarehouseReaderMetaData.setTotalRecords(10000L);
-		dataWarehouseReaderMetaData.setPage(1);
-		dataWarehouseReaderMetaData.setTotalPages(100);
-		dataWarehouseReaderMetaData.setLimit(10);
-		dataWarehouseReaderMetaData.setCount(1000);
+		final var pagingAndSortingMetaData = new generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData();
+		pagingAndSortingMetaData.setTotalRecords(10000L);
+		pagingAndSortingMetaData.setPage(1);
+		pagingAndSortingMetaData.setTotalPages(100);
+		pagingAndSortingMetaData.setLimit(10);
+		pagingAndSortingMetaData.setCount(1000);
 
 		final var metaData = MetaData.create().withTotalRecords(10000)
 			.withPage(1)
@@ -179,7 +179,7 @@ class InvoiceMapperTest {
 
 		final var dataWarehouseReaderInvoiceResponse = new generated.se.sundsvall.datawarehousereader.InvoiceResponse();
 		dataWarehouseReaderInvoiceResponse.setInvoices(List.of(dataWarehouseReaderInvoice));
-		dataWarehouseReaderInvoiceResponse.setMeta(dataWarehouseReaderMetaData);
+		dataWarehouseReaderInvoiceResponse.setMeta(pagingAndSortingMetaData);
 
 		final var invoicesResponse = InvoiceMapper.toInvoicesResponse(dataWarehouseReaderInvoiceResponse);
 

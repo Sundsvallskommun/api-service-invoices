@@ -1,30 +1,5 @@
 package se.sundsvall.invoices.service;
 
-import static java.util.Collections.emptyList;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.verifyNoInteractions;
-import static org.mockito.Mockito.when;
-import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
-
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.zalando.problem.Status;
-import org.zalando.problem.ThrowableProblem;
-
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import generated.se.sundsvall.datawarehousereader.Direction;
@@ -36,12 +11,39 @@ import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
 import generated.se.sundsvall.invoicecache.InvoicePdf;
 import generated.se.sundsvall.invoicecache.InvoicesResponse;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
-import se.sundsvall.invoices.api.model.InvoiceOrigin;
-import se.sundsvall.invoices.api.model.InvoiceType;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
 import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
+
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.List;
+
+import static java.util.Collections.emptyList;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForInterfaceTypes.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoInteractions;
+import static org.mockito.Mockito.when;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
+import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
+import static se.sundsvall.invoices.api.model.InvoiceType.CREDIT_INVOICE;
+import static se.sundsvall.invoices.api.model.InvoiceType.INVOICE;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
 
 @ExtendWith(MockitoExtension.class)
 class InvoicesServiceTest {
@@ -64,6 +66,7 @@ class InvoicesServiceTest {
 	@Test
 	void getCommercialInvoicesSuccess() {
 
+		final var municipalityId = "municipalityId";
 		final var partyIds = List.of(randomUUID().toString(), randomUUID().toString());
 		final var customerNumber_1 = "111111";
 		final var customerNumber_2 = "222222";
@@ -72,6 +75,8 @@ class InvoicesServiceTest {
 		final var invoiceName = "invoiceName";
 		final var invoiceDate = "invoiceDate";
 		final var dataWarehouseReaderParameters = new InvoiceParameters()
+			.page(1)
+			.limit(100)
 			.invoiceName(invoiceName)
 			.customerNumber(customerNumbers)
 			.organizationNumber(organizationNumber)
@@ -79,24 +84,24 @@ class InvoicesServiceTest {
 			.sortBy(List.of(invoiceDate))
 			.sortDirection(Direction.DESC);
 
-		when(dataWarehouseReaderClientMock.getCustomerEngagements(partyIds)).thenReturn(customerEngagementResponseMock);
+		when(dataWarehouseReaderClientMock.getCustomerEngagements(municipalityId, partyIds)).thenReturn(customerEngagementResponseMock);
 		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(List.of(customerEngagementMock, customerEngagementMock));
 		when(customerEngagementMock.getCustomerNumber()).thenReturn(customerNumber_1, customerNumber_2);
-		when(dataWarehouseReaderClientMock.getInvoices(dataWarehouseReaderParameters)).thenReturn(createDataWarehouseReaderInvoiceResponse());
-
-		final var invoicesResponse = invoicesService.getInvoices(InvoiceOrigin.COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumber(organizationNumber).withPartyId(partyIds));
+		when(dataWarehouseReaderClientMock.getInvoices(municipalityId, dataWarehouseReaderParameters)).thenReturn(createDataWarehouseReaderInvoiceResponse());
+		final var invoicesResponse = invoicesService.getInvoices(municipalityId, COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumber(organizationNumber).withPartyId(partyIds));
 
 		assertThat(invoicesResponse.getInvoices()).hasSize(2);
-		assertThat(invoicesResponse.getInvoices().get(0).getInvoiceType()).isEqualTo(InvoiceType.INVOICE);
-		assertThat(invoicesResponse.getInvoices().get(1).getInvoiceType()).isEqualTo(InvoiceType.CREDIT_INVOICE);
-		verify(dataWarehouseReaderClientMock).getCustomerEngagements(partyIds);
-		verify(dataWarehouseReaderClientMock).getInvoices(dataWarehouseReaderParameters);
+		assertThat(invoicesResponse.getInvoices().getFirst().getInvoiceType()).isEqualTo(INVOICE);
+		assertThat(invoicesResponse.getInvoices().getLast().getInvoiceType()).isEqualTo(CREDIT_INVOICE);
+		verify(dataWarehouseReaderClientMock).getCustomerEngagements(municipalityId, partyIds);
+		verify(dataWarehouseReaderClientMock).getInvoices(municipalityId, dataWarehouseReaderParameters);
 		verifyNoInteractions(invoiceCacheClientMock);
 	}
 
 	@Test
 	void getCommercialInvoicesNoHits() {
 
+		final var municipalityId = "municipalityId";
 		final var partyIds = List.of(randomUUID().toString());
 		final var customerNumber = "111111";
 		final var customerNumbers = List.of(customerNumber);
@@ -104,6 +109,8 @@ class InvoicesServiceTest {
 		final var invoiceName = "invoiceName";
 		final var invoiceDate = "invoiceDate";
 		final var dataWarehouseReaderParameters = new InvoiceParameters()
+			.page(1)
+			.limit(100)
 			.invoiceName(invoiceName)
 			.customerNumber(customerNumbers)
 			.organizationNumber(organizationNumber)
@@ -111,47 +118,48 @@ class InvoicesServiceTest {
 			.sortBy(List.of(invoiceDate))
 			.sortDirection(Direction.DESC);
 
-		when(dataWarehouseReaderClientMock.getCustomerEngagements(partyIds)).thenReturn(customerEngagementResponseMock);
+		when(dataWarehouseReaderClientMock.getCustomerEngagements(municipalityId, partyIds)).thenReturn(customerEngagementResponseMock);
 		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(List.of(customerEngagementMock));
 		when(customerEngagementMock.getCustomerNumber()).thenReturn(customerNumber);
-		when(dataWarehouseReaderClientMock.getInvoices(dataWarehouseReaderParameters)).thenReturn(new InvoiceResponse().invoices(emptyList()).meta(createDataWarehouseReaderMetaData()));
+		when(dataWarehouseReaderClientMock.getInvoices(municipalityId, dataWarehouseReaderParameters)).thenReturn(new InvoiceResponse().invoices(emptyList()).meta(createPagingAndSortingMetaData()));
 
-		final var invoicesResponse = invoicesService.getInvoices(InvoiceOrigin.COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumber(organizationNumber).withPartyId(partyIds));
+		final var invoicesResponse = invoicesService.getInvoices(municipalityId, COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumber(organizationNumber).withPartyId(partyIds));
 
 		assertThat(invoicesResponse).isNotNull();
 		assertThat(invoicesResponse.getInvoices()).isEmpty();
-		verify(dataWarehouseReaderClientMock).getCustomerEngagements(partyIds);
-		verify(dataWarehouseReaderClientMock).getInvoices(dataWarehouseReaderParameters);
+		verify(dataWarehouseReaderClientMock).getCustomerEngagements(municipalityId, partyIds);
+		verify(dataWarehouseReaderClientMock).getInvoices(municipalityId, dataWarehouseReaderParameters);
 		verifyNoInteractions(invoiceCacheClientMock);
 	}
 
 	@Test
 	void getCommercialInvoicesNoEngagements() {
 
+		final var municipalityId = "municipalityId";
 		final var partyIds = List.of(randomUUID().toString(), randomUUID().toString());
 		final var organizationNumber = "5565027223";
 		final var invoiceName = "invoiceName";
-		final var invoiceOrigin = InvoiceOrigin.COMMERCIAL;
 		final var invoiceParameters = InvoicesParameters.create()
 			.withInvoiceName(invoiceName)
 			.withOrganizationNumber(organizationNumber)
 			.withPartyId(partyIds);
 
-		when(dataWarehouseReaderClientMock.getCustomerEngagements(partyIds)).thenReturn(customerEngagementResponseMock);
+		when(dataWarehouseReaderClientMock.getCustomerEngagements(municipalityId, partyIds)).thenReturn(customerEngagementResponseMock);
 		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(emptyList());
 
-		final ThrowableProblem e = assertThrows(ThrowableProblem.class, () -> invoicesService.getInvoices(invoiceOrigin, invoiceParameters));
+		final ThrowableProblem e = assertThrows(ThrowableProblem.class, () -> invoicesService.getInvoices(municipalityId, COMMERCIAL, invoiceParameters));
 
-		assertThat(e.getStatus()).isEqualTo(Status.NOT_FOUND);
+		assertThat(e.getStatus()).isEqualTo(NOT_FOUND);
 		assertThat(e.getMessage()).isEqualTo("Not Found: No engagements found for partyIds: '" + partyIds + "'");
-		verify(dataWarehouseReaderClientMock).getCustomerEngagements(partyIds);
-		verify(dataWarehouseReaderClientMock, never()).getInvoices(any());
+		verify(dataWarehouseReaderClientMock).getCustomerEngagements(municipalityId, partyIds);
+		verify(dataWarehouseReaderClientMock, never()).getInvoices(anyString(), any());
 		verifyNoInteractions(invoiceCacheClientMock);
 	}
 
 	@Test
 	void getPublicAdministrationInvoicesSuccess() {
 
+		final var municipalityId = "municipalityId";
 		final var partyIds = List.of(randomUUID().toString(), randomUUID().toString());
 		final var ocrNumber = "111111";
 		final var invoiceNumber = "123";
@@ -159,11 +167,11 @@ class InvoicesServiceTest {
 
 		when(invoiceCacheClientMock.getInvoices(invoiceCacheParameters)).thenReturn(createInvoiceCacheInvoicesResponse());
 
-		final var invoicesResponse = invoicesService.getInvoices(InvoiceOrigin.PUBLIC_ADMINISTRATION, InvoicesParameters.create().withOcrNumber(ocrNumber).withInvoiceNumber(invoiceNumber).withPartyId(partyIds));
+		final var invoicesResponse = invoicesService.getInvoices(municipalityId, PUBLIC_ADMINISTRATION, InvoicesParameters.create().withOcrNumber(ocrNumber).withInvoiceNumber(invoiceNumber).withPartyId(partyIds));
 
 		assertThat(invoicesResponse.getInvoices()).hasSize(2);
-		assertThat(invoicesResponse.getInvoices().get(0).getInvoiceType()).isEqualTo(InvoiceType.CREDIT_INVOICE);
-		assertThat(invoicesResponse.getInvoices().get(1).getInvoiceType()).isEqualTo(InvoiceType.INVOICE);
+		assertThat(invoicesResponse.getInvoices().getFirst().getInvoiceType()).isEqualTo(CREDIT_INVOICE);
+		assertThat(invoicesResponse.getInvoices().getLast().getInvoiceType()).isEqualTo(INVOICE);
 		verify(invoiceCacheClientMock).getInvoices(invoiceCacheParameters);
 		verifyNoInteractions(dataWarehouseReaderClientMock);
 	}
@@ -171,6 +179,7 @@ class InvoicesServiceTest {
 	@Test
 	void getPublicAdministrationInvoicesNoHits() {
 
+		final var municipalityId = "municipalityId";
 		final var partyIds = List.of(randomUUID().toString(), randomUUID().toString());
 		final var ocrNumber = "111111";
 		final var invoiceNumber = "123";
@@ -178,7 +187,7 @@ class InvoicesServiceTest {
 
 		when(invoiceCacheClientMock.getInvoices(invoiceCacheParameters)).thenReturn(createInvoiceCacheInvoicesResponse().invoices(emptyList()));
 
-		final var invoicesResponse = invoicesService.getInvoices(InvoiceOrigin.PUBLIC_ADMINISTRATION, InvoicesParameters.create().withOcrNumber(ocrNumber).withInvoiceNumber(invoiceNumber).withPartyId(partyIds));
+		final var invoicesResponse = invoicesService.getInvoices(municipalityId, PUBLIC_ADMINISTRATION, InvoicesParameters.create().withOcrNumber(ocrNumber).withInvoiceNumber(invoiceNumber).withPartyId(partyIds));
 
 		assertThat(invoicesResponse.getInvoices()).isEmpty();
 		verify(invoiceCacheClientMock).getInvoices(invoiceCacheParameters);
@@ -188,20 +197,21 @@ class InvoicesServiceTest {
 	@Test
 	void getInvoiceDetailsSuccess() {
 
+		final var municipalityId = "municipalityId";
 		final var organizationNumber = "5523456789";
 		final var invoiceNumber = "111222";
 		final var expectedInvoiceDetail = new InvoiceDetail();
 		expectedInvoiceDetail.setAmount(10.45f);
 		expectedInvoiceDetail.setQuantity(2);
 
-		when(dataWarehouseReaderClientMock.getInvoiceDetails(organizationNumber, Long.parseLong(invoiceNumber))).thenReturn(List.of(createDataWarehouseReaderInvoiceDetail(invoiceNumber)));
+		when(dataWarehouseReaderClientMock.getInvoiceDetails(municipalityId, organizationNumber, Long.parseLong(invoiceNumber))).thenReturn(List.of(createDataWarehouseReaderInvoiceDetail(invoiceNumber)));
 
-		final var invoiceDetails = invoicesService.getInvoiceDetails(organizationNumber, invoiceNumber);
+		final var invoiceDetails = invoicesService.getInvoiceDetails(municipalityId, organizationNumber, invoiceNumber);
 
 		assertThat(invoiceDetails).hasSize(1);
-		assertThat(invoiceDetails.get(0)).hasFieldOrPropertyWithValue("amount", expectedInvoiceDetail.getAmount());
-		assertThat(invoiceDetails.get(0)).hasFieldOrPropertyWithValue("quantity", expectedInvoiceDetail.getQuantity());
-		verify(dataWarehouseReaderClientMock).getInvoiceDetails(organizationNumber, Long.parseLong(invoiceNumber));
+		assertThat(invoiceDetails.getFirst()).hasFieldOrPropertyWithValue("amount", expectedInvoiceDetail.getAmount());
+		assertThat(invoiceDetails.getFirst()).hasFieldOrPropertyWithValue("quantity", expectedInvoiceDetail.getQuantity());
+		verify(dataWarehouseReaderClientMock).getInvoiceDetails(municipalityId, organizationNumber, Long.parseLong(invoiceNumber));
 	}
 
 	@Test
@@ -209,7 +219,7 @@ class InvoicesServiceTest {
 		final var organizationNumber = "5523456789";
 		final var invoiceNumber = "111222";
 		final var invoiceName = "invoiceName";
-		final var invoiceType = InvoiceType.CREDIT_INVOICE;
+		final var invoiceType = CREDIT_INVOICE;
 		final var content = "content".getBytes(StandardCharsets.UTF_8);
 
 		when(invoiceCacheClientMock.getInvoicePdf(organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType))).thenReturn(new InvoicePdf().name(invoiceName).content(Base64.getEncoder().encodeToString(content)));
@@ -234,7 +244,7 @@ class InvoicesServiceTest {
 					.invoiceName(invoiceName)
 					.invoiceType("Kreditfaktura")
 					.invoiceStatus("Inkasso")))
-			.meta(createDataWarehouseReaderMetaData());
+			.meta(createPagingAndSortingMetaData());
 	}
 
 	private InvoicesResponse createInvoiceCacheInvoicesResponse() {
@@ -258,8 +268,8 @@ class InvoicesServiceTest {
 			.totalRecords(1000L);
 	}
 
-	private generated.se.sundsvall.datawarehousereader.MetaData createDataWarehouseReaderMetaData() {
-		return new generated.se.sundsvall.datawarehousereader.MetaData()
+	private generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData createPagingAndSortingMetaData() {
+		return new generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData()
 			.count(10)
 			.limit(100)
 			.page(1)

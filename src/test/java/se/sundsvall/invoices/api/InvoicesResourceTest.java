@@ -1,21 +1,5 @@
 package se.sundsvall.invoices.api;
 
-import static java.lang.String.valueOf;
-import static java.util.Optional.ofNullable;
-import static java.util.UUID.randomUUID;
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
-import static org.springframework.http.MediaType.APPLICATION_JSON;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Map;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.EnumSource;
@@ -28,7 +12,6 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-
 import se.sundsvall.invoices.Application;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceDetailsResponse;
@@ -40,13 +23,30 @@ import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.PdfInvoice;
 import se.sundsvall.invoices.service.InvoicesService;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
+
+import static java.lang.String.valueOf;
+import static java.util.Optional.ofNullable;
+import static java.util.UUID.randomUUID;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
+
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class InvoicesResourceTest {
 
-	private static final String INVOICES_PATH = "/{invoiceOrigin}";
-	private static final String DETAILS_PATH = "/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
-	private static final String PDF_PATH = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
+	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
+	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
+	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 
 	private static final int DEFAULT_PAGE = 1;
 	private static final int DEFAULT_LIMIT = 100;
@@ -65,6 +65,7 @@ class InvoicesResourceTest {
 	private static final LocalDate DUE_DATE_TO = LocalDate.now();
 	private static final String ORGANIZATION_GROUP = "organizationGroup";
 	private static final String ORGANIZATION_NUMBER = "5522345678";
+	private static final String MUNICIPALITY_ID = "2281";
 
 	@MockBean
 	private InvoicesService invoicesServiceMock;
@@ -79,14 +80,14 @@ class InvoicesResourceTest {
 	void getInvoicesAllParameters() {
 
 		// Arrange
-		when(invoicesServiceMock.getInvoices(any(), any())).thenReturn(InvoicesResponse.create());
+		when(invoicesServiceMock.getInvoices(anyString(), any(), any())).thenReturn(InvoicesResponse.create());
 
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(PAGE, LIMIT, FACILITY_IDS, INVOICE_NUMBER, INVOICE_DATE_FROM, INVOICE_DATE_TO, INVOICE_NAME,
 					INVOICE_TYPE, INVOICE_STATUS, OCR_NUMBER, DUE_DATE_FROM, DUE_DATE_TO, ORGANIZATION_GROUP, ORGANIZATION_NUMBER, PARTY_IDS))
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL)))
+				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -95,7 +96,7 @@ class InvoicesResourceTest {
 			.getResponseBody();
 
 		// Assert
-		verify(invoicesServiceMock).getInvoices(eq(InvoiceOrigin.COMMERCIAL), parametersCaptor.capture());
+		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), parametersCaptor.capture());
 		final InvoicesParameters parameters = parametersCaptor.getValue();
 		assertThat(parameters.getDueDateFrom()).isEqualTo(DUE_DATE_FROM);
 		assertThat(parameters.getDueDateTo()).isEqualTo(DUE_DATE_TO);
@@ -119,13 +120,13 @@ class InvoicesResourceTest {
 	void getInvoicesOnlyMandatoryParameters() {
 
 		// Arrange
-		when(invoicesServiceMock.getInvoices(any(), any())).thenReturn(InvoicesResponse.create());
+		when(invoicesServiceMock.getInvoices(anyString(), any(), any())).thenReturn(InvoicesResponse.create());
 
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(null, null, null, null, null, null, null, null, null, null, null, null, null, null, PARTY_IDS))
-				.build(Map.of("invoiceOrigin", InvoiceOrigin.COMMERCIAL)))
+				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -134,7 +135,7 @@ class InvoicesResourceTest {
 			.getResponseBody();
 
 		// Assert
-		verify(invoicesServiceMock).getInvoices(eq(InvoiceOrigin.COMMERCIAL), parametersCaptor.capture());
+		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), parametersCaptor.capture());
 		final InvoicesParameters parameters = parametersCaptor.getValue();
 		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
 		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);
@@ -147,12 +148,12 @@ class InvoicesResourceTest {
 	void getInvoiceDetails() {
 
 		// Arrange
-		when(invoicesServiceMock.getInvoiceDetails(ORGANIZATION_NUMBER, INVOICE_NUMBER)).thenReturn(List.of(InvoiceDetail.create()));
+		when(invoicesServiceMock.getInvoiceDetails(MUNICIPALITY_ID, ORGANIZATION_NUMBER, INVOICE_NUMBER)).thenReturn(List.of(InvoiceDetail.create()));
 
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(DETAILS_PATH)
-				.build(Map.of("organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", INVOICE_NUMBER)))
+				.build(MUNICIPALITY_ID, ORGANIZATION_NUMBER, INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -162,7 +163,7 @@ class InvoicesResourceTest {
 
 		// Assert
 		assertThat(response).isNotNull().isEqualTo(InvoiceDetailsResponse.create().withDetails(List.of(InvoiceDetail.create())));
-		verify(invoicesServiceMock).getInvoiceDetails(ORGANIZATION_NUMBER, INVOICE_NUMBER);
+		verify(invoicesServiceMock).getInvoiceDetails(MUNICIPALITY_ID, ORGANIZATION_NUMBER, INVOICE_NUMBER);
 	}
 
 	@ParameterizedTest
@@ -175,7 +176,7 @@ class InvoicesResourceTest {
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PDF_PATH).queryParam("invoiceType", INVOICE_TYPE)
-				.build(Map.of("invoiceOrigin", origin, "organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", INVOICE_NUMBER)))
+				.build(MUNICIPALITY_ID, origin, ORGANIZATION_NUMBER, INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -198,7 +199,7 @@ class InvoicesResourceTest {
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
-				.build(Map.of("invoiceOrigin", origin, "organizationNumber", ORGANIZATION_NUMBER, "invoiceNumber", INVOICE_NUMBER)))
+				.build(MUNICIPALITY_ID, origin, ORGANIZATION_NUMBER, INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)

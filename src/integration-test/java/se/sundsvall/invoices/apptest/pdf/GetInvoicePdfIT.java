@@ -1,18 +1,17 @@
 package se.sundsvall.invoices.apptest.pdf;
 
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.BAD_GATEWAY;
-import static org.springframework.http.HttpStatus.OK;
-
 import org.junit.jupiter.api.Test;
-
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.invoices.Application;
 
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static org.springframework.http.HttpStatus.OK;
+
 @WireMockAppTestSuite(files = "classpath:/GetInvoicePdf/", classes = Application.class)
 class GetInvoicePdfIT extends AbstractAppTest {
-	private static final String PATH_PREFIX = "/COMMERCIAL/";
+	private static final String PATH_PREFIX = "/2281/COMMERCIAL/";
 	private static final String PATH_SUFFIX = "/pdf";
 	private static final String RESPONSE_FILE = "response.json";
 

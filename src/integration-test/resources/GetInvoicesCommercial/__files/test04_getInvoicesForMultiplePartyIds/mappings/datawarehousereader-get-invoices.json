@@ -2,7 +2,7 @@
 	"name": "datawarehousereader-get-invoices",
 	"request": {
 		"method": "GET",
-		"urlPath": "/api-datawarehousereader/invoices",
+		"urlPath": "/api-datawarehousereader/2281/invoices",
 		"headers": {
 			"Authorization": {
 				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"

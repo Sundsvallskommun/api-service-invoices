@@ -1,11 +1,11 @@
 openapi: 3.0.1
 info:
-  title: api-datawarehousereader
+  title: datawarehousereader
   contact: {}
   license:
     name: MIT License
-    url: 'https://opensource.org/licenses/MIT'
-  version: '3.0'
+    url: https://opensource.org/licenses/MIT
+  version: "4.0"
 tags:
   - name: Measurement
     description: Measurement operations
@@ -18,7 +18,7 @@ tags:
   - name: Invoice
     description: Invoice operations
 paths:
-  '/measurements/{category}/{aggregateOn}':
+  /{municipalityId}/measurements/{category}/{aggregateOn}:
     get:
       tags:
         - Measurement
@@ -26,43 +26,53 @@ paths:
       description: Resource returns measurement data matching provided search parameters
       operationId: getMeasurements
       parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
         - name: category
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Category'
+            $ref: "#/components/schemas/Category"
         - name: aggregateOn
           in: path
           required: true
           schema:
-            $ref: '#/components/schemas/Aggregation'
+            $ref: "#/components/schemas/Aggregation"
         - name: searchParams
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/MeasurementParameters'
+            $ref: "#/components/schemas/MeasurementParameters"
       responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/MeasurementResponse'
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/Problem'
-                  - $ref: '#/components/schemas/ConstraintViolationProblem'
-        '500':
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
           description: Internal Server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-  /invoices:
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/MeasurementResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/MeasurementResponse"
+  /{municipalityId}/invoices:
     get:
       tags:
         - Invoice
@@ -70,41 +80,57 @@ paths:
       description: Resource returns all invoices matching provided search parameters
       operationId: getInvoices
       parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
         - name: searchParams
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/InvoiceParameters'
+            $ref: "#/components/schemas/InvoiceParameters"
       responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InvoiceResponse'
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/Problem'
-                  - $ref: '#/components/schemas/ConstraintViolationProblem'
-        '500':
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
           description: Internal Server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-  '/invoices/{organizationNumber}/{invoiceNumber}/details':
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/InvoiceResponse"
+  /{municipalityId}/invoices/{organizationNumber}/{invoiceNumber}/details:
     get:
       tags:
         - Invoice
-      summary: >-
-        Get invoice details for invoice matching issuer of provided organization
+      summary: Get invoice details for invoice matching issuer of provided organization
         number and having invoice number matching provided invoice number
       operationId: getInvoiceDetails
       parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
         - name: organizationNumber
           in: path
           description: Organization number of invoice issuer
@@ -121,33 +147,38 @@ paths:
             format: int64
           example: 805137494
       responses:
-        '200':
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "200":
           description: Successful operation
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/InvoiceDetail'
-        '400':
-          description: Bad request
-          content:
+                  $ref: "#/components/schemas/InvoiceDetail"
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-        '404':
-          description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Problem'
-        '500':
-          description: Internal Server error
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Problem'
-  /installedbase:
+                type: array
+                items:
+                  $ref: "#/components/schemas/InvoiceDetail"
+  /{municipalityId}/installedbase:
     get:
       tags:
         - Installed base
@@ -155,68 +186,220 @@ paths:
       description: Resource returns all installed bases matching provided search parameters
       operationId: getInstalledBase
       parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
         - name: searchParams
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/InstalledBaseParameters'
+            $ref: "#/components/schemas/InstalledBaseParameters"
       responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/InstalledBaseResponse'
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/Problem'
-                  - $ref: '#/components/schemas/ConstraintViolationProblem'
-        '500':
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
           description: Internal Server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
-  /customer/engagements:
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstalledBaseResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/InstalledBaseResponse"
+  /{municipalityId}/installations:
+    get:
+      tags:
+        - Installations
+      summary: Get installation details
+      description: Resource returns all installations matching provided search parameters
+      operationId: getInstallationDetails
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: searchParams
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/InstallationParameters"
+      responses:
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InstallationDetailsResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/InstallationDetailsResponse"
+  /{municipalityId}/customer/engagements:
     get:
       tags:
         - Customer
       summary: Get basic customer information
-      description: >-
-        Resource returns all customer engagements matching provided search
+      description: Resource returns all customer engagements matching provided search
         parameters
       operationId: getCustomerEngagements
       parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
         - name: searchParams
           in: query
           required: true
           schema:
-            $ref: '#/components/schemas/CustomerEngagementParameters'
+            $ref: "#/components/schemas/CustomerEngagementParameters"
       responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomerEngagementResponse'
-        '400':
+        "400":
           description: Bad request
           content:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: '#/components/schemas/Problem'
-                  - $ref: '#/components/schemas/ConstraintViolationProblem'
-        '500':
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
           description: Internal Server error
           content:
             application/problem+json:
               schema:
-                $ref: '#/components/schemas/Problem'
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerEngagementResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/CustomerEngagementResponse"
+  /{municipalityId}/customer/details:
+    get:
+      tags:
+        - Customer
+      summary: Get detailed customer information
+      description: Resource returns all customer details matching provided search
+        parameters
+      operationId: getCustomerDetails
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: searchParams
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/CustomerDetailsParameters"
+      responses:
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerDetailsResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/CustomerDetailsResponse"
+  /{municipalityId}/agreements:
+    get:
+      tags:
+        - Agreement
+      summary: Get agreements
+      description: Resource returns all agreements matching provided search parameters
+      operationId: getAgreements
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality id
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: searchParams
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/AgreementParameters"
+      responses:
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/AgreementResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/AgreementResponse"
   /api-docs:
     get:
       tags:
@@ -224,7 +407,7 @@ paths:
       summary: OpenAPI
       operationId: getApiDocs
       responses:
-        '200':
+        "200":
           description: OK
           content:
             application/yaml:
@@ -233,46 +416,11 @@ paths:
       x-auth-type: None
       x-throttling-tier: Unlimited
       x-wso2-mutual-ssl: Optional
-  /agreements:
-    get:
-      tags:
-        - Agreement
-      summary: Get agreements
-      description: Resource returns all agreements matching provided search parameters
-      operationId: getAgreements
-      parameters:
-        - name: searchParams
-          in: query
-          required: true
-          schema:
-            $ref: '#/components/schemas/AgreementParameters'
-      responses:
-        '200':
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/AgreementResponse'
-        '400':
-          description: Bad request
-          content:
-            application/problem+json:
-              schema:
-                oneOf:
-                  - $ref: '#/components/schemas/Problem'
-                  - $ref: '#/components/schemas/ConstraintViolationProblem'
-        '500':
-          description: Internal Server error
-          content:
-            application/problem+json:
-              schema:
-                $ref: '#/components/schemas/Problem'
 components:
   schemas:
     Category:
       type: string
       description: Category
-      readOnly: true
       enum:
         - COMMUNICATION
         - DISTRICT_COOLING
@@ -284,7 +432,6 @@ components:
     Aggregation:
       type: string
       description: Data point aggregation granularity
-      readOnly: true
       enum:
         - HOUR
         - DAY
@@ -308,13 +455,12 @@ components:
           example: 1
           default: 1
         limit:
-          maximum: 1000
           minimum: 1
           type: integer
-          description: Result size per page
+          description: Result size per page. Maximum allowed value is dynamically
+            configured
           format: int32
-          example: 100
-          default: 100
+          example: 15
         sortBy:
           type: array
           items:
@@ -322,7 +468,7 @@ components:
             description: The properties to sort on
             example: propertyName
         sortDirection:
-          $ref: '#/components/schemas/Direction'
+          $ref: "#/components/schemas/Direction"
         partyId:
           type: string
           description: PartyId (e.g. a personId or an organizationId)
@@ -330,22 +476,212 @@ components:
         facilityId:
           type: string
           description: Facility id
-          example: '735999109151401011'
+          example: "735999109151401011"
         fromDateTime:
           type: string
-          description: >-
-            Date and time for oldest measurement point to return. Format is
-            yyyy-MM-dd'T'HH:mm:ss.SSSXXX, for example
-            '2000-10-31T01:30:00.000-05:00'
+          description: "Date and time for oldest measurement point to return. Format\
+            \ is yyyy-MM-dd'T'HH:mm:ss.SSSXXX, for example '2000-10-31T01:30:00.000-05:00'"
           format: date-time
         toDateTime:
           type: string
-          description: >-
-            Date and time for youngest measurement point to return. Format is
-            yyyy-MM-dd'T'HH:mm:ss.SSSXXX, for example
-            '2000-10-31T01:30:00.000-05:00'
+          description: "Date and time for youngest measurement point to return. Format\
+            \ is yyyy-MM-dd'T'HH:mm:ss.SSSXXX, for example '2000-10-31T01:30:00.000-05:00'"
           format: date-time
       description: Measurement request parameters model
+    Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
+    StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    ConstraintViolationProblem:
+      type: object
+      properties:
+        cause:
+          $ref: "#/components/schemas/ThrowableProblem"
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        type:
+          type: string
+          format: uri
+        status:
+          $ref: "#/components/schemas/StatusType"
+        violations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Violation"
+        title:
+          type: string
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        detail:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    ThrowableProblem:
+      type: object
+      properties:
+        cause:
+          $ref: "#/components/schemas/ThrowableProblem"
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties:
+            type: object
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    Violation:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
     Measurement:
       type: object
       properties:
@@ -358,11 +694,11 @@ components:
           type: string
           description: Facility id
           readOnly: true
-          example: '735999109151401011'
+          example: "735999109151401011"
         category:
-          $ref: '#/components/schemas/Category'
+          $ref: "#/components/schemas/Category"
         aggregatedOn:
-          $ref: '#/components/schemas/Aggregation'
+          $ref: "#/components/schemas/Aggregation"
         measurementType:
           type: string
           description: Measurement type
@@ -380,23 +716,20 @@ components:
           example: 1292.75
         timestamp:
           type: string
-          description: >-
-            Date and time for measurement point. Format is
-            yyyy-MM-dd'T'HH:mm:ss.SSSXXX, for example
-            '2000-10-31T01:30:00.000-05:00'
+          description: "Date and time for measurement point. Format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX,\
+            \ for example '2000-10-31T01:30:00.000-05:00'"
           format: date-time
           readOnly: true
         metaData:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/MeasurementMetaData'
+            $ref: "#/components/schemas/MeasurementMetaData"
         interpolation:
           type: integer
-          description: >-
-            Interpolation information. Zero means that no interpolations has
-            been done. Value greater than zero tells how many values in the
-            serie that has been interpolated/calculated.
+          description: Interpolation information. Zero means that no interpolations
+            has been done. Value greater than zero tells how many values in the serie
+            that has been interpolated/calculated.
           format: int32
           readOnly: true
           example: 13
@@ -414,7 +747,7 @@ components:
           type: string
           description: Value for the meta data
           readOnly: true
-          example: '5733010'
+          example: "5733010"
       description: Measurement meta data model
       readOnly: true
     MeasurementResponse:
@@ -424,11 +757,11 @@ components:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/Measurement'
+            $ref: "#/components/schemas/Measurement"
         _meta:
-          $ref: '#/components/schemas/MetaData'
+          $ref: "#/components/schemas/PagingAndSortingMetaData"
       description: Measurement response model
-    MetaData:
+    PagingAndSortingMetaData:
       type: object
       properties:
         page:
@@ -463,274 +796,19 @@ components:
           example: 23
         sortBy:
           type: array
-          description: The properties to sort by
           readOnly: true
-          example: property
           items:
             type: string
             description: The properties to sort by
             readOnly: true
             example: property
         sortDirection:
-          $ref: '#/components/schemas/Direction'
-      description: Metadata model
+          $ref: "#/components/schemas/Direction"
+      description: PagingAndSortingMetaData model
       readOnly: true
-    Problem:
-      type: object
-      properties:
-        instance:
-          type: string
-          format: uri
-        type:
-          type: string
-          format: uri
-        parameters:
-          type: object
-          additionalProperties:
-            type: object
-        status:
-          $ref: '#/components/schemas/StatusType'
-        title:
-          type: string
-        detail:
-          type: string
-    StatusType:
-      type: object
-      properties:
-        statusCode:
-          type: integer
-          format: int32
-        reasonPhrase:
-          type: string
-    ConstraintViolationProblem:
-      type: object
-      properties:
-        cause:
-          $ref: '#/components/schemas/ThrowableProblem'
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              nativeMethod:
-                type: boolean
-              className:
-                type: string
-        type:
-          type: string
-          format: uri
-        status:
-          $ref: '#/components/schemas/StatusType'
-        violations:
-          type: array
-          items:
-            $ref: '#/components/schemas/Violation'
-        title:
-          type: string
-        message:
-          type: string
-        instance:
-          type: string
-          format: uri
-        parameters:
-          type: object
-          additionalProperties:
-            type: object
-        detail:
-          type: string
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              cause:
-                type: object
-                properties:
-                  stackTrace:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        classLoaderName:
-                          type: string
-                        moduleName:
-                          type: string
-                        moduleVersion:
-                          type: string
-                        methodName:
-                          type: string
-                        fileName:
-                          type: string
-                        lineNumber:
-                          type: integer
-                          format: int32
-                        nativeMethod:
-                          type: boolean
-                        className:
-                          type: string
-                  message:
-                    type: string
-                  localizedMessage:
-                    type: string
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    nativeMethod:
-                      type: boolean
-                    className:
-                      type: string
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
-    ThrowableProblem:
-      type: object
-      properties:
-        cause:
-          $ref: '#/components/schemas/ThrowableProblem'
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              nativeMethod:
-                type: boolean
-              className:
-                type: string
-        message:
-          type: string
-        instance:
-          type: string
-          format: uri
-        type:
-          type: string
-          format: uri
-        parameters:
-          type: object
-          additionalProperties:
-            type: object
-        status:
-          $ref: '#/components/schemas/StatusType'
-        title:
-          type: string
-        detail:
-          type: string
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              cause:
-                type: object
-                properties:
-                  stackTrace:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        classLoaderName:
-                          type: string
-                        moduleName:
-                          type: string
-                        moduleVersion:
-                          type: string
-                        methodName:
-                          type: string
-                        fileName:
-                          type: string
-                        lineNumber:
-                          type: integer
-                          format: int32
-                        nativeMethod:
-                          type: boolean
-                        className:
-                          type: string
-                  message:
-                    type: string
-                  localizedMessage:
-                    type: string
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    nativeMethod:
-                      type: boolean
-                    className:
-                      type: string
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
-    Violation:
-      type: object
-      properties:
-        field:
-          type: string
-        message:
-          type: string
     CustomerType:
       type: string
       description: Customer type
-      readOnly: true
       example: Enterprise
       enum:
         - Enterprise
@@ -746,13 +824,12 @@ components:
           example: 1
           default: 1
         limit:
-          maximum: 1000
           minimum: 1
           type: integer
-          description: Result size per page
+          description: Result size per page. Maximum allowed value is dynamically
+            configured
           format: int32
-          example: 100
-          default: 100
+          example: 15
         sortBy:
           type: array
           items:
@@ -760,21 +837,21 @@ components:
             description: The properties to sort on
             example: propertyName
         sortDirection:
-          $ref: '#/components/schemas/Direction'
+          $ref: "#/components/schemas/Direction"
         customerNumber:
           type: array
           items:
             type: string
             description: Customer numbers
-            example: '39195'
+            example: "39195"
         customerType:
-          $ref: '#/components/schemas/CustomerType'
+          $ref: "#/components/schemas/CustomerType"
         facilityId:
           type: array
           items:
             type: string
             description: Facility ids
-            example: '735999109151401011'
+            example: "735999109151401011"
         invoiceNumber:
           type: integer
           description: Invoice number
@@ -784,12 +861,12 @@ components:
           type: string
           description: Earliest invoice date. Format is YYYY-MM-DD.
           format: date
-          example: '2022-01-01'
+          example: 2022-01-01
         invoiceDateTo:
           type: string
           description: Latest invoice date. Format is YYYY-MM-DD.
           format: date
-          example: '2022-01-31'
+          example: 2022-01-31
         invoiceName:
           type: string
           description: Invoice name
@@ -811,12 +888,12 @@ components:
           type: string
           description: Earliest due date. Format is YYYY-MM-DD.
           format: date
-          example: '2022-01-01'
+          example: 2022-01-01
         dueDateTo:
           type: string
           description: Latest due date. Format is YYYY-MM-DD.
           format: date
-          example: '2022-01-31'
+          example: 2022-01-31
         organizationGroup:
           type: string
           description: Organization group
@@ -824,7 +901,7 @@ components:
         organizationNumber:
           type: string
           description: Organization number of invoice issuer
-          example: '5565027223'
+          example: "5565027223"
         administration:
           type: string
           description: Adminstration
@@ -837,14 +914,14 @@ components:
           type: string
           description: Customer number
           readOnly: true
-          example: '39195'
+          example: "39195"
         customerType:
-          $ref: '#/components/schemas/CustomerType'
+          $ref: "#/components/schemas/CustomerType"
         facilityId:
           type: string
           description: Facility id
           readOnly: true
-          example: '735999109151401011'
+          example: "735999109151401011"
         invoiceNumber:
           type: integer
           description: Invoice number
@@ -856,7 +933,7 @@ components:
           description: Invoice date
           format: date
           readOnly: true
-          example: '2022-01-15'
+          example: 2022-01-15
         invoiceName:
           type: string
           description: invoice name
@@ -888,12 +965,12 @@ components:
           description: Due date
           format: date
           readOnly: true
-          example: '2022-01-31'
+          example: 2022-01-31
         totalAmount:
           type: number
           description: Total amount
           readOnly: true
-          example: 1116
+          example: 1116.0
         amountVatIncluded:
           type: number
           description: Amount included VAT
@@ -938,7 +1015,7 @@ components:
           type: string
           description: Organization number of invoice issuer
           readOnly: true
-          example: '5565027223'
+          example: "5565027223"
         administration:
           type: string
           description: Adminstration
@@ -953,7 +1030,7 @@ components:
           type: string
           description: Postal code
           readOnly: true
-          example: '85230'
+          example: "85230"
         city:
           type: string
           description: City
@@ -978,9 +1055,9 @@ components:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/Invoice'
+            $ref: "#/components/schemas/Invoice"
         _meta:
-          $ref: '#/components/schemas/MetaData'
+          $ref: "#/components/schemas/PagingAndSortingMetaData"
       description: Invoice response model
     InvoiceDetail:
       type: object
@@ -1011,7 +1088,7 @@ components:
           description: VAT rate
           format: double
           readOnly: true
-          example: 25
+          example: 25.0
         quantity:
           type: number
           description: Quantity
@@ -1032,12 +1109,12 @@ components:
           type: string
           description: Period from
           readOnly: true
-          example: '2022-01-01'
+          example: 2022-01-01
         periodTo:
           type: string
           description: Period to
           readOnly: true
-          example: '2022-01-31'
+          example: 2022-01-31
         description:
           type: string
           description: Description
@@ -1057,7 +1134,7 @@ components:
           type: string
           description: Organization number of invoice issuer
           readOnly: true
-          example: '5565027223'
+          example: "5565027223"
       description: Invoice detail model
     InstalledBaseParameters:
       type: object
@@ -1070,13 +1147,12 @@ components:
           example: 1
           default: 1
         limit:
-          maximum: 1000
           minimum: 1
           type: integer
-          description: Result size per page
+          description: Result size per page. Maximum allowed value is dynamically
+            configured
           format: int32
-          example: 100
-          default: 100
+          example: 15
         sortBy:
           type: array
           items:
@@ -1084,7 +1160,7 @@ components:
             description: The properties to sort on
             example: propertyName
         sortDirection:
-          $ref: '#/components/schemas/Direction'
+          $ref: "#/components/schemas/Direction"
         company:
           type: string
           description: Company
@@ -1092,7 +1168,7 @@ components:
         customerNumber:
           type: string
           description: Customer number
-          example: '104327'
+          example: "104327"
         type:
           type: string
           description: Type
@@ -1100,7 +1176,7 @@ components:
         facilityId:
           type: string
           description: Facility id
-          example: '735999109270751042'
+          example: "735999109270751042"
         careOf:
           type: string
           description: Care of address
@@ -1112,7 +1188,7 @@ components:
         postCode:
           type: string
           description: Postal code
-          example: '85230'
+          example: "85230"
         city:
           type: string
           description: City
@@ -1120,7 +1196,17 @@ components:
         propertyDesignation:
           type: string
           description: Property designation
-          example: 'Södermalm 1:27'
+          example: Södermalm 1:27
+        lastModifiedDateFrom:
+          type: string
+          description: Earliest date when item was last modified
+          format: date
+          example: 2022-12-31
+        lastModifiedDateTom:
+          type: string
+          description: Latest date when item was last modified
+          format: date
+          example: 2022-12-31
       description: Installed base request parameters model
     InstalledBaseItem:
       type: object
@@ -1134,7 +1220,7 @@ components:
           type: string
           description: Customer number
           readOnly: true
-          example: '104327'
+          example: "104327"
         type:
           type: string
           description: Type
@@ -1144,7 +1230,7 @@ components:
           type: string
           description: Facility id
           readOnly: true
-          example: '735999109270751042'
+          example: "735999109270751042"
         placementId:
           type: integer
           description: Placement id
@@ -1165,7 +1251,7 @@ components:
           type: string
           description: Postal code
           readOnly: true
-          example: '85230'
+          example: "85230"
         city:
           type: string
           description: City
@@ -1175,25 +1261,31 @@ components:
           type: string
           description: Property designation
           readOnly: true
-          example: 'Södermalm 1:27'
+          example: Södermalm 1:27
         dateFrom:
           type: string
           description: From date
           format: date
           readOnly: true
-          example: '2019-01-01'
+          example: 2019-01-01
         dateTo:
           type: string
           description: To date
           format: date
           readOnly: true
-          example: '2022-12-31'
+          example: 2022-12-31
+        dateLastModified:
+          type: string
+          description: Date when object was last modified (or null if never modified)
+          format: date
+          readOnly: true
+          example: 2022-12-31
         metaData:
           maxItems: 1000
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/InstalledBaseItemMetaData'
+            $ref: "#/components/schemas/InstalledBaseItemMetaData"
       description: Installed base item model
       readOnly: true
     InstalledBaseItemMetaData:
@@ -1228,10 +1320,155 @@ components:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/InstalledBaseItem'
+            $ref: "#/components/schemas/InstalledBaseItem"
         _meta:
-          $ref: '#/components/schemas/MetaData'
+          $ref: "#/components/schemas/PagingAndSortingMetaData"
       description: Installed base response model
+    InstallationParameters:
+      type: object
+      properties:
+        page:
+          minimum: 1
+          type: integer
+          description: Page number
+          format: int32
+          example: 1
+          default: 1
+        limit:
+          minimum: 1
+          type: integer
+          description: Result size per page. Maximum allowed value is dynamically
+            configured
+          format: int32
+          example: 15
+        sortBy:
+          type: array
+          items:
+            type: string
+            description: The properties to sort on
+            example: propertyName
+        sortDirection:
+          $ref: "#/components/schemas/Direction"
+        installed:
+          type: boolean
+          description: Is the installation installed
+          example: true
+        lastModifiedDateFrom:
+          type: string
+          description: Earliest date when item was last modified
+          format: date
+          example: 2022-12-31
+        lastModifiedDateTo:
+          type: string
+          description: Latest date when item was last modified
+          format: date
+          example: 2022-12-31
+        category:
+          $ref: "#/components/schemas/Category"
+        facilityId:
+          type: string
+          description: Facility id
+          example: "735999109151401011"
+      description: Installations request parameters model
+    InstallationDetails:
+      type: object
+      properties:
+        company:
+          type: string
+          description: Company
+          readOnly: true
+          example: Sundsvall Energi AB
+        type:
+          type: string
+          description: Type
+          readOnly: true
+          example: Fjärrvärme
+        facilityId:
+          type: string
+          description: Facility id
+          readOnly: true
+          example: "735999109270751042"
+        placementId:
+          type: integer
+          description: Placement id
+          format: int32
+          readOnly: true
+          example: 5263
+        careOf:
+          type: string
+          description: Care of address
+          readOnly: true
+          example: Agatha Malm
+        street:
+          type: string
+          description: Street
+          readOnly: true
+          example: Storgatan 9
+        postCode:
+          type: string
+          description: Post code
+          readOnly: true
+          example: "85230"
+        city:
+          type: string
+          description: City
+          readOnly: true
+          example: Sundsvall
+        propertyDesignation:
+          type: string
+          description: Property designation
+          readOnly: true
+          example: Södermalm 1:27
+        dateFrom:
+          type: string
+          description: From date
+          format: date
+          readOnly: true
+          example: 2019-01-01
+        dateTo:
+          type: string
+          description: To date
+          format: date
+          readOnly: true
+          example: 2022-12-31
+        dateLastModified:
+          type: string
+          description: Date when object was last modified (or null if never modified)
+          format: date
+          readOnly: true
+          example: 2022-12-31
+        metaData:
+          maxItems: 1000
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InstallationMetaDataEmbeddable"
+      description: Installation details model
+      readOnly: true
+    InstallationDetailsResponse:
+      type: object
+      properties:
+        installationDetails:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/InstallationDetails"
+        _meta:
+          $ref: "#/components/schemas/PagingAndSortingMetaData"
+    InstallationMetaDataEmbeddable:
+      type: object
+      properties:
+        company:
+          type: string
+        key:
+          type: string
+        value:
+          type: string
+        type:
+          type: string
+        displayName:
+          type: string
+      readOnly: true
     CustomerEngagementParameters:
       type: object
       properties:
@@ -1243,13 +1480,12 @@ components:
           example: 1
           default: 1
         limit:
-          maximum: 1000
           minimum: 1
           type: integer
-          description: Result size per page
+          description: Result size per page. Maximum allowed value is dynamically
+            configured
           format: int32
-          example: 100
-          default: 100
+          example: 15
         sortBy:
           type: array
           items:
@@ -1257,7 +1493,7 @@ components:
             description: The properties to sort on
             example: propertyName
         sortDirection:
-          $ref: '#/components/schemas/Direction'
+          $ref: "#/components/schemas/Direction"
         partyId:
           type: array
           items:
@@ -1267,11 +1503,11 @@ components:
         customerNumber:
           type: string
           description: Customer number
-          example: '10007'
+          example: "10007"
         organizationNumber:
           type: string
           description: Organization number for counterpart of engagement
-          example: '5565027223'
+          example: "5565027223"
         organizationName:
           type: string
           description: Organization name for counterpart of engagement
@@ -1286,22 +1522,33 @@ components:
           readOnly: true
           example: 81471222-5798-11e9-ae24-57fa13b361e1
         customerType:
-          $ref: '#/components/schemas/CustomerType'
+          $ref: "#/components/schemas/CustomerType"
         customerNumber:
           type: string
           description: Customer number
           readOnly: true
-          example: '10007'
+          example: "10007"
         organizationNumber:
           type: string
           description: Organization number for counterpart of engagement
           readOnly: true
-          example: '5565027223'
+          example: "5565027223"
         organizationName:
           type: string
           description: Organization name for counterpart of engagement
           readOnly: true
           example: Sundsvall Elnät
+        active:
+          type: boolean
+          description: "Indicates customer status, if not active then the moveInDate\
+            \ holds information on when the customer will be activated"
+          readOnly: true
+          example: true
+        moveInDate:
+          type: string
+          description: The prospective customer's move-in date
+          format: date
+          readOnly: true
       description: Customer engagement model
       readOnly: true
     CustomerEngagementResponse:
@@ -1311,10 +1558,167 @@ components:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/CustomerEngagement'
+            $ref: "#/components/schemas/CustomerEngagement"
         _meta:
-          $ref: '#/components/schemas/MetaData'
+          $ref: "#/components/schemas/PagingAndSortingMetaData"
       description: Customer engagement response model
+    CustomerDetailsParameters:
+      required:
+        - customerEngagementOrgId
+      type: object
+      properties:
+        page:
+          minimum: 1
+          type: integer
+          description: Page number
+          format: int32
+          example: 1
+          default: 1
+        limit:
+          minimum: 1
+          type: integer
+          description: Result size per page. Maximum allowed value is dynamically
+            configured
+          format: int32
+          example: 15
+        sortBy:
+          type: array
+          items:
+            type: string
+            description: The properties to sort on
+            example: propertyName
+        sortDirection:
+          $ref: "#/components/schemas/Direction"
+        partyId:
+          type: array
+          items:
+            type: string
+            description: PartyId (e.g. a personId or an organizationId)
+            example: 81471222-5798-11e9-ae24-57fa13b361e1
+        customerEngagementOrgId:
+          type: string
+          description: Organization id for customer engagements
+          example: "5565027225"
+        fromDateTime:
+          type: string
+          description: Date and time for when to search for changes from. Format is
+            yyyy-MM-dd'T'HH:mm:ss.SSSXXX. If omitted changes within the last year
+            will be returned.
+          format: date-time
+          example: 2000-10-31T01:30:00-05:00
+      description: Customer details request parameters model
+    CustomerDetails:
+      type: object
+      properties:
+        customerEngagementOrgId:
+          type: string
+          description: Company with which the customer has an engagement (organization
+            number)
+          readOnly: true
+          example: "5591962591"
+        customerEngagementOrgName:
+          type: string
+          description: Name of the company the customer has an engagement with
+          readOnly: true
+          example: Sundsvall Elnät
+        partyId:
+          type: string
+          description: PartyId (e.g. a personId or an organizationId)
+          readOnly: true
+          example: 81471222-5798-11e9-ae24-57fa13b361e1
+        customerNumber:
+          type: string
+          description: Customer number
+          readOnly: true
+          example: "39195"
+        customerName:
+          type: string
+          description: Customer name
+          readOnly: true
+          example: Sven Svensson
+        street:
+          type: string
+          description: Street
+          readOnly: true
+          example: Storgatan 44
+        postalCode:
+          type: string
+          description: Postal code
+          readOnly: true
+          example: "85230"
+        city:
+          type: string
+          description: City
+          readOnly: true
+          example: Sundsvall
+        careOf:
+          type: string
+          description: Care of address
+          readOnly: true
+          example: Agatha Malm
+        phoneNumbers:
+          type: array
+          readOnly: true
+          items:
+            type: string
+            description: List of phoneNumbers
+            readOnly: true
+            example: 076-1234567
+        emails:
+          type: array
+          readOnly: true
+          items:
+            type: string
+            description: List of emailAddresses
+            readOnly: true
+            example: test@test.se
+        customerCategoryID:
+          type: integer
+          description: Customer category ID
+          format: int32
+          readOnly: true
+          example: 1
+        customerCategoryDescription:
+          type: string
+          description: Customer category description
+          readOnly: true
+          example: Privat
+        customerChangedFlg:
+          type: boolean
+          description: Indicates if customer details have changed since the search
+            date
+          readOnly: true
+          example: false
+        installedChangedFlg:
+          type: boolean
+          description: Indicates if placement and/or equipment details have changed
+            since the search date
+          readOnly: true
+          example: true
+        active:
+          type: boolean
+          description: "Indicates customer status, if not active then the moveInDate\
+            \ holds information on when the customer will be activated"
+          readOnly: true
+          example: true
+        moveInDate:
+          type: string
+          description: The prospective customer's move-in date
+          format: date
+          readOnly: true
+      description: Customer details model
+      readOnly: true
+    CustomerDetailsResponse:
+      type: object
+      properties:
+        customerDetails:
+          type: array
+          readOnly: true
+          items:
+            $ref: "#/components/schemas/CustomerDetails"
+        _meta:
+          $ref: "#/components/schemas/PagingAndSortingMetaData"
+      description: Customer details response model
     AgreementParameters:
       type: object
       properties:
@@ -1326,13 +1730,12 @@ components:
           example: 1
           default: 1
         limit:
-          maximum: 1000
           minimum: 1
           type: integer
-          description: Result size per page
+          description: Result size per page. Maximum allowed value is dynamically
+            configured
           format: int32
-          example: 100
-          default: 100
+          example: 15
         sortBy:
           type: array
           items:
@@ -1340,7 +1743,7 @@ components:
             description: The properties to sort on
             example: propertyName
         sortDirection:
-          $ref: '#/components/schemas/Direction'
+          $ref: "#/components/schemas/Direction"
         partyId:
           type: string
           description: PartyId (e.g. a personId or an organizationId)
@@ -1348,23 +1751,23 @@ components:
         customerNumber:
           type: string
           description: Customer number
-          example: '10007'
+          example: "10007"
         facilityId:
           type: string
           description: Facility Id
-          example: '1223334'
+          example: "1223334"
         category:
           type: array
           items:
-            $ref: '#/components/schemas/Category'
+            $ref: "#/components/schemas/Category"
         billingId:
           type: string
           description: Billing Id
-          example: '222333'
+          example: "222333"
         agreementId:
           type: string
           description: Agreement Id
-          example: '333444'
+          example: "333444"
         description:
           type: string
           description: Description
@@ -1389,6 +1792,12 @@ components:
           type: string
           description: To-date in validity of agreement
           format: date
+        active:
+          type: boolean
+          description: Shows if agreement is active ('fromDate' <= today and 'toDate'
+            => today). Null shows both active and inactive
+          nullable: true
+          example: true
       description: Agreement request parameters model
     Agreement:
       type: object
@@ -1402,24 +1811,24 @@ components:
           type: string
           description: Customer number
           readOnly: true
-          example: '10007'
+          example: "10007"
         facilityId:
           type: string
           description: Facility Id
           readOnly: true
-          example: '1223334'
+          example: "1223334"
         category:
-          $ref: '#/components/schemas/Category'
+          $ref: "#/components/schemas/Category"
         billingId:
           type: string
           description: Billing Id
           readOnly: true
-          example: '222333'
+          example: "222333"
         agreementId:
           type: string
           description: Agreement Id
           readOnly: true
-          example: '333444'
+          example: "333444"
         description:
           type: string
           description: Description
@@ -1450,6 +1859,12 @@ components:
           description: To-date in validity of agreement
           format: date
           readOnly: true
+        active:
+          type: boolean
+          description: Shows if agreement is active ('fromDate' <= today and 'toDate'
+            => today)
+          readOnly: true
+          example: true
       description: Agreement model
       readOnly: true
     AgreementResponse:
@@ -1459,8 +1874,8 @@ components:
           type: array
           readOnly: true
           items:
-            $ref: '#/components/schemas/Agreement'
+            $ref: "#/components/schemas/Agreement"
         _meta:
-          $ref: '#/components/schemas/MetaData'
+          $ref: "#/components/schemas/PagingAndSortingMetaData"
       description: Agreement response model
   securitySchemes: {}
