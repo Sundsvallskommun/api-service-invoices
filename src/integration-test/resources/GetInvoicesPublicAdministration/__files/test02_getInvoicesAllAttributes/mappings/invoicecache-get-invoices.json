@@ -1,47 +1,48 @@
 {
-	"name": "invoicecache-get-invoices",
-	"request": {
-		"method": "GET",
-		"urlPath": "/api-invoicecache/invoices",
-		"headers": {
-			"Authorization": {
-				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
-			}
-		},
-		"queryParameters": {
-			"limit": {
-				"equalTo": "100"
-			},
-			"page": {
-				"equalTo": "1"
-			},
-			"partyIds": {
-				"equalTo": "EC114D35-A46C-48EF-599E-7E32B5B5939C"
-			},
-			"invoiceNumbers": {
-				"equalTo": "766763197"			},
-			"invoiceDateFrom": {
-				"equalTo": "2022-01-01"
-			},
-			"invoiceDateTo": {
-				"equalTo": "2022-12-21"
-			},
-			"ocrNumber": {
-				"equalTo": "766763197"
-			},
-			"dueDateFrom": {
-				"equalTo": "2022-01-02"
-			},
-			"dueDateTo": {
-				"equalTo": "2022-12-22"
-			}
-		}
-	},
-	"response": {
-		"headers": {
-			"Content-Type": "application/json"
-		},
-		"status": 200,
-		"bodyFileName": "test02_getInvoicesAllAttributes/responses/invoicecache-get-invoices-response.json"
-	}
+  "name": "invoicecache-get-invoices",
+  "request": {
+    "method": "GET",
+    "urlPath": "/api-invoicecache/2281/invoices",
+    "headers": {
+      "Authorization": {
+        "equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+      }
+    },
+    "queryParameters": {
+      "limit": {
+        "equalTo": "100"
+      },
+      "page": {
+        "equalTo": "1"
+      },
+      "partyIds": {
+        "equalTo": "EC114D35-A46C-48EF-599E-7E32B5B5939C"
+      },
+      "invoiceNumbers": {
+        "equalTo": "766763197"
+      },
+      "invoiceDateFrom": {
+        "equalTo": "2022-01-01"
+      },
+      "invoiceDateTo": {
+        "equalTo": "2022-12-21"
+      },
+      "ocrNumber": {
+        "equalTo": "766763197"
+      },
+      "dueDateFrom": {
+        "equalTo": "2022-01-02"
+      },
+      "dueDateTo": {
+        "equalTo": "2022-12-22"
+      }
+    }
+  },
+  "response": {
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "status": 200,
+    "bodyFileName": "test02_getInvoicesAllAttributes/responses/invoicecache-get-invoices-response.json"
+  }
 }

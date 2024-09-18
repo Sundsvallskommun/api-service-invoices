@@ -165,14 +165,14 @@ class InvoicesServiceTest {
 		final var invoiceNumber = "123";
 		final var invoiceCacheParameters = new InvoiceFilterRequest().invoiceNumbers(List.of(invoiceNumber)).ocrNumber(ocrNumber).partyIds(partyIds);
 
-		when(invoiceCacheClientMock.getInvoices(invoiceCacheParameters)).thenReturn(createInvoiceCacheInvoicesResponse());
+		when(invoiceCacheClientMock.getInvoices(municipalityId,invoiceCacheParameters)).thenReturn(createInvoiceCacheInvoicesResponse());
 
 		final var invoicesResponse = invoicesService.getInvoices(municipalityId, PUBLIC_ADMINISTRATION, InvoicesParameters.create().withOcrNumber(ocrNumber).withInvoiceNumber(invoiceNumber).withPartyId(partyIds));
 
 		assertThat(invoicesResponse.getInvoices()).hasSize(2);
 		assertThat(invoicesResponse.getInvoices().getFirst().getInvoiceType()).isEqualTo(CREDIT_INVOICE);
 		assertThat(invoicesResponse.getInvoices().getLast().getInvoiceType()).isEqualTo(INVOICE);
-		verify(invoiceCacheClientMock).getInvoices(invoiceCacheParameters);
+		verify(invoiceCacheClientMock).getInvoices(municipalityId,invoiceCacheParameters);
 		verifyNoInteractions(dataWarehouseReaderClientMock);
 	}
 
@@ -185,12 +185,12 @@ class InvoicesServiceTest {
 		final var invoiceNumber = "123";
 		final var invoiceCacheParameters = new InvoiceFilterRequest().invoiceNumbers(List.of(invoiceNumber)).ocrNumber(ocrNumber).partyIds(partyIds);
 
-		when(invoiceCacheClientMock.getInvoices(invoiceCacheParameters)).thenReturn(createInvoiceCacheInvoicesResponse().invoices(emptyList()));
+		when(invoiceCacheClientMock.getInvoices(municipalityId,invoiceCacheParameters)).thenReturn(createInvoiceCacheInvoicesResponse().invoices(emptyList()));
 
 		final var invoicesResponse = invoicesService.getInvoices(municipalityId, PUBLIC_ADMINISTRATION, InvoicesParameters.create().withOcrNumber(ocrNumber).withInvoiceNumber(invoiceNumber).withPartyId(partyIds));
 
 		assertThat(invoicesResponse.getInvoices()).isEmpty();
-		verify(invoiceCacheClientMock).getInvoices(invoiceCacheParameters);
+		verify(invoiceCacheClientMock).getInvoices(municipalityId,invoiceCacheParameters);
 		verifyNoInteractions(dataWarehouseReaderClientMock);
 	}
 
@@ -221,15 +221,16 @@ class InvoicesServiceTest {
 		final var invoiceName = "invoiceName";
 		final var invoiceType = CREDIT_INVOICE;
 		final var content = "content".getBytes(StandardCharsets.UTF_8);
+		final var municipalityId = "municipalityId";
 
-		when(invoiceCacheClientMock.getInvoicePdf(organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType))).thenReturn(new InvoicePdf().name(invoiceName).content(Base64.getEncoder().encodeToString(content)));
+		when(invoiceCacheClientMock.getInvoicePdf(municipalityId,organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType))).thenReturn(new InvoicePdf().name(invoiceName).content(Base64.getEncoder().encodeToString(content)));
 
-		final var pdfInvoice = invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType);
+		final var pdfInvoice = invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType,municipalityId );
 
 		assertThat(pdfInvoice).isNotNull();
 		assertThat(pdfInvoice.getFileName()).isEqualTo(invoiceName);
 		assertThat(pdfInvoice.getFile()).isEqualTo(content);
-		verify(invoiceCacheClientMock).getInvoicePdf(organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType));
+		verify(invoiceCacheClientMock).getInvoicePdf(municipalityId,organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType));
 	}
 
 	private InvoiceResponse createDataWarehouseReaderInvoiceResponse() {

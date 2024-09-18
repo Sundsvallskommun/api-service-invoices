@@ -32,9 +32,9 @@ import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
 @Service
 public class InvoicesService {
 
-	private DataWarehouseReaderClient dataWarehouseReaderClient;
+	private final DataWarehouseReaderClient dataWarehouseReaderClient;
 
-	private InvoiceCacheClient invoiceCacheClient;
+	private final InvoiceCacheClient invoiceCacheClient;
 
 	public InvoicesService(final DataWarehouseReaderClient dataWarehouseReaderClient, final InvoiceCacheClient invoiceCacheClient) {
 		this.dataWarehouseReaderClient = dataWarehouseReaderClient;
@@ -44,7 +44,7 @@ public class InvoicesService {
 	public InvoicesResponse getInvoices(final String municipalityId, final InvoiceOrigin invoiceOrigin, final InvoicesParameters invoiceParameters) {
 		return switch (invoiceOrigin) {
 			case COMMERCIAL -> toInvoicesResponse(dataWarehouseReaderClient.getInvoices(municipalityId, toDataWarehouseReaderInvoiceParameters(getCustomerNumbers(municipalityId, invoiceParameters.getPartyId()), invoiceParameters)));
-			case PUBLIC_ADMINISTRATION -> toInvoicesResponse(invoiceCacheClient.getInvoices(InvoiceMapper.toInvoiceCacheParameters(invoiceParameters)));
+			case PUBLIC_ADMINISTRATION -> toInvoicesResponse(invoiceCacheClient.getInvoices(municipalityId,InvoiceMapper.toInvoiceCacheParameters(invoiceParameters)));
 		};
 	}
 
@@ -61,7 +61,7 @@ public class InvoicesService {
 		return toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(municipalityId, organizationNumber, parseLong(invoiceNumber)));
 	}
 
-	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType) {
-		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
+	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {
+		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(municipalityId,organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
 	}
 }
