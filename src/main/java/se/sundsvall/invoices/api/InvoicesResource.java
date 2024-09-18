@@ -87,6 +87,6 @@ public class InvoicesResource {
 		@Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank @PathVariable("invoiceNumber") final String invoiceNumber,
 		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter", required = false) @RequestParam(value = "invoiceType", required = false) final InvoiceType invoiceType) {
 
-		return ok(invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType));
+		return ok(invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType,municipalityId));
 	}
 }
