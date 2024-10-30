@@ -1,19 +1,13 @@
 {
-  "name": "invoicecache-get-invoices",
-  "request": {
-    "method": "GET",
-    "url": "/api-invoicecache/2281/invoices?partyIds=88c8c596-e545-4c42-aa2f-2f61a150613b&partyIds=5256b101-4df3-4990-8ac8-6e49478bde4f&limit=100&page=1",
-    "headers": {
-      "Authorization": {
-        "equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
-      }
-    }
-  },
-  "response": {
-    "headers": {
-      "Content-Type": "application/json"
-    },
-    "status": 200,
-    "bodyFileName": "test03_getInvoicesForMultiplePartyIds/responses/invoicecache-get-invoices-response.json"
-  }
+	"request": {
+		"headers": {"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"}},
+		"method": "GET",
+		"url": "/api-invoicecache/2281/invoices?partyIds=88c8c596-e545-4c42-aa2f-2f61a150613b&partyIds=5256b101-4df3-4990-8ac8-6e49478bde4f&limit=100&page=1"
+	},
+	"response": {
+		"headers": {"Content-Type": "application/json"},
+		"bodyFileName": "test03_getInvoicesForMultiplePartyIds/responses/invoicecache-get-invoices-response.json",
+		"status": 200
+	},
+	"name": "invoicecache-get-invoices"
 }

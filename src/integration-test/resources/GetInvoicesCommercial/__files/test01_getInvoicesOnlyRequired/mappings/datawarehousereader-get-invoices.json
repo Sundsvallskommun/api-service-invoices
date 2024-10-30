@@ -1,36 +1,20 @@
 {
-	"name": "datawarehousereader-get-invoices",
 	"request": {
+		"headers": {"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"}},
 		"method": "GET",
-		"urlPath": "/api-datawarehousereader/2281/invoices",
-		"headers": {
-			"Authorization": {
-				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
-			}
-		},
 		"queryParameters": {
-			"limit": {
-				"equalTo": "100"
-			},
-			"page": {
-				"equalTo": "1"
-			},
-			"customerNumber": {
-				"equalTo": "600606"
-			},
-			"sortBy": {
-				"equalTo": "invoiceDate"
-			},
-			"sortDirection": {
-				"equalTo": "DESC"
-			}
-		}
+			"sortDirection": {"equalTo": "DESC"},
+			"limit": {"equalTo": "100"},
+			"sortBy": {"equalTo": "invoiceDate"},
+			"page": {"equalTo": "1"},
+			"customerNumber": {"equalTo": "600606"}
+		},
+		"urlPath": "/api-datawarehousereader/2281/invoices"
 	},
 	"response": {
-		"headers": {
-			"Content-Type": "application/json"
-		},
-		"status": 200,
-		"bodyFileName": "test01_getInvoicesOnlyRequired/responses/datawarehousereader-get-invoices-response.json"
-	}
+		"headers": {"Content-Type": "application/json"},
+		"bodyFileName": "test01_getInvoicesOnlyRequired/responses/datawarehousereader-get-invoices-response.json",
+		"status": 200
+	},
+	"name": "datawarehousereader-get-invoices"
 }

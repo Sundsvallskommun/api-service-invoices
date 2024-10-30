@@ -171,7 +171,7 @@ class InvoicesResourceTest {
 	void getPdfInvoice(final InvoiceOrigin origin) {
 
 		// Arrange
-		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE,MUNICIPALITY_ID)).thenReturn(PdfInvoice.create());
+		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID)).thenReturn(PdfInvoice.create());
 
 		// Act
 		final var response = webTestClient.get()
@@ -186,7 +186,7 @@ class InvoicesResourceTest {
 
 		// Assert
 		assertThat(response).isNotNull().isEqualTo(PdfInvoice.create());
-		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE,MUNICIPALITY_ID);
+		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID);
 	}
 
 	@ParameterizedTest
@@ -194,7 +194,7 @@ class InvoicesResourceTest {
 	void getPdfInvoiceInvoiceTypeMissing(final InvoiceOrigin origin) {
 
 		// Arrange
-		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, null,MUNICIPALITY_ID)).thenReturn(PdfInvoice.create());
+		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, null, MUNICIPALITY_ID)).thenReturn(PdfInvoice.create());
 
 		// Act
 		final var response = webTestClient.get()
@@ -209,7 +209,7 @@ class InvoicesResourceTest {
 
 		// Assert
 		assertThat(response).isNotNull().isEqualTo(PdfInvoice.create());
-		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, null,MUNICIPALITY_ID);
+		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, null, MUNICIPALITY_ID);
 	}
 
 	private MultiValueMap<String, String> createParameterMap(final Integer page, final Integer limit, final List<String> facilityIds, final String invoiceNumber, final LocalDate invoiceDateFrom,

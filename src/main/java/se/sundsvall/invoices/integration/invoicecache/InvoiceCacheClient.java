@@ -23,21 +23,25 @@ public interface InvoiceCacheClient {
 	/**
 	 * Get invoices.
 	 *
-	 * @param invoiceParameters with attributes for searching/filtering invoices.
-	 * @return an invoicesResponse
+	 * @param  invoiceParameters with attributes for searching/filtering invoices.
+	 * @return                   an invoicesResponse
 	 */
-	@GetMapping(path = "/{municipalityId}/invoices", produces = {APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE})
+	@GetMapping(path = "/{municipalityId}/invoices", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
 	InvoicesResponse getInvoices(@PathVariable(name = "municipalityId") String municipalityId, @SpringQueryMap InvoiceFilterRequest invoiceParameters);
 
 	/**
 	 * Get invoice pdf.
 	 *
-	 * @param issuerLegalId legal id for issuer of the invoice.
-	 * @param invoiceNumber invoice number för the invoice.
-	 * @param invoiceType optional parameter for filtering invoices by invoiceType.
-	 * @return an invoicePdf
+	 * @param  issuerLegalId legal id for issuer of the invoice.
+	 * @param  invoiceNumber invoice number för the invoice.
+	 * @param  invoiceType   optional parameter for filtering invoices by invoiceType.
+	 * @return               an invoicePdf
 	 */
-	@GetMapping(path = "/{municipalityId}/invoices/{issuerlegalid}/{invoicenumber}/pdf", produces = {APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE})
+	@GetMapping(path = "/{municipalityId}/invoices/{issuerlegalid}/{invoicenumber}/pdf", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
 	InvoicePdf getInvoicePdf(
 		@PathVariable(name = "municipalityId") String municipalityId,
 		@PathVariable(name = "issuerlegalid") String issuerLegalId,

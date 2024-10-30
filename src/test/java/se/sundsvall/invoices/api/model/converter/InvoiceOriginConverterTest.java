@@ -29,7 +29,9 @@ class InvoiceOriginConverterTest {
 	}
 
 	@ParameterizedTest
-	@ValueSource(strings = { "", " ", "invalid-category" })
+	@ValueSource(strings = {
+		"", " ", "invalid-category"
+	})
 	@NullSource
 	void testInvalidValues(String parameter) {
 		final var throwable = assertThrows(ThrowableProblem.class, () -> CONVERTER.convert(parameter));

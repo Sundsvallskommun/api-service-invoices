@@ -1,5 +1,5 @@
 {
+	"detail": "invoicecache error: {status=404 Not Found, title=Not Found}",
 	"title": "Bad Gateway",
-	"status": 502,
-	"detail": "invoicecache error: {status=404 Not Found, title=Not Found}"
+	"status": 502
 }

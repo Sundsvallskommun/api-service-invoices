@@ -1,56 +1,54 @@
-{
-	"details": [
-		{
-			"amount": 128.78,
-			"amountVatExcluded": 103.02,
-			"vat": 25.76,
-			"vatRate": 25.0,
-			"quantity": 3679.2,
-			"unit": "kWh",
-			"unitPrice": 0.028,
-			"productCode": "1404",
-			"productName": "Elöverföring",
-			"fromDate": "2019-09-01",
-			"toDate": "2019-09-30"
-		},
-		{
-			"amount": 1595.85,
-			"amountVatExcluded": 1276.68,
-			"vat": 319.17,
-			"vatRate": 25.0,
-			"quantity": 3679.2,
-			"unit": "kWh",
-			"unitPrice": 0.347,
-			"productCode": "1413",
-			"productName": "Energiskatt",
-			"fromDate": "2019-09-01",
-			"toDate": "2019-09-30"
-		},
-		{
-			"amount": 1161.37,
-			"amountVatExcluded": 929.1,
-			"vat": 232.27,
-			"vatRate": 25.0,
-			"quantity": 30.0,
-			"unit": "Dagar",
-			"unitPrice": 30.9699,
-			"productCode": "1407",
-			"productName": "Fast Elnätsavgift",
-			"fromDate": "2019-09-01",
-			"toDate": "2019-09-30"
-		},
-		{
-			"amount": 674.63,
-			"amountVatExcluded": 539.7,
-			"vat": 134.93,
-			"vatRate": 25.0,
-			"quantity": 30.0,
-			"unit": "kWh",
-			"unitPrice": 0.789,
-			"productCode": "1405",
-			"productName": "Effekt",
-			"fromDate": "2019-09-01",
-			"toDate": "2019-09-30"
-		}
-	]
-}
+{"details": [
+	{
+		"unitPrice": 0.028,
+		"fromDate": "2019-09-01",
+		"amount": 128.78,
+		"unit": "kWh",
+		"quantity": 3679.2,
+		"productCode": "1404",
+		"vatRate": 25,
+		"toDate": "2019-09-30",
+		"vat": 25.76,
+		"productName": "Elöverföring",
+		"amountVatExcluded": 103.02
+	},
+	{
+		"unitPrice": 0.347,
+		"fromDate": "2019-09-01",
+		"amount": 1595.85,
+		"unit": "kWh",
+		"quantity": 3679.2,
+		"productCode": "1413",
+		"vatRate": 25,
+		"toDate": "2019-09-30",
+		"vat": 319.17,
+		"productName": "Energiskatt",
+		"amountVatExcluded": 1276.68
+	},
+	{
+		"unitPrice": 30.9699,
+		"fromDate": "2019-09-01",
+		"amount": 1161.37,
+		"unit": "Dagar",
+		"quantity": 30,
+		"productCode": "1407",
+		"vatRate": 25,
+		"toDate": "2019-09-30",
+		"vat": 232.27,
+		"productName": "Fast Elnätsavgift",
+		"amountVatExcluded": 929.1
+	},
+	{
+		"unitPrice": 0.789,
+		"fromDate": "2019-09-01",
+		"amount": 674.63,
+		"unit": "kWh",
+		"quantity": 30,
+		"productCode": "1405",
+		"vatRate": 25,
+		"toDate": "2019-09-30",
+		"vat": 134.93,
+		"productName": "Effekt",
+		"amountVatExcluded": 539.7
+	}
+]}
