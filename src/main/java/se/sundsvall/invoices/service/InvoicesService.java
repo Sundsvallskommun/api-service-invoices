@@ -44,7 +44,7 @@ public class InvoicesService {
 	public InvoicesResponse getInvoices(final String municipalityId, final InvoiceOrigin invoiceOrigin, final InvoicesParameters invoiceParameters) {
 		return switch (invoiceOrigin) {
 			case COMMERCIAL -> toInvoicesResponse(dataWarehouseReaderClient.getInvoices(municipalityId, toDataWarehouseReaderInvoiceParameters(getCustomerNumbers(municipalityId, invoiceParameters.getPartyId()), invoiceParameters)));
-			case PUBLIC_ADMINISTRATION -> toInvoicesResponse(invoiceCacheClient.getInvoices(municipalityId,InvoiceMapper.toInvoiceCacheParameters(invoiceParameters)));
+			case PUBLIC_ADMINISTRATION -> toInvoicesResponse(invoiceCacheClient.getInvoices(municipalityId, InvoiceMapper.toInvoiceCacheParameters(invoiceParameters)));
 		};
 	}
 
@@ -62,6 +62,6 @@ public class InvoicesService {
 	}
 
 	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {
-		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(municipalityId,organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
+		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
 	}
 }

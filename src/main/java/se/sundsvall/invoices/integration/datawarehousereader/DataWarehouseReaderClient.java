@@ -23,32 +23,38 @@ public interface DataWarehouseReaderClient {
 	/**
 	 * Get customer engagements matching sent in partyIds
 	 *
-	 * @param municipalityId a municipalityId.
-	 * @param partyIds a List of partyIds.
-	 * @return a customerEngagementResponse
+	 * @param  municipalityId a municipalityId.
+	 * @param  partyIds       a List of partyIds.
+	 * @return                a customerEngagementResponse
 	 */
-	@GetMapping(path = "/{municipalityId}/customer/engagements", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
+	@GetMapping(path = "/{municipalityId}/customer/engagements", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
 	CustomerEngagementResponse getCustomerEngagements(@PathVariable("municipalityId") String municipalityId, @RequestParam(value = "partyId") List<String> partyIds);
 
 	/**
 	 * Get invoices found by searchParams.
 	 *
-	 * @param municipalityId a municipalityId.
-	 * @param invoiceParameters with attributes for searching invoices.
-	 * @return an invoiceResponse
+	 * @param  municipalityId    a municipalityId.
+	 * @param  invoiceParameters with attributes for searching invoices.
+	 * @return                   an invoiceResponse
 	 */
-	@GetMapping(path = "/{municipalityId}/invoices", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
+	@GetMapping(path = "/{municipalityId}/invoices", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
 	InvoiceResponse getInvoices(@PathVariable("municipalityId") String municipalityId, @SpringQueryMap InvoiceParameters invoiceParameters);
 
 	/**
 	 * Get invoice-details of an invoice issued by a specific organization.
 	 *
-	 * @param municipalityId     a municipalityId.
-	 * @param organizationNumber organizationNumber of invoice issuer
-	 * @param invoiceNumber      id of invoice.
-	 * @return a list of invoices
+	 * @param  municipalityId     a municipalityId.
+	 * @param  organizationNumber organizationNumber of invoice issuer
+	 * @param  invoiceNumber      id of invoice.
+	 * @return                    a list of invoices
 	 */
-	@GetMapping(path = "/{municipalityId}/invoices/{organizationNumber}/{invoiceNumber}/details/", produces = { APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE })
+	@GetMapping(path = "/{municipalityId}/invoices/{organizationNumber}/{invoiceNumber}/details/", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
 	List<InvoiceDetail> getInvoiceDetails(
 		@PathVariable("municipalityId") String municipalityId,
 		@PathVariable(name = "organizationNumber") String organizationNumber,

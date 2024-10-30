@@ -273,7 +273,7 @@ class InvoicesResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(DETAILS_PATH)
-				.build("invalid-municipality-id", ORGANIZATION_NUMBER, INVOICE_NUMBER))
+			.build("invalid-municipality-id", ORGANIZATION_NUMBER, INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -309,7 +309,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getDetail()).isEqualTo(
-			"Failed to convert value of type 'java.lang.String' to required type 'se.sundsvall.invoices.api.model.InvoiceOrigin'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.PathVariable se.sundsvall.invoices.api.model.InvoiceOrigin] for value [not-valid]");
+			"Method parameter 'invoiceOrigin': Failed to convert value of type 'java.lang.String' to required type 'se.sundsvall.invoices.api.model.InvoiceOrigin'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.PathVariable se.sundsvall.invoices.api.model.InvoiceOrigin] for value [not-valid]");
 
 		verifyNoInteractions(invoicesServiceMock);
 	}

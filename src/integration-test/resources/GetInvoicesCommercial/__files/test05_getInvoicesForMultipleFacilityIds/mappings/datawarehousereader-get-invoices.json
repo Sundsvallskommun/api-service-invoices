@@ -1,53 +1,27 @@
 {
-	"name": "datawarehousereader-get-invoices",
 	"request": {
+		"headers": {"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"}},
 		"method": "GET",
-		"urlPath": "/api-datawarehousereader/2281/invoices",
-		"headers": {
-			"Authorization": {
-				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
-			}
-		},
 		"queryParameters": {
-			"limit": {
-				"equalTo": "100"
-			},
-			"page": {
-				"equalTo": "1"
-			},
-			"customerNumber": {
-				"or": [
-					{
-						"equalTo": "39315"
-					},
-					{
-						"equalTo": "40117"
-					}
-				]
-			},
-			"facilityId": {
-				"or": [
-					{
-						"equalTo": "735999109242413886"
-					},
-					{
-						"equalTo": "735999109215204886"
-					}
-				]
-			},
-			"sortBy": {
-				"equalTo": "invoiceDate"
-			},
-			"sortDirection": {
-				"equalTo": "DESC"
-			}
-		}
+			"sortDirection": {"equalTo": "DESC"},
+			"facilityId": {"or": [
+				{"equalTo": "735999109242413886"},
+				{"equalTo": "735999109215204886"}
+			]},
+			"limit": {"equalTo": "100"},
+			"sortBy": {"equalTo": "invoiceDate"},
+			"page": {"equalTo": "1"},
+			"customerNumber": {"or": [
+				{"equalTo": "39315"},
+				{"equalTo": "40117"}
+			]}
+		},
+		"urlPath": "/api-datawarehousereader/2281/invoices"
 	},
 	"response": {
-		"headers": {
-			"Content-Type": "application/json"
-		},
-		"status": 200,
-		"bodyFileName": "test05_getInvoicesForMultipleFacilityIds/responses/datawarehousereader-get-invoices-response.json"
-	}
+		"headers": {"Content-Type": "application/json"},
+		"bodyFileName": "test05_getInvoicesForMultipleFacilityIds/responses/datawarehousereader-get-invoices-response.json",
+		"status": 200
+	},
+	"name": "datawarehousereader-get-invoices"
 }

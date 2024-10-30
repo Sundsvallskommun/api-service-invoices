@@ -1,57 +1,57 @@
 {
 	"invoices": [
 		{
-			"dueDate": "2022-09-30",
-			"totalAmount": 4995.0,
-			"amountVatIncluded": 4995.0,
-			"amountVatExcluded": 3996.0,
-			"vatEligibleAmount": 0.0,
-			"rounding": 0.0,
-			"vat": 999.0,
-			"currency": "SEK",
-			"invoiceDate": "2022-09-01",
-			"invoiceDescription": "Avdelning 44",
-			"invoiceNumber": "53489546",
-			"invoiceStatus": "PAID",
 			"ocrNumber": "8907136421",
-			"invoiceType": "INVOICE",
+			"invoiceDescription": "Avdelning 44",
+			"invoiceOrigin": "PUBLIC_ADMINISTRATION",
+			"dueDate": "2022-09-30",
+			"amountVatIncluded": 4995,
+			"vat": 999,
+			"vatEligibleAmount": 0,
+			"rounding": 0,
 			"invoiceAddress": {
-				"street": "Storgatan 10",
-				"postcode": "85740",
+				"careOf": "John Doe",
 				"city": "Sundsvall",
-				"careOf": "John Doe"
+				"street": "Storgatan 10",
+				"postcode": "85740"
 			},
-			"invoiceOrigin": "PUBLIC_ADMINISTRATION"
+			"invoiceDate": "2022-09-01",
+			"totalAmount": 4995,
+			"invoiceNumber": "53489546",
+			"invoiceType": "INVOICE",
+			"currency": "SEK",
+			"invoiceStatus": "PAID",
+			"amountVatExcluded": 3996
 		},
 		{
-			"dueDate": "2022-10-30",
-			"totalAmount": 4995.0,
-			"amountVatIncluded": 4995.0,
-			"amountVatExcluded": 3996.0,
-			"vatEligibleAmount": 0.0,
-			"rounding": 0.0,
-			"vat": 999.0,
-			"currency": "SEK",
-			"invoiceDate": "2022-10-01",
-			"invoiceDescription": "Avdelning 44",
-			"invoiceNumber": "53489547",
-			"invoiceStatus": "PAID",
 			"ocrNumber": "8907136422",
-			"invoiceType": "INVOICE",
+			"invoiceDescription": "Avdelning 44",
+			"invoiceOrigin": "PUBLIC_ADMINISTRATION",
+			"dueDate": "2022-10-30",
+			"amountVatIncluded": 4995,
+			"vat": 999,
+			"vatEligibleAmount": 0,
+			"rounding": 0,
 			"invoiceAddress": {
-				"street": "Storgatan 10",
-				"postcode": "85740",
+				"careOf": "John Doe",
 				"city": "Sundsvall",
-				"careOf": "John Doe"
+				"street": "Storgatan 10",
+				"postcode": "85740"
 			},
-			"invoiceOrigin": "PUBLIC_ADMINISTRATION"
+			"invoiceDate": "2022-10-01",
+			"totalAmount": 4995,
+			"invoiceNumber": "53489547",
+			"invoiceType": "INVOICE",
+			"currency": "SEK",
+			"invoiceStatus": "PAID",
+			"amountVatExcluded": 3996
 		}
 	],
 	"_meta": {
-		"page": 1,
+		"totalRecords": 2,
 		"limit": 100,
 		"count": 2,
-		"totalRecords": 2,
-		"totalPages": 1
+		"totalPages": 1,
+		"page": 1
 	}
 }
