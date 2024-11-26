@@ -14,8 +14,6 @@
 	<name>api-service-invoices</name>
 	<description>Service for listing invoice-data</description>
 	<properties>
-		<app.jvm.xmx.mb>512</app.jvm.xmx.mb>
-		<!-- Service properties -->
 		<generated-sources-path>${project.build.directory}/generated-sources</generated-sources-path>
 		<generated-sources-java-path>src/main/java</generated-sources-java-path>
 	</properties>
