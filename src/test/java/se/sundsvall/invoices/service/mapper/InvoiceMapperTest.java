@@ -3,6 +3,12 @@ package se.sundsvall.invoices.service.mapper;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
+import generated.se.sundsvall.datawarehousereader.Direction;
+import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
+import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
+import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
+import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
+import generated.se.sundsvall.invoicecache.InvoicePdf;
 import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
@@ -11,18 +17,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Stream;
-
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-
-import generated.se.sundsvall.datawarehousereader.Direction;
-import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
-import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
-import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
-import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
-import generated.se.sundsvall.invoicecache.InvoicePdf;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;

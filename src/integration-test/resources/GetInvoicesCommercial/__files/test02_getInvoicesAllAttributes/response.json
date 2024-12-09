@@ -1,32 +1,34 @@
 {
-	"invoices": [{
-		"ocrNumber": "766763197",
-		"invoiceName": "766763197.pdf",
-		"facilityId": "735999226000",
-		"invoiceDescription": "Fjärrkyla",
-		"invoiceOrigin": "COMMERCIAL",
-		"organizationNumber": "5564786647",
-		"dueDate": "2019-10-30",
-		"amountVatIncluded": 343.7,
-		"vat": 274.96,
-		"vatEligibleAmount": 274.96,
-		"rounding": 0.3,
-		"invoiceAddress": {
-			"careOf": "Anka Kalle",
-			"city": "Vetlanda",
-			"street": "Flugeby Hammersdal",
-			"postcode": "57491"
-		},
-		"invoiceDate": "2019-10-08",
-		"totalAmount": 344,
-		"reversedVat": false,
-		"pdfAvailable": false,
-		"invoiceNumber": "766763197",
-		"invoiceType": "INVOICE",
-		"currency": "sek",
-		"invoiceStatus": "SENT",
-		"amountVatExcluded": 274.96
-	}],
+	"invoices": [
+		{
+			"ocrNumber": "766763197",
+			"invoiceName": "766763197.pdf",
+			"facilityId": "735999226000",
+			"invoiceDescription": "Fjärrkyla",
+			"invoiceOrigin": "COMMERCIAL",
+			"organizationNumber": "5564786647",
+			"dueDate": "2019-10-30",
+			"amountVatIncluded": 343.7,
+			"vat": 274.96,
+			"vatEligibleAmount": 274.96,
+			"rounding": 0.3,
+			"invoiceAddress": {
+				"careOf": "Anka Kalle",
+				"city": "Vetlanda",
+				"street": "Flugeby Hammersdal",
+				"postcode": "57491"
+			},
+			"invoiceDate": "2019-10-08",
+			"totalAmount": 344,
+			"reversedVat": false,
+			"pdfAvailable": false,
+			"invoiceNumber": "766763197",
+			"invoiceType": "INVOICE",
+			"currency": "sek",
+			"invoiceStatus": "SENT",
+			"amountVatExcluded": 274.96
+		}
+	],
 	"_meta": {
 		"totalRecords": 1,
 		"limit": 100,

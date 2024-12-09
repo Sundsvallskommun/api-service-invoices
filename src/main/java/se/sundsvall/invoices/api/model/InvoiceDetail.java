@@ -1,9 +1,8 @@
 package se.sundsvall.invoices.api.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.Objects;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 
 @Schema(description = "Invoice-detail")
 public class InvoiceDetail {

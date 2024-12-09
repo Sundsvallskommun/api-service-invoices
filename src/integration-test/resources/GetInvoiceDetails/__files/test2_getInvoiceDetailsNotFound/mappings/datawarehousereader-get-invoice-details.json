@@ -1,11 +1,17 @@
 {
 	"request": {
-		"headers": {"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"}},
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
 		"method": "GET",
 		"urlPath": "/api-datawarehousereader/2281/invoices/5565257545/666/details/"
 	},
 	"response": {
-		"headers": {"Content-Type": "application/problem+json"},
+		"headers": {
+			"Content-Type": "application/problem+json"
+		},
 		"jsonBody": {
 			"detail": "No invoicedetails found for invoicenumber '666'",
 			"title": "Not Found",
