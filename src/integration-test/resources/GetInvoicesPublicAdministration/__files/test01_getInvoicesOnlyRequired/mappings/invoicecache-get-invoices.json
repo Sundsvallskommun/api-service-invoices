@@ -1,16 +1,28 @@
 {
 	"request": {
-		"headers": {"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"}},
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
 		"method": "GET",
 		"queryParameters": {
-			"partyIds": {"equalTo": "AC653C32-B26C-47E8-8C2E-3B18C1B5879C"},
-			"limit": {"equalTo": "100"},
-			"page": {"equalTo": "1"}
+			"partyIds": {
+				"equalTo": "AC653C32-B26C-47E8-8C2E-3B18C1B5879C"
+			},
+			"limit": {
+				"equalTo": "100"
+			},
+			"page": {
+				"equalTo": "1"
+			}
 		},
 		"urlPath": "/api-invoicecache/2281/invoices"
 	},
 	"response": {
-		"headers": {"Content-Type": "application/json"},
+		"headers": {
+			"Content-Type": "application/json"
+		},
 		"bodyFileName": "test01_getInvoicesOnlyRequired/responses/invoicecache-get-invoices-response.json",
 		"status": 200
 	},

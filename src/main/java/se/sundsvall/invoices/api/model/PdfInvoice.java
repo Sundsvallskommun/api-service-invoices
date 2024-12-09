@@ -1,9 +1,8 @@
 package se.sundsvall.invoices.api.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.util.Arrays;
 import java.util.Objects;
-
-import io.swagger.v3.oas.annotations.media.Schema;
 
 public class PdfInvoice {
 

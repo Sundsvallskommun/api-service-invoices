@@ -1,32 +1,5 @@
 package se.sundsvall.invoices.service;
 
-import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
-import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
-import generated.se.sundsvall.datawarehousereader.Direction;
-import generated.se.sundsvall.datawarehousereader.Invoice;
-import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
-import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
-import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
-import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
-import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
-import generated.se.sundsvall.invoicecache.InvoicePdf;
-import generated.se.sundsvall.invoicecache.InvoicesResponse;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.zalando.problem.ThrowableProblem;
-import se.sundsvall.invoices.api.model.InvoiceDetail;
-import se.sundsvall.invoices.api.model.InvoicesParameters;
-import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
-import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
-
-import java.math.BigDecimal;
-import java.nio.charset.StandardCharsets;
-import java.util.Base64;
-import java.util.List;
-
 import static java.util.Collections.emptyList;
 import static java.util.UUID.randomUUID;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -44,6 +17,32 @@ import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATIO
 import static se.sundsvall.invoices.api.model.InvoiceType.CREDIT_INVOICE;
 import static se.sundsvall.invoices.api.model.InvoiceType.INVOICE;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
+
+import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
+import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
+import generated.se.sundsvall.datawarehousereader.Direction;
+import generated.se.sundsvall.datawarehousereader.Invoice;
+import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
+import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
+import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
+import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
+import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
+import generated.se.sundsvall.invoicecache.InvoicePdf;
+import generated.se.sundsvall.invoicecache.InvoicesResponse;
+import java.math.BigDecimal;
+import java.nio.charset.StandardCharsets;
+import java.util.Base64;
+import java.util.List;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.zalando.problem.ThrowableProblem;
+import se.sundsvall.invoices.api.model.InvoiceDetail;
+import se.sundsvall.invoices.api.model.InvoicesParameters;
+import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
+import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
 
 @ExtendWith(MockitoExtension.class)
 class InvoicesServiceTest {

@@ -2,12 +2,10 @@ package se.sundsvall.invoices.api.model;
 
 import static java.lang.Integer.parseInt;
 
-import java.util.Objects;
-
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
-
-import io.swagger.v3.oas.annotations.media.Schema;
+import java.util.Objects;
 
 abstract class AbstractParameterBase {
 

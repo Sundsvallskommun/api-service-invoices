@@ -1,22 +1,44 @@
 {
 	"request": {
-		"headers": {"Authorization": {"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"}},
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
 		"method": "GET",
 		"queryParameters": {
-			"sortDirection": {"equalTo": "DESC"},
-			"limit": {"equalTo": "100"},
-			"sortBy": {"equalTo": "invoiceDate"},
-			"page": {"equalTo": "1"},
-			"customerNumber": {"or": [
-				{"equalTo": "39315"},
-				{"equalTo": "67881"},
-				{"equalTo": "15008"}
-			]}
+			"sortDirection": {
+				"equalTo": "DESC"
+			},
+			"limit": {
+				"equalTo": "100"
+			},
+			"sortBy": {
+				"equalTo": "invoiceDate"
+			},
+			"page": {
+				"equalTo": "1"
+			},
+			"customerNumber": {
+				"or": [
+					{
+						"equalTo": "39315"
+					},
+					{
+						"equalTo": "67881"
+					},
+					{
+						"equalTo": "15008"
+					}
+				]
+			}
 		},
 		"urlPath": "/api-datawarehousereader/2281/invoices"
 	},
 	"response": {
-		"headers": {"Content-Type": "application/json"},
+		"headers": {
+			"Content-Type": "application/json"
+		},
 		"bodyFileName": "test04_getInvoicesForMultiplePartyIds/responses/datawarehousereader-get-invoices-response.json",
 		"status": 200
 	},
