@@ -8,6 +8,7 @@ import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
 import generated.se.sundsvall.invoicecache.InvoicePdf;
 import generated.se.sundsvall.invoicecache.InvoicesResponse;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.invoices.integration.invoicecache.configuration.InvoiceCacheConfiguration;
 
 @FeignClient(name = CLIENT_ID, url = "${integration.invoicecache.url}", configuration = InvoiceCacheConfiguration.class)
+@CircuitBreaker(name = CLIENT_ID)
 public interface InvoiceCacheClient {
 
 	/**
