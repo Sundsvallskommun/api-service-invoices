@@ -20,7 +20,7 @@ _The service provides invoice metadata for citizens within Sundsvall municipalit
 git clone https://github.com/Sundsvallskommun/api-service-invoices.git
 cd api-service-invoices
 ```
-  
+
 2. **Configure the application:**
 
    Before running the application, you need to set up configuration settings.
@@ -91,7 +91,9 @@ Configuration is crucial for the application to run successfully. Ensure all nec
 server:
   port: 8080
 ```
+
 - **External Service URLs**
+
 ```yaml
   integration:
     datawarehousereader:
@@ -117,7 +119,9 @@ server:
             invoicecache:
               token-uri: <token-url>
 ```
+
 ### Additional Notes
+
 - **Application Profiles:**
   Use Spring profiles (`dev`, `prod`, etc.) to manage different configurations for different environments.
 
