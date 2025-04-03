@@ -53,7 +53,7 @@ public interface DataWarehouseReaderClient {
 	 * @param  invoiceNumber      id of invoice.
 	 * @return                    a list of invoices
 	 */
-	@GetMapping(path = "/{municipalityId}/invoices/{organizationNumber}/{invoiceNumber}/details/", produces = {
+	@GetMapping(path = "/{municipalityId}/invoices/{organizationNumber}/{invoiceNumber}/details", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	List<InvoiceDetail> getInvoiceDetails(
