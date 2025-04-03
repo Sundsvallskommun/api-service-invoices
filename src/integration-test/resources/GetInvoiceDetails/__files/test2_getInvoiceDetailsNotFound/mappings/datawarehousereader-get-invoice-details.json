@@ -6,7 +6,7 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/api-datawarehousereader/2281/invoices/5565257545/666/details/"
+		"urlPath": "/api-datawarehousereader/2281/invoices/5565257545/666/details"
 	},
 	"response": {
 		"headers": {
