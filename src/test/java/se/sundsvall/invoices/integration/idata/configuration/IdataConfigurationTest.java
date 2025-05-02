@@ -1,10 +1,12 @@
-package se.sundsvall.invoices.integration.datawarehousereader.configuration;
+package se.sundsvall.invoices.integration.idata.configuration;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
-import static se.sundsvall.invoices.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration.CLIENT_ID;
+import static se.sundsvall.invoices.integration.idata.configuration.IdataConfiguration.CLIENT_ID;
 
+import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,22 +18,14 @@ import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.oauth2.client.registration.ClientRegistration;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 
 @ExtendWith(MockitoExtension.class)
-class DataWarehouseReaderConfigurationTest {
+class IdataConfigurationTest {
 
 	@Mock
-	private ClientRegistrationRepository clientRepositoryMock;
-
-	@Mock
-	private ClientRegistration clientRegistrationMock;
-
-	@Mock
-	private DataWarehouseReaderProperties propertiesMock;
+	private IdataProperties propertiesMock;
 
 	@Spy
 	private FeignMultiCustomizer feignMultiCustomizerSpy;
@@ -40,23 +34,21 @@ class DataWarehouseReaderConfigurationTest {
 	private ArgumentCaptor<ErrorDecoder> errorDecoderCaptor;
 
 	@InjectMocks
-	private DataWarehouseReaderConfiguration configuration;
+	private IdataConfiguration configuration;
 
 	@Test
 	void testFeignBuilderHelper() {
-
 		final var connectTimeout = 123;
 		final var readTimeout = 321;
 
 		when(propertiesMock.connectTimeout()).thenReturn(connectTimeout);
 		when(propertiesMock.readTimeout()).thenReturn(readTimeout);
-		when(clientRepositoryMock.findByRegistrationId(CLIENT_ID)).thenReturn(clientRegistrationMock);
 
 		// Mock static FeignMultiCustomizer to enable spy and to verify that static method is being called
 		try (MockedStatic<FeignMultiCustomizer> feignMultiCustomizerMock = Mockito.mockStatic(FeignMultiCustomizer.class)) {
 			feignMultiCustomizerMock.when(FeignMultiCustomizer::create).thenReturn(feignMultiCustomizerSpy);
 
-			configuration.feignBuilderCustomizer(clientRepositoryMock, propertiesMock);
+			configuration.feignBuilderCustomizer(propertiesMock);
 
 			feignMultiCustomizerMock.verify(FeignMultiCustomizer::create);
 		}
@@ -64,10 +56,10 @@ class DataWarehouseReaderConfigurationTest {
 		// Verifications
 		verify(propertiesMock).connectTimeout();
 		verify(propertiesMock).readTimeout();
-		verify(clientRepositoryMock).findByRegistrationId(CLIENT_ID);
+
 		verify(feignMultiCustomizerSpy).withErrorDecoder(errorDecoderCaptor.capture());
 		verify(feignMultiCustomizerSpy).withRequestTimeoutsInSeconds(connectTimeout, readTimeout);
-		verify(feignMultiCustomizerSpy).withRetryableOAuth2InterceptorForClientRegistration(clientRegistrationMock);
+		verify(feignMultiCustomizerSpy).withRequestInterceptor(any(RequestInterceptor.class));
 		verify(feignMultiCustomizerSpy).composeCustomizersToOne();
 
 		// Assert ErrorDecoder

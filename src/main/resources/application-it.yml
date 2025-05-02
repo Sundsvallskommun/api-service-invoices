@@ -3,6 +3,8 @@ integration:
     url: http://localhost:${wiremock.server.port:}/api-datawarehousereader
   invoicecache:
     url: http://localhost:${wiremock.server.port:}/api-invoicecache
+  idata:
+    url: http://localhost:${wiremock.server.port:}/api-idata
 spring:
   security:
     oauth2:
