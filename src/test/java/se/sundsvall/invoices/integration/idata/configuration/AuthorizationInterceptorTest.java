@@ -1,6 +1,9 @@
 package se.sundsvall.invoices.integration.idata.configuration;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.mockStatic;
 
 import feign.RequestTemplate;
 import java.util.Collection;
@@ -9,6 +12,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import org.apache.commons.codec.binary.Hex;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,7 +20,9 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import org.mockito.InjectMocks;
+import org.mockito.MockedStatic;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.zalando.problem.Problem;
 
 @ExtendWith(MockitoExtension.class)
 class AuthorizationInterceptorTest {
@@ -70,6 +76,17 @@ class AuthorizationInterceptorTest {
 		var result = interceptor.generateHMAC(message, key);
 
 		assertThat(result).isEqualTo(expected);
+	}
+
+	@Test
+	void generateHMAC_throws() {
+		try (MockedStatic<Hex> mockedHex = mockStatic(Hex.class)) {
+			mockedHex.when(() -> Hex.encodeHexString((byte[]) any())).thenThrow(new RuntimeException("Mocked exception"));
+
+			assertThatThrownBy(() -> interceptor.generateHMAC("message", "key"))
+				.isInstanceOf(Problem.class)
+				.hasMessageContaining("Error occurred when trying to generate authorization header");
+		}
 	}
 
 	private static Stream<Arguments> generateHMACArgumentsProvider() {

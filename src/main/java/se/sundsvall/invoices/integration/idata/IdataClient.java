@@ -1,6 +1,6 @@
 package se.sundsvall.invoices.integration.idata;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.ALL_VALUE;
 import static se.sundsvall.invoices.integration.idata.configuration.IdataConfiguration.CLIENT_ID;
 
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -13,7 +13,7 @@ import se.sundsvall.invoices.integration.idata.configuration.IdataConfiguration;
 @CircuitBreaker(name = CLIENT_ID)
 public interface IdataClient {
 
-	@GetMapping(produces = APPLICATION_JSON_VALUE)
+	@GetMapping(produces = ALL_VALUE)
 	byte[] getInvoice(
 		@RequestParam(name = "customerno") String customerNumber,
 		@RequestParam(name = "invoiceno") String invoiceNumber);

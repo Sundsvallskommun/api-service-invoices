@@ -2,8 +2,6 @@ package se.sundsvall.invoices.integration.idata.configuration;
 
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
-import java.security.InvalidKeyException;
-import java.security.NoSuchAlgorithmException;
 import java.util.Collection;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -12,6 +10,8 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.zalando.problem.Problem;
+import org.zalando.problem.Status;
 
 /**
  * Interceptor for adding authorization headers to requests made to the IDATA API. This interceptor generates an HMAC
@@ -46,6 +46,10 @@ public class AuthorizationInterceptor implements RequestInterceptor {
 	 * @return         the message string
 	 */
 	String createMessageWithParameters(final Map<String, Collection<String>> queries) {
+		if (queries == null || queries.isEmpty()) {
+			LOGGER.warn("No query parameters found in request template.");
+			return "";
+		}
 		return queries.entrySet().stream()
 			.sorted(Map.Entry.comparingByKey())
 			.map(entry -> entry.getKey() + "=" + String.join(",", entry.getValue()))
@@ -66,9 +70,9 @@ public class AuthorizationInterceptor implements RequestInterceptor {
 			mac.init(secretKeySpec);
 
 			return Hex.encodeHexString(mac.doFinal(message.getBytes()));
-		} catch (NoSuchAlgorithmException | InvalidKeyException e) {
+		} catch (Exception e) {
 			LOGGER.error("Error generating HMAC: {}", e.getMessage());
-			return null;
+			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Error occurred when trying to generate authorization header");
 		}
 	}
 
