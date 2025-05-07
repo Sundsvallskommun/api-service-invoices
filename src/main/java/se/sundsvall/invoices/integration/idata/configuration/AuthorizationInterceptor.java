@@ -1,5 +1,8 @@
 package se.sundsvall.invoices.integration.idata.configuration;
 
+import static java.util.Collections.emptyMap;
+import static java.util.Optional.ofNullable;
+
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import java.util.Collection;
@@ -46,11 +49,7 @@ public class AuthorizationInterceptor implements RequestInterceptor {
 	 * @return         the message string
 	 */
 	String createMessageWithParameters(final Map<String, Collection<String>> queries) {
-		if (queries == null || queries.isEmpty()) {
-			LOGGER.warn("No query parameters found in request template.");
-			return "";
-		}
-		return queries.entrySet().stream()
+		return ofNullable(queries).orElse(emptyMap()).entrySet().stream()
 			.sorted(Map.Entry.comparingByKey())
 			.map(entry -> entry.getKey() + "=" + String.join(",", entry.getValue()))
 			.collect(Collectors.joining("&"));
