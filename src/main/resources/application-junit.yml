@@ -3,6 +3,11 @@ integration:
     url: http://dataWarehouseReaderUrl
   invoicecache:
     url: http://invoiceCacheUrl
+  idata:
+    url: http://idataUrl
+    api-key: apiKey
+    secret-key: secretKey
+    customer-number: customerNumber
 spring:
   security:
     oauth2:

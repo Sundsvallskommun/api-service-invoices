@@ -5,11 +5,14 @@ integration:
   invoicecache:
     connectTimeout: 10
     readTimeout: 20
+  idata:
+    connectTimeout: 10
+    readTimeout: 20
 logbook:
   body-filters:
     json-path:
-     - key: "['file','content']"
-       value: '[base64]'
+      - key: "['file','content']"
+        value: '[base64]'
 
 logging:
   level:
