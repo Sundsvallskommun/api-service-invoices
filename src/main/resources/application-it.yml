@@ -5,6 +5,9 @@ integration:
     url: http://localhost:${wiremock.server.port:}/api-invoicecache
   idata:
     url: http://localhost:${wiremock.server.port:}/api-idata
+    api-key: apiKey
+    secret-key: secretKey
+    customer-number: customerNumber
 spring:
   security:
     oauth2:

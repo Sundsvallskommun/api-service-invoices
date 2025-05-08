@@ -320,6 +320,14 @@ public class InvoiceMapper {
 			.orElse(null);
 	}
 
+	public static PdfInvoice toPdfInvoice(final byte[] file, final String invoiceNumber) {
+		return ofNullable(file)
+			.map(i -> PdfInvoice.create()
+				.withFileName(invoiceNumber + ".pdf")
+				.withFile(file))
+			.orElse(null);
+	}
+
 	/*********************************
 	 * COMMON MAPPING
 	 *********************************/

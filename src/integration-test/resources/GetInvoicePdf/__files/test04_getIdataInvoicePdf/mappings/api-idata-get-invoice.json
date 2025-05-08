@@ -1,0 +1,26 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"matches": "IDATA apiKey:b2c301b441bd1d5fd76fc2420f093a816666a2ad"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/api-idata",
+		"queryParameters": {
+			"invoiceno": {
+				"matches": "111222"
+			},
+			"customerno": {
+				"matches": "customerNumber"
+			}
+		}
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/pdf"
+		},
+		"bodyFileName": "test04_getIdataInvoicePdf/responses/test.pdf",
+		"status": 200
+	}
+}

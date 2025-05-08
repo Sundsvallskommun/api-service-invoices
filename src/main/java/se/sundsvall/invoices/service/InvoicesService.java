@@ -25,6 +25,7 @@ import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.PdfInvoice;
 import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
+import se.sundsvall.invoices.integration.idata.IdataIntegration;
 import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
 import se.sundsvall.invoices.service.mapper.InvoiceMapper;
 
@@ -32,11 +33,12 @@ import se.sundsvall.invoices.service.mapper.InvoiceMapper;
 public class InvoicesService {
 
 	private final DataWarehouseReaderClient dataWarehouseReaderClient;
-
+	private final IdataIntegration idataIntegration;
 	private final InvoiceCacheClient invoiceCacheClient;
 
-	public InvoicesService(final DataWarehouseReaderClient dataWarehouseReaderClient, final InvoiceCacheClient invoiceCacheClient) {
+	public InvoicesService(final DataWarehouseReaderClient dataWarehouseReaderClient, final IdataIntegration idataIntegration, final InvoiceCacheClient invoiceCacheClient) {
 		this.dataWarehouseReaderClient = dataWarehouseReaderClient;
+		this.idataIntegration = idataIntegration;
 		this.invoiceCacheClient = invoiceCacheClient;
 	}
 
@@ -61,6 +63,14 @@ public class InvoicesService {
 	}
 
 	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {
+		if (isInvoicesStoredAtIdata(organizationNumber)) {
+			return toPdfInvoice(idataIntegration.getInvoice(invoiceNumber), invoiceNumber);
+		}
+
 		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
+	}
+
+	boolean isInvoicesStoredAtIdata(final String organizationNumber) {
+		return "5565027223".equals(organizationNumber);
 	}
 }
