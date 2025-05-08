@@ -42,6 +42,7 @@ import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
+import se.sundsvall.invoices.integration.idata.IdataIntegration;
 import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,6 +59,9 @@ class InvoicesServiceTest {
 
 	@Mock
 	private CustomerEngagement customerEngagementMock;
+
+	@Mock
+	private IdataIntegration idataIntegrationMock;
 
 	@InjectMocks
 	private InvoicesService invoicesService;
@@ -230,6 +234,27 @@ class InvoicesServiceTest {
 		assertThat(pdfInvoice.getFileName()).isEqualTo(invoiceName);
 		assertThat(pdfInvoice.getFile()).isEqualTo(content);
 		verify(invoiceCacheClientMock).getInvoicePdf(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType));
+	}
+
+	@Test
+	void getPdfInvoiceIdata() {
+		final var organizationNumber = "5565027223";
+		final var invoiceNumber = "111222";
+		final var municipalityId = "municipalityId";
+		final var bytes = new byte[] {
+			1, 2, 3
+		};
+
+		when(idataIntegrationMock.getInvoice(invoiceNumber)).thenReturn(bytes);
+
+		final var pdfInvoice = invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, INVOICE, municipalityId);
+
+		assertThat(pdfInvoice).isNotNull().satisfies(invoice -> {
+			assertThat(invoice.getFileName()).isEqualTo(invoiceNumber + ".pdf");
+			assertThat(invoice.getFile()).isEqualTo(bytes);
+		});
+
+		verify(idataIntegrationMock).getInvoice(invoiceNumber);
 	}
 
 	private InvoiceResponse createDataWarehouseReaderInvoiceResponse() {

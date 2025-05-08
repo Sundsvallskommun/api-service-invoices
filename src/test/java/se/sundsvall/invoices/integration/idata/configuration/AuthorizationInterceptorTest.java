@@ -93,6 +93,5 @@ class AuthorizationInterceptorTest {
 		return Stream.of(
 			Arguments.of("customerno=123456&invoiceno=654321", "SecretKey", "c4224db74f128debe70deec74fcfbbd12007427d"),
 			Arguments.of("customerno=123456&invoiceno=123456", "SecretKey", "9f6498e108f0f59695b54a15f99ac5d237af9678"));
-
 	}
 }
