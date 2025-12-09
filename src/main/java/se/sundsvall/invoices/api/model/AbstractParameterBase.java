@@ -12,11 +12,11 @@ abstract class AbstractParameterBase {
 	private static final String DEFAULT_LIMIT = "100";
 	private static final String DEFAULT_PAGE = "1";
 
-	@Schema(description = "Page number", example = DEFAULT_PAGE, defaultValue = DEFAULT_PAGE)
+	@Schema(description = "Page number", examples = DEFAULT_PAGE, defaultValue = DEFAULT_PAGE)
 	@Min(1)
 	protected int page = parseInt(DEFAULT_PAGE);
 
-	@Schema(description = "Result size per page", example = DEFAULT_LIMIT, defaultValue = DEFAULT_LIMIT)
+	@Schema(description = "Result size per page", examples = DEFAULT_LIMIT, defaultValue = DEFAULT_LIMIT)
 	@Min(1)
 	@Max(1000)
 	protected int limit = parseInt(DEFAULT_LIMIT);

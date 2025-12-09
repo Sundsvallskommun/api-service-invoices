@@ -35,11 +35,11 @@ import se.sundsvall.invoices.service.InvoicesService;
 @RequestMapping("/{municipalityId}")
 @Validated
 @Tag(name = "Invoices", description = "Service that delivers invoice information")
-public class InvoicesResource {
+class InvoicesResource {
 
 	private final InvoicesService invoicesService;
 
-	public InvoicesResource(final InvoicesService invoicesService) {
+	InvoicesResource(final InvoicesService invoicesService) {
 		this.invoicesService = invoicesService;
 	}
 
@@ -54,7 +54,7 @@ public class InvoicesResource {
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<InvoicesResponse> getInvoices(
+	ResponseEntity<InvoicesResponse> getInvoices(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable(name = "invoiceOrigin") final InvoiceOrigin invoiceOrigin,
 		@Valid final InvoicesParameters searchParams) {
@@ -71,7 +71,7 @@ public class InvoicesResource {
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<InvoiceDetailsResponse> getInvoiceDetails(
+	ResponseEntity<InvoiceDetailsResponse> getInvoiceDetails(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @PathVariable(name = "organizationNumber") @ValidOrganizationNumber final String organizationNumber,
 		@Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank @PathVariable("invoiceNumber") final String invoiceNumber) {
@@ -88,7 +88,7 @@ public class InvoicesResource {
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	public ResponseEntity<PdfInvoice> getPdfInvoice(
+	ResponseEntity<PdfInvoice> getPdfInvoice(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @PathVariable(name = "organizationNumber") @ValidOrganizationNumber final String organizationNumber,
 		@PathVariable(name = "invoiceOrigin") final InvoiceOrigin invoiceOrigin,

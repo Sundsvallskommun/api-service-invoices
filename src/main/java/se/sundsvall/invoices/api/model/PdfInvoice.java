@@ -6,7 +6,7 @@ import java.util.Objects;
 
 public class PdfInvoice {
 
-	@Schema(example = "faktura-999.pdf", description = "File-name")
+	@Schema(examples = "faktura-999.pdf", description = "File-name")
 	private String fileName;
 
 	@Schema(description = "Base64-encoded contents of file")

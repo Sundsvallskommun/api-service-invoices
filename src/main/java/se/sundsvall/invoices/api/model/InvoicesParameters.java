@@ -14,49 +14,49 @@ import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 @Schema(description = "Invoice request parameters model")
 public class InvoicesParameters extends AbstractParameterBase {
 
-	@ArraySchema(schema = @Schema(description = "PartyId (e.g. a personId or an organizationId)", example = "81471222-5798-11e9-ae24-57fa13b361e1"), minItems = 1, uniqueItems = true)
+	@ArraySchema(schema = @Schema(description = "PartyId (e.g. a personId or an organizationId)", examples = "81471222-5798-11e9-ae24-57fa13b361e1"), minItems = 1, uniqueItems = true)
 	@NotEmpty
 	private List<@ValidUuid String> partyId;
 
-	@ArraySchema(schema = @Schema(description = "Facility id", example = "735999109151401011"))
+	@ArraySchema(schema = @Schema(description = "Facility id", examples = "735999109151401011"))
 	private List<String> facilityId;
 
-	@Schema(description = "Invoice number", example = "767915994")
+	@Schema(description = "Invoice number", examples = "767915994")
 	private String invoiceNumber;
 
 	@DateTimeFormat(iso = ISO.DATE)
-	@Schema(description = "Earliest invoice date. Format is YYYY-MM-DD.", example = "2022-01-01")
+	@Schema(description = "Earliest invoice date. Format is YYYY-MM-DD.", examples = "2022-01-01")
 	private LocalDate invoiceDateFrom;
 
 	@DateTimeFormat(iso = ISO.DATE)
-	@Schema(description = "Latest invoice date. Format is YYYY-MM-DD.", example = "2022-01-31")
+	@Schema(description = "Latest invoice date. Format is YYYY-MM-DD.", examples = "2022-01-31")
 	private LocalDate invoiceDateTo;
 
-	@Schema(description = "invoice name", example = "765801493.pdf")
+	@Schema(description = "invoice name", examples = "765801493.pdf")
 	private String invoiceName;
 
-	@Schema(description = "Invoice type", example = "NORMAL", enumAsRef = true)
+	@Schema(description = "Invoice type", examples = "NORMAL", enumAsRef = true)
 	private InvoiceType invoiceType;
 
-	@Schema(description = "Invoice status", example = "PAID", enumAsRef = true)
+	@Schema(description = "Invoice status", examples = "PAID", enumAsRef = true)
 	private InvoiceStatus invoiceStatus;
 
-	@Schema(description = "Ocr number", example = "767915994")
+	@Schema(description = "Ocr number", examples = "767915994")
 	private String ocrNumber;
 
 	@DateTimeFormat(iso = ISO.DATE)
-	@Schema(description = "Earliest due date. Format is YYYY-MM-DD.", example = "2022-01-01")
+	@Schema(description = "Earliest due date. Format is YYYY-MM-DD.", examples = "2022-01-01")
 	private LocalDate dueDateFrom;
 
 	@DateTimeFormat(iso = ISO.DATE)
-	@Schema(description = "Latest due date. Format is YYYY-MM-DD.", example = "2022-01-31")
+	@Schema(description = "Latest due date. Format is YYYY-MM-DD.", examples = "2022-01-31")
 	private LocalDate dueDateTo;
 
-	@Schema(description = "Creditor organization number", example = "5564786647")
+	@Schema(description = "Creditor organization number", examples = "5564786647")
 	@ValidOrganizationNumber(nullable = true)
 	private String organizationNumber;
 
-	@Schema(description = "Organization group", example = "stadsbacken")
+	@Schema(description = "Organization group", examples = "stadsbacken")
 	private String organizationGroup;
 
 	public static InvoicesParameters create() {

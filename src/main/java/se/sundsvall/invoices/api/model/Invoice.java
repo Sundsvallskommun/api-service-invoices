@@ -9,64 +9,64 @@ import java.util.Objects;
 @Schema(description = "Invoice model")
 public class Invoice {
 
-	@Schema(example = "2022-02-28", description = "Due date")
+	@Schema(examples = "2022-02-28", description = "Due date")
 	private LocalDate dueDate;
 
-	@Schema(example = "814.00", description = "Invoice-amount including VAT and rounding")
+	@Schema(examples = "814.00", description = "Invoice-amount including VAT and rounding")
 	private float totalAmount;
 
-	@Schema(example = "813.50", description = "Invoice-amount including VAT")
+	@Schema(examples = "813.50", description = "Invoice-amount including VAT")
 	private float amountVatIncluded;
 
-	@Schema(example = "651.20", description = "Invoice-amount excluding VAT")
+	@Schema(examples = "651.20", description = "Invoice-amount excluding VAT")
 	private float amountVatExcluded;
 
-	@Schema(example = "651.20", description = "Amount which VAT is applied on")
+	@Schema(examples = "651.20", description = "Amount which VAT is applied on")
 	private float vatEligibleAmount;
 
-	@Schema(example = "0.50", description = "Equalization to integer")
+	@Schema(examples = "0.50", description = "Equalization to integer")
 	private float rounding;
 
-	@Schema(example = "162.80", description = "VAT")
+	@Schema(examples = "162.80", description = "VAT")
 	private float vat;
 
-	@Schema(example = "false", description = "Is VAT reversed")
+	@Schema(examples = "false", description = "Is VAT reversed")
 	private Boolean reversedVat;
 
-	@Schema(example = "false", description = "Is invoice-pdf available")
+	@Schema(examples = "false", description = "Is invoice-pdf available")
 	private Boolean pdfAvailable;
 
-	@Schema(example = "SEK", description = "Currency")
+	@Schema(examples = "SEK", description = "Currency")
 	private String currency;
 
-	@Schema(example = "2022-01-15", description = "Invoice-date")
+	@Schema(examples = "2022-01-15", description = "Invoice-date")
 	private LocalDate invoiceDate;
 
-	@Schema(example = "2022-01-01", description = "Invoice from-date")
+	@Schema(examples = "2022-01-01", description = "Invoice from-date")
 	private LocalDate fromDate;
 
-	@Schema(example = "2022-01-31", description = "Invoice to-date")
+	@Schema(examples = "2022-01-31", description = "Invoice to-date")
 	private LocalDate toDate;
 
-	@Schema(example = "999", description = "Invoice-number")
+	@Schema(examples = "999", description = "Invoice-number")
 	private String invoiceNumber;
 
 	@Schema(implementation = InvoiceStatus.class)
 	private InvoiceStatus invoiceStatus;
 
-	@Schema(example = "96758235", description = "OCR-number")
+	@Schema(examples = "96758235", description = "OCR-number")
 	private String ocrNumber;
 
-	@Schema(description = "Organization number of the creditor", example = "5565027223")
+	@Schema(description = "Organization number of the creditor", examples = "5565027223")
 	private String organizationNumber;
 
-	@Schema(example = "faktura-999.pdf", description = "Invoice-name")
+	@Schema(examples = "faktura-999.pdf", description = "Invoice-name")
 	private String invoiceName;
 
 	@Schema(implementation = InvoiceType.class)
 	private InvoiceType invoiceType;
 
-	@Schema(example = "Fjärrvärme", description = "Invoice-description")
+	@Schema(examples = "Fjärrvärme", description = "Invoice-description")
 	private String invoiceDescription;
 
 	@Schema(description = "Invoice-address")
