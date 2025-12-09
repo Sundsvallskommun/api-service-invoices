@@ -7,40 +7,40 @@ import java.util.Objects;
 @Schema(description = "Invoice-detail")
 public class InvoiceDetail {
 
-	@Schema(example = "814.00", description = "Amount")
+	@Schema(examples = "814.00", description = "Amount")
 	private float amount;
 
-	@Schema(example = "651.20", description = "Invoice-amount excluding VAT")
+	@Schema(examples = "651.20", description = "Invoice-amount excluding VAT")
 	private float amountVatExcluded;
 
-	@Schema(example = "162.80", description = "VAT")
+	@Schema(examples = "162.80", description = "VAT")
 	private float vat;
 
-	@Schema(example = "25.00", description = "VAT-rate in percent")
+	@Schema(examples = "25.00", description = "VAT-rate in percent")
 	private float vatRate;
 
-	@Schema(example = "3.45", description = "Quantity of product")
+	@Schema(examples = "3.45", description = "Quantity of product")
 	private float quantity;
 
-	@Schema(example = "kWh", description = "Unit in quantity")
+	@Schema(examples = "kWh", description = "Unit in quantity")
 	private String unit;
 
-	@Schema(example = "271.30", description = "Unit-price")
+	@Schema(examples = "271.30", description = "Unit-price")
 	private float unitPrice;
 
-	@Schema(example = "Förbrukning el", description = "Description of detail")
+	@Schema(examples = "Förbrukning el", description = "Description of detail")
 	private String description;
 
-	@Schema(example = "999", description = "Product code")
+	@Schema(examples = "999", description = "Product code")
 	private String productCode;
 
-	@Schema(example = "Elförbrukning", description = "Product name")
+	@Schema(examples = "Elförbrukning", description = "Product name")
 	private String productName;
 
-	@Schema(example = "2022-01-01", description = "Invoice-detail from-date")
+	@Schema(examples = "2022-01-01", description = "Invoice-detail from-date")
 	private LocalDate fromDate;
 
-	@Schema(example = "2022-01-31", description = "Invoice-detail to-date")
+	@Schema(examples = "2022-01-31", description = "Invoice-detail to-date")
 	private LocalDate toDate;
 
 	public static InvoiceDetail create() {

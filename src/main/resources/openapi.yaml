@@ -1,0 +1,833 @@
+openapi: 3.1.0
+info:
+  title: api-invoices
+  contact: { }
+  license:
+    name: MIT License
+    url: https://opensource.org/licenses/MIT
+  version: "8.0"
+servers:
+  - url: http://localhost:52838
+    description: Generated server url
+tags:
+  - name: Invoices
+    description: Service that delivers invoice information
+paths:
+  /{municipalityId}/{invoiceOrigin}:
+    get:
+      tags:
+        - Invoices
+      summary: Returns invoices matching sent in search parameters
+      operationId: getInvoices
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: invoiceOrigin
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/InvoiceOrigin"
+        - name: searchParams
+          in: query
+          required: true
+          schema:
+            $ref: "#/components/schemas/InvoicesParameters"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoicesResponse"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf:
+    get:
+      tags:
+        - Invoices
+      summary: Returns invoice in pdf-format
+      operationId: getPdfInvoice
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: organizationNumber
+          in: path
+          description: Organization number of invoice issuer
+          required: true
+          schema:
+            type: string
+          example: 5565272223
+        - name: invoiceOrigin
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/InvoiceOrigin"
+        - name: invoiceNumber
+          in: path
+          description: Id of invoice
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          example: 333444
+        - name: invoiceType
+          in: query
+          description: InvoiceType filter parameter
+          required: false
+          schema:
+            $ref: "#/components/schemas/InvoiceType"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PdfInvoice"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details:
+    get:
+      tags:
+        - Invoices
+      summary: Returns invoice-details of an invoice
+      operationId: getInvoiceDetails
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: organizationNumber
+          in: path
+          description: Organization number of invoice issuer
+          required: true
+          schema:
+            type: string
+          example: 5565272223
+        - name: invoiceNumber
+          in: path
+          description: Id of invoice
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          example: 333444
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceDetailsResponse"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /api-docs:
+    get:
+      tags:
+        - API
+      summary: OpenAPI
+      operationId: getApiDocs
+      responses:
+        "200":
+          description: OK
+          content:
+            application/yaml:
+              schema:
+                type: string
+      x-auth-type: None
+      x-throttling-tier: Unlimited
+      x-wso2-mutual-ssl: Optional
+components:
+  schemas:
+    InvoiceOrigin:
+      type: string
+      description: Invoice origin (invoices originates from either commercial or public
+        activities)
+      enum:
+        - COMMERCIAL
+        - PUBLIC_ADMINISTRATION
+      example: COMMERCIAL
+    InvoiceStatus:
+      type: string
+      description: Status of invoice
+      enum:
+        - PAID
+        - SENT
+        - PARTIALLY_PAID
+        - DEBT_COLLECTION
+        - PAID_TOO_MUCH
+        - REMINDER
+        - VOID
+        - CREDITED
+        - WRITTEN_OFF
+        - UNKNOWN
+      example: PAID
+    InvoiceType:
+      type: string
+      description: Type of invoice
+      enum:
+        - INVOICE
+        - CREDIT_INVOICE
+        - START_INVOICE
+        - FINAL_INVOICE
+        - DIRECT_DEBIT
+        - SELF_INVOICE
+        - REMINDER
+        - CONSOLIDATED_INVOICE
+        - INTERNAL_INVOICE
+        - OFFSET_INVOICE
+        - UNKNOWN
+      example: INVOICE
+    InvoicesParameters:
+      type: object
+      description: Invoice request parameters model
+      properties:
+        page:
+          type: integer
+          format: int32
+          default: 1
+          description: Page number
+          examples:
+            - "1"
+          minimum: 1
+        limit:
+          type: integer
+          format: int32
+          default: 100
+          description: Result size per page
+          examples:
+            - "100"
+          maximum: 1000
+          minimum: 1
+        partyId:
+          type: array
+          items:
+            type: string
+            description: PartyId (e.g. a personId or an organizationId)
+            examples:
+              - 81471222-5798-11e9-ae24-57fa13b361e1
+          minItems: 1
+          uniqueItems: true
+        facilityId:
+          type: array
+          items:
+            type: string
+            description: Facility id
+            examples:
+              - "735999109151401011"
+        invoiceNumber:
+          type: string
+          description: Invoice number
+          examples:
+            - "767915994"
+        invoiceDateFrom:
+          type: string
+          format: date
+          description: Earliest invoice date. Format is YYYY-MM-DD.
+          examples:
+            - 2022-01-01
+        invoiceDateTo:
+          type: string
+          format: date
+          description: Latest invoice date. Format is YYYY-MM-DD.
+          examples:
+            - 2022-01-31
+        invoiceName:
+          type: string
+          description: invoice name
+          examples:
+            - 765801493.pdf
+        invoiceType:
+          $ref: "#/components/schemas/InvoiceType"
+          description: Invoice type
+          examples:
+            - NORMAL
+        invoiceStatus:
+          $ref: "#/components/schemas/InvoiceStatus"
+          description: Invoice status
+          examples:
+            - PAID
+        ocrNumber:
+          type: string
+          description: Ocr number
+          examples:
+            - "767915994"
+        dueDateFrom:
+          type: string
+          format: date
+          description: Earliest due date. Format is YYYY-MM-DD.
+          examples:
+            - 2022-01-01
+        dueDateTo:
+          type: string
+          format: date
+          description: Latest due date. Format is YYYY-MM-DD.
+          examples:
+            - 2022-01-31
+        organizationNumber:
+          type: string
+          description: Creditor organization number
+          examples:
+            - "5564786647"
+        organizationGroup:
+          type: string
+          description: Organization group
+          examples:
+            - stadsbacken
+      required:
+        - partyId
+    Address:
+      type: object
+      properties:
+        street:
+          type: string
+          description: Street-address
+          examples:
+            - Storgatan 1
+        postcode:
+          type: string
+          description: Post-code
+          examples:
+            - "11122"
+        city:
+          type: string
+          description: City
+          examples:
+            - Sundsvall
+        careOf:
+          type: string
+          description: Care-of
+          examples:
+            - Kalle
+    Invoice:
+      type: object
+      description: Invoice model
+      properties:
+        dueDate:
+          type: string
+          format: date
+          description: Due date
+          examples:
+            - 2022-02-28
+        totalAmount:
+          type: number
+          format: float
+          description: Invoice-amount including VAT and rounding
+          examples:
+            - "814.00"
+        amountVatIncluded:
+          type: number
+          format: float
+          description: Invoice-amount including VAT
+          examples:
+            - "813.50"
+        amountVatExcluded:
+          type: number
+          format: float
+          description: Invoice-amount excluding VAT
+          examples:
+            - "651.20"
+        vatEligibleAmount:
+          type: number
+          format: float
+          description: Amount which VAT is applied on
+          examples:
+            - "651.20"
+        rounding:
+          type: number
+          format: float
+          description: Equalization to integer
+          examples:
+            - "0.50"
+        vat:
+          type: number
+          format: float
+          description: VAT
+          examples:
+            - "162.80"
+        reversedVat:
+          type: boolean
+          description: Is VAT reversed
+          examples:
+            - "false"
+        pdfAvailable:
+          type: boolean
+          description: Is invoice-pdf available
+          examples:
+            - "false"
+        currency:
+          type: string
+          description: Currency
+          examples:
+            - SEK
+        invoiceDate:
+          type: string
+          format: date
+          description: Invoice-date
+          examples:
+            - 2022-01-15
+        fromDate:
+          type: string
+          format: date
+          description: Invoice from-date
+          examples:
+            - 2022-01-01
+        toDate:
+          type: string
+          format: date
+          description: Invoice to-date
+          examples:
+            - 2022-01-31
+        invoiceNumber:
+          type: string
+          description: Invoice-number
+          examples:
+            - "999"
+        invoiceStatus:
+          $ref: "#/components/schemas/InvoiceStatus"
+        ocrNumber:
+          type: string
+          description: OCR-number
+          examples:
+            - "96758235"
+        organizationNumber:
+          type: string
+          description: Organization number of the creditor
+          examples:
+            - "5565027223"
+        invoiceName:
+          type: string
+          description: Invoice-name
+          examples:
+            - faktura-999.pdf
+        invoiceType:
+          $ref: "#/components/schemas/InvoiceType"
+        invoiceDescription:
+          type: string
+          description: Invoice-description
+          examples:
+            - Fjärrvärme
+        invoiceAddress:
+          $ref: "#/components/schemas/Address"
+          description: Invoice-address
+        facilityId:
+          type: string
+          description: Facility-id
+        invoiceOrigin:
+          $ref: "#/components/schemas/InvoiceOrigin"
+    InvoicesResponse:
+      type: object
+      description: InvoicesResponse model
+      properties:
+        invoices:
+          type: array
+          items:
+            $ref: "#/components/schemas/Invoice"
+        _meta:
+          $ref: "#/components/schemas/MetaData"
+          readOnly: true
+    MetaData:
+      type: object
+      description: Metadata model
+      properties:
+        page:
+          type: integer
+          format: int32
+          description: Current page
+          examples:
+            - "5"
+          readOnly: true
+        limit:
+          type: integer
+          format: int32
+          description: Displayed objects per page
+          examples:
+            - "20"
+          readOnly: true
+        count:
+          type: integer
+          format: int32
+          description: Displayed objects on current page
+          examples:
+            - "13"
+          readOnly: true
+        totalRecords:
+          type: integer
+          format: int64
+          description: Total amount of hits based on provided search parameters
+          examples:
+            - "98"
+          readOnly: true
+        totalPages:
+          type: integer
+          format: int32
+          description: Total amount of pages based on provided search parameters
+          examples:
+            - "23"
+          readOnly: true
+    Problem:
+      type: object
+      properties:
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties: { }
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
+    StatusType:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+        reasonPhrase:
+          type: string
+    ConstraintViolationProblem:
+      type: object
+      properties:
+        cause:
+          $ref: "#/components/schemas/ThrowableProblem"
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        type:
+          type: string
+          format: uri
+        status:
+          $ref: "#/components/schemas/StatusType"
+        violations:
+          type: array
+          items:
+            $ref: "#/components/schemas/Violation"
+        title:
+          type: string
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties: { }
+        detail:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    ThrowableProblem:
+      type: object
+      properties:
+        cause: { }
+        stackTrace:
+          type: array
+          items:
+            type: object
+            properties:
+              classLoaderName:
+                type: string
+              moduleName:
+                type: string
+              moduleVersion:
+                type: string
+              methodName:
+                type: string
+              fileName:
+                type: string
+              lineNumber:
+                type: integer
+                format: int32
+              className:
+                type: string
+              nativeMethod:
+                type: boolean
+        message:
+          type: string
+        instance:
+          type: string
+          format: uri
+        type:
+          type: string
+          format: uri
+        parameters:
+          type: object
+          additionalProperties: { }
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
+        suppressed:
+          type: array
+          items:
+            type: object
+            properties:
+              stackTrace:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    classLoaderName:
+                      type: string
+                    moduleName:
+                      type: string
+                    moduleVersion:
+                      type: string
+                    methodName:
+                      type: string
+                    fileName:
+                      type: string
+                    lineNumber:
+                      type: integer
+                      format: int32
+                    className:
+                      type: string
+                    nativeMethod:
+                      type: boolean
+              message:
+                type: string
+              localizedMessage:
+                type: string
+        localizedMessage:
+          type: string
+    Violation:
+      type: object
+      properties:
+        field:
+          type: string
+        message:
+          type: string
+    PdfInvoice:
+      type: object
+      properties:
+        fileName:
+          type: string
+          description: File-name
+          examples:
+            - faktura-999.pdf
+        file:
+          type: string
+          format: byte
+          description: Base64-encoded contents of file
+    InvoiceDetail:
+      type: object
+      description: Invoice-detail
+      properties:
+        amount:
+          type: number
+          format: float
+          description: Amount
+          examples:
+            - "814.00"
+        amountVatExcluded:
+          type: number
+          format: float
+          description: Invoice-amount excluding VAT
+          examples:
+            - "651.20"
+        vat:
+          type: number
+          format: float
+          description: VAT
+          examples:
+            - "162.80"
+        vatRate:
+          type: number
+          format: float
+          description: VAT-rate in percent
+          examples:
+            - "25.00"
+        quantity:
+          type: number
+          format: float
+          description: Quantity of product
+          examples:
+            - "3.45"
+        unit:
+          type: string
+          description: Unit in quantity
+          examples:
+            - kWh
+        unitPrice:
+          type: number
+          format: float
+          description: Unit-price
+          examples:
+            - "271.30"
+        description:
+          type: string
+          description: Description of detail
+          examples:
+            - Förbrukning el
+        productCode:
+          type: string
+          description: Product code
+          examples:
+            - "999"
+        productName:
+          type: string
+          description: Product name
+          examples:
+            - Elförbrukning
+        fromDate:
+          type: string
+          format: date
+          description: Invoice-detail from-date
+          examples:
+            - 2022-01-01
+        toDate:
+          type: string
+          format: date
+          description: Invoice-detail to-date
+          examples:
+            - 2022-01-31
+    InvoiceDetailsResponse:
+      type: object
+      properties:
+        details:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvoiceDetail"
+  securitySchemes: { }

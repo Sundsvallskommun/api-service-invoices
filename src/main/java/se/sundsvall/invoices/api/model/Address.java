@@ -5,16 +5,16 @@ import java.util.Objects;
 
 public class Address {
 
-	@Schema(example = "Storgatan 1", description = "Street-address")
+	@Schema(examples = "Storgatan 1", description = "Street-address")
 	private String street;
 
-	@Schema(example = "11122", description = "Post-code")
+	@Schema(examples = "11122", description = "Post-code")
 	private String postcode;
 
-	@Schema(example = "Sundsvall", description = "City")
+	@Schema(examples = "Sundsvall", description = "City")
 	private String city;
 
-	@Schema(example = "Kalle", description = "Care-of")
+	@Schema(examples = "Kalle", description = "Care-of")
 	private String careOf;
 
 	public static Address create() {
