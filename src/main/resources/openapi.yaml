@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "8.0"
 servers:
-  - url: http://localhost:52838
+  - url: http://localhost:65221
     description: Generated server url
 tags:
   - name: Invoices
@@ -245,7 +245,8 @@ components:
         - CREDITED
         - WRITTEN_OFF
         - UNKNOWN
-      example: PAID
+      examples:
+        - PAID
     InvoiceType:
       type: string
       description: Type of invoice
@@ -261,7 +262,8 @@ components:
         - INTERNAL_INVOICE
         - OFFSET_INVOICE
         - UNKNOWN
-      example: INVOICE
+      examples:
+        - INVOICE
     InvoicesParameters:
       type: object
       description: Invoice request parameters model
@@ -552,6 +554,12 @@ components:
     Problem:
       type: object
       properties:
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -561,20 +569,14 @@ components:
         parameters:
           type: object
           additionalProperties: { }
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
     StatusType:
       type: object
       properties:
+        reasonPhrase:
+          type: string
         statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -615,14 +617,14 @@ components:
           type: string
         message:
           type: string
+        detail:
+          type: string
         instance:
           type: string
           format: uri
         parameters:
           type: object
           additionalProperties: { }
-        detail:
-          type: string
         suppressed:
           type: array
           items:
@@ -684,6 +686,12 @@ components:
                 type: boolean
         message:
           type: string
+        title:
+          type: string
+        detail:
+          type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -693,12 +701,6 @@ components:
         parameters:
           type: object
           additionalProperties: { }
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
         suppressed:
           type: array
           items:
