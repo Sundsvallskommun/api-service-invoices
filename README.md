@@ -6,7 +6,7 @@ _The service provides invoice metadata for citizens within Sundsvall municipalit
 
 ### Prerequisites
 
-- **Java 21 or higher**
+- **Java 25 or higher**
 - **Maven**
 - **MariaDB**
 - **Git**
@@ -30,7 +30,8 @@ cd api-service-invoices
 
 3. **Ensure dependent services are running:**
 
-   If this microservice depends on other services, make sure they are up and accessible. See [Dependencies](#dependencies) for more details.
+   If this microservice depends on other services, make sure they are up and accessible.
+   See [Dependencies](#dependencies) for more details.
 
 4. **Build and run the application:**
 
@@ -44,11 +45,13 @@ This microservice depends on the following services:
 
 - **DataWarehouseReader**
   - **Purpose:** Retrieve the metadata for invoices.
-  - **Repository:** [https://github.com/Sundsvallskommun/api-service-datawarehousereader](https://github.com/Sundsvallskommun/api-service-datawarehousereader.git)
+  - **Repository:
+    ** [https://github.com/Sundsvallskommun/api-service-datawarehousereader](https://github.com/Sundsvallskommun/api-service-datawarehousereader.git)
   - **Setup Instructions:** See documentation in repository above for installation and configuration steps.
 - **InvoiceCache**
   - **Purpose:** Retrieve the complete invoices.
-  - **Repository:** [https://github.com/Sundsvallskommun/api-service-invoice-cache](https://github.com/Sundsvallskommun/api-service-invoice-cache.git)
+  - **Repository:
+    ** [https://github.com/Sundsvallskommun/api-service-invoice-cache](https://github.com/Sundsvallskommun/api-service-invoice-cache.git)
   - **Setup Instructions:** See documentation in repository above for installation and configuration steps.
 
 Ensure that these services are running and properly configured before starting this microservice.
@@ -73,7 +76,8 @@ curl -X GET http://localhost:8080/2281/COMMERCIAL?partyId=fc21e65b-3608-4355-932
 
 ## Configuration
 
-Configuration is crucial for the application to run successfully. Ensure all necessary settings are configured in `application.yml`.
+Configuration is crucial for the application to run successfully. Ensure all necessary settings are configured in
+`application.yml`.
 
 ### Key Configuration Parameters
 
@@ -123,7 +127,8 @@ server:
 
 ## Contributing
 
-Contributions are welcome! Please see [CONTRIBUTING.md](https://github.com/Sundsvallskommun/.github/blob/main/.github/CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Please
+see [CONTRIBUTING.md](https://github.com/Sundsvallskommun/.github/blob/main/.github/CONTRIBUTING.md) for guidelines.
 
 ## License
 
