@@ -3,7 +3,9 @@
 		{
 			"invoiceName": "137968392.pdf",
 			"ocrNumber": 137968392,
-			"invoiceDescription": "El",
+			"invoiceDescriptions": [
+				"El"
+			],
 			"city": "FRÖSÖN",
 			"administration": "Sundsvall Elnät",
 			"dueDate": "2019-10-29",
@@ -13,7 +15,9 @@
 			"invoiceType": "Faktura",
 			"currency": "sek",
 			"organizationGroup": "stadsbacken",
-			"facilityId": "735999109144",
+			"facilityIds": [
+				"735999109144"
+			],
 			"organizationNumber": "5565027223",
 			"amountVatIncluded": 12059.99,
 			"vat": 9647.99,
@@ -32,7 +36,9 @@
 		{
 			"invoiceName": "137968293.pdf",
 			"ocrNumber": 137968293,
-			"invoiceDescription": "El",
+			"invoiceDescriptions": [
+				"El"
+			],
 			"city": "FRÖSÖN",
 			"administration": "Sundsvall Elnät",
 			"dueDate": "2019-10-29",
@@ -42,7 +48,9 @@
 			"invoiceType": "Faktura",
 			"currency": "sek",
 			"organizationGroup": "stadsbacken",
-			"facilityId": "735999109140",
+			"facilityIds": [
+				"735999109140"
+			],
 			"organizationNumber": "5565027223",
 			"amountVatIncluded": 48631.01,
 			"vat": 38904.81,
@@ -61,7 +69,9 @@
 		{
 			"invoiceName": "137968194.pdf",
 			"ocrNumber": 137968194,
-			"invoiceDescription": "El",
+			"invoiceDescriptions": [
+				"El"
+			],
 			"city": "FRÖSÖN",
 			"administration": "Sundsvall Elnät",
 			"dueDate": "2019-10-29",
@@ -71,7 +81,9 @@
 			"invoiceType": "Faktura",
 			"currency": "sek",
 			"organizationGroup": "stadsbacken",
-			"facilityId": "735999109261",
+			"facilityIds": [
+				"735999109261"
+			],
 			"organizationNumber": "5565027223",
 			"amountVatIncluded": 1357.36,
 			"vat": 1085.89,

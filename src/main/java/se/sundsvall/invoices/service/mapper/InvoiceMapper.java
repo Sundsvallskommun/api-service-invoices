@@ -49,7 +49,7 @@ public class InvoiceMapper {
 	public static InvoiceParameters toDataWarehouseReaderInvoiceParameters(final List<String> customerNumbers, final InvoicesParameters invoiceParameters) {
 		return new InvoiceParameters()
 			.customerNumber(customerNumbers)
-			.facilityId(invoiceParameters.getFacilityId())
+			.facilityIds(invoiceParameters.getFacilityId())
 			.invoiceName(invoiceParameters.getInvoiceName())
 			.invoiceNumber(toLong(invoiceParameters.getInvoiceNumber()))
 			.organizationGroup(invoiceParameters.getOrganizationGroup())
@@ -96,8 +96,12 @@ public class InvoiceMapper {
 			.withOrganizationNumber(dataWarehouseReaderInvoice.getOrganizationNumber())
 			.withInvoiceName(dataWarehouseReaderInvoice.getInvoiceName())
 			.withInvoiceType(toInvoiceType(dataWarehouseReaderInvoice.getInvoiceType()))
-			.withInvoiceDescription(dataWarehouseReaderInvoice.getInvoiceDescription())
-			.withFacilityId(dataWarehouseReaderInvoice.getFacilityId())
+			.withInvoiceDescription(Optional.ofNullable(dataWarehouseReaderInvoice.getInvoiceDescriptions())
+				.flatMap(list -> list.stream().findFirst())
+				.orElse(null))
+			.withFacilityId(Optional.ofNullable(dataWarehouseReaderInvoice.getFacilityIds())
+				.flatMap(list -> list.stream().findFirst())
+				.orElse(null))
 			.withPdfAvailable(dataWarehouseReaderInvoice.getPdfAvailable())
 			.withInvoiceAddress(toAddress(dataWarehouseReaderInvoice))
 			.withInvoiceOrigin(COMMERCIAL);

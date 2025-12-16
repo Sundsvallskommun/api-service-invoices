@@ -41,6 +41,7 @@ spring:
           invoicecache:
             authorization-grant-type: client_credentials
             provider: invoicecache
+
 springdoc:
   swagger-ui:
     operationsSorter: method
