@@ -10,7 +10,7 @@
 			"organizationGroup": {
 				"equalTo": "stadsbacken"
 			},
-			"facilityId": {
+			"facilityIds": {
 				"equalTo": "735999226000"
 			},
 			"invoiceName": {

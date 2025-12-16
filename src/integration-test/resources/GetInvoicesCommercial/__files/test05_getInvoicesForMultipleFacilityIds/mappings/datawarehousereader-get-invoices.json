@@ -10,7 +10,7 @@
 			"sortDirection": {
 				"equalTo": "DESC"
 			},
-			"facilityId": {
+			"facilityIds": {
 				"or": [
 					{
 						"equalTo": "735999109242413886"

@@ -3,7 +3,9 @@
 		{
 			"invoiceName": "766763197.pdf",
 			"ocrNumber": 766763197,
-			"invoiceDescription": "Fjärrkyla",
+			"invoiceDescriptions": [
+				"Fjärrkyla"
+			],
 			"city": "Vetlanda",
 			"administration": "Sundsvall Energi AB",
 			"dueDate": "2019-10-30",
@@ -13,7 +15,9 @@
 			"invoiceType": "Faktura",
 			"currency": "sek",
 			"organizationGroup": "stadsbacken",
-			"facilityId": "735999226000",
+			"facilityIds": [
+				"735999226000"
+			],
 			"organizationNumber": "5564786647",
 			"amountVatIncluded": 343.7,
 			"vat": 274.96,

@@ -3,7 +3,9 @@
 		{
 			"invoiceName": "137993598.pdf",
 			"ocrNumber": 137993598,
-			"invoiceDescription": "El",
+			"invoiceDescriptions": [
+				"El"
+			],
 			"city": "Sundsvall",
 			"administration": "Sundsvall Energi AB",
 			"dueDate": "2019-11-08",
@@ -13,7 +15,9 @@
 			"invoiceType": "Faktura",
 			"currency": "sek",
 			"organizationGroup": "stadsbacken",
-			"facilityId": "735999109215204886",
+			"facilityIds": [
+				"735999109215204886"
+			],
 			"organizationNumber": "5564786647",
 			"amountVatIncluded": 6236.78,
 			"vat": 4989.42,
@@ -32,7 +36,9 @@
 		{
 			"invoiceName": "767917693.pdf",
 			"ocrNumber": 767917693,
-			"invoiceDescription": "Fjärrvärme",
+			"invoiceDescriptions": [
+				"Fjärrvärme"
+			],
 			"city": "Sundsvall",
 			"administration": "Sundsvall Energi AB",
 			"dueDate": "2019-11-13",
@@ -42,7 +48,9 @@
 			"invoiceType": "Faktura",
 			"currency": "sek",
 			"organizationGroup": "stadsbacken",
-			"facilityId": "735999109242413886",
+			"facilityIds": [
+				"735999109242413886"
+			],
 			"organizationNumber": "5564786647",
 			"amountVatIncluded": 147.84,
 			"vat": 0,
@@ -61,7 +69,9 @@
 		{
 			"invoiceName": "137994091.pdf",
 			"ocrNumber": 137994091,
-			"invoiceDescription": "Fjärrvärme",
+			"invoiceDescriptions": [
+				"Fjärrvärme"
+			],
 			"city": "Sundsvall",
 			"administration": "Sundsvall Elnät",
 			"dueDate": "2019-11-08",
@@ -71,7 +81,9 @@
 			"invoiceType": "Faktura",
 			"currency": "sek",
 			"organizationGroup": "stadsbacken",
-			"facilityId": "735848103876774877",
+			"facilityIds": [
+				"735848103876774877"
+			],
 			"organizationNumber": "5565027223",
 			"amountVatIncluded": 2453.85,
 			"vat": 1963.08,

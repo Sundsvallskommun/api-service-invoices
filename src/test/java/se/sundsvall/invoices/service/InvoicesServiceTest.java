@@ -83,7 +83,7 @@ class InvoicesServiceTest {
 			.invoiceName(invoiceName)
 			.customerNumber(customerNumbers)
 			.organizationNumber(organizationNumber)
-			.facilityId(null)
+			.facilityIds(null)
 			.sortBy(List.of(invoiceDate))
 			.sortDirection(Direction.DESC);
 
@@ -117,7 +117,7 @@ class InvoicesServiceTest {
 			.invoiceName(invoiceName)
 			.customerNumber(customerNumbers)
 			.organizationNumber(organizationNumber)
-			.facilityId(null)
+			.facilityIds(null)
 			.sortBy(List.of(invoiceDate))
 			.sortDirection(Direction.DESC);
 
