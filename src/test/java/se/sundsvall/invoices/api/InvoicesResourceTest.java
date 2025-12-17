@@ -99,7 +99,7 @@ class InvoicesResourceTest {
 		final InvoicesParameters parameters = parametersCaptor.getValue();
 		assertThat(parameters.getDueDateFrom()).isEqualTo(DUE_DATE_FROM);
 		assertThat(parameters.getDueDateTo()).isEqualTo(DUE_DATE_TO);
-		assertThat(parameters.getFacilityId()).isEqualTo(FACILITY_IDS);
+		assertThat(parameters.getFacilityIds()).isEqualTo(FACILITY_IDS);
 		assertThat(parameters.getInvoiceDateFrom()).isEqualTo(INVOICE_DATE_FROM);
 		assertThat(parameters.getInvoiceDateTo()).isEqualTo(INVOICE_DATE_TO);
 		assertThat(parameters.getInvoiceName()).isEqualTo(INVOICE_NAME);
@@ -220,7 +220,7 @@ class InvoicesResourceTest {
 
 		ofNullable(page).ifPresent(p -> parameters.add("page", valueOf(p)));
 		ofNullable(limit).ifPresent(p -> parameters.add("limit", valueOf(p)));
-		ofNullable(facilityIds).ifPresent(p -> parameters.addAll("facilityId", p));
+		ofNullable(facilityIds).ifPresent(p -> parameters.addAll("facilityIds", p));
 		ofNullable(invoiceNumber).ifPresent(p -> parameters.add("invoiceNumber", p));
 		ofNullable(invoiceDateFrom).ifPresent(p -> parameters.add("invoiceDateFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(invoiceDateTo).ifPresent(p -> parameters.add("invoiceDateTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));

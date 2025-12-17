@@ -12,6 +12,7 @@ import static org.hamcrest.core.AllOf.allOf;
 import com.google.code.beanmatchers.BeanMatchers;
 import java.time.LocalDate;
 import java.util.Random;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -52,9 +53,9 @@ class InvoiceTest {
 		final var ocrNumber = "ocrNumber";
 		final var invoiceName = "invoiceName";
 		final var invoiceType = InvoiceType.INVOICE;
-		final var invoiceDescription = "invoiceDescription";
+		final var invoiceDescriptions = Set.of("invoiceDescription");
 		final var invoiceAddress = Address.create();
-		final var facilityId = "facilityId";
+		final var facilityIds = Set.of("facilityId");
 		final var organizationNumber = "organizationNumber";
 		final var invoiceOrigin = InvoiceOrigin.PUBLIC_ADMINISTRATION;
 
@@ -77,9 +78,9 @@ class InvoiceTest {
 			.withOcrNumber(ocrNumber)
 			.withInvoiceName(invoiceName)
 			.withInvoiceType(invoiceType)
-			.withInvoiceDescription(invoiceDescription)
+			.withInvoiceDescriptions(invoiceDescriptions)
 			.withInvoiceAddress(invoiceAddress)
-			.withFacilityId(facilityId)
+			.withFacilityIds(facilityIds)
 			.withOrganizationNumber(organizationNumber)
 			.withInvoiceOrigin(invoiceOrigin);
 
@@ -102,9 +103,9 @@ class InvoiceTest {
 		assertThat(invoice.getOcrNumber()).isEqualTo(ocrNumber);
 		assertThat(invoice.getInvoiceName()).isEqualTo(invoiceName);
 		assertThat(invoice.getInvoiceType()).isEqualTo(invoiceType);
-		assertThat(invoice.getInvoiceDescription()).isEqualTo(invoiceDescription);
+		assertThat(invoice.getInvoiceDescriptions()).isEqualTo(invoiceDescriptions);
 		assertThat(invoice.getInvoiceAddress()).isEqualTo(invoiceAddress);
-		assertThat(invoice.getFacilityId()).isEqualTo(facilityId);
+		assertThat(invoice.getFacilityIds()).isEqualTo(facilityIds);
 		assertThat(invoice.getOrganizationNumber()).isEqualTo(organizationNumber);
 		assertThat(invoice.getInvoiceOrigin()).isEqualTo(invoiceOrigin);
 	}

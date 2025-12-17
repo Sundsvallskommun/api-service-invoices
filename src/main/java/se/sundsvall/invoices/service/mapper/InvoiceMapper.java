@@ -2,6 +2,7 @@ package se.sundsvall.invoices.service.mapper;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
@@ -20,6 +21,7 @@ import java.util.Base64;
 import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -49,7 +51,7 @@ public class InvoiceMapper {
 	public static InvoiceParameters toDataWarehouseReaderInvoiceParameters(final List<String> customerNumbers, final InvoicesParameters invoiceParameters) {
 		return new InvoiceParameters()
 			.customerNumber(customerNumbers)
-			.facilityIds(invoiceParameters.getFacilityId())
+			.facilityIds(invoiceParameters.getFacilityIds())
 			.invoiceName(invoiceParameters.getInvoiceName())
 			.invoiceNumber(toLong(invoiceParameters.getInvoiceNumber()))
 			.organizationGroup(invoiceParameters.getOrganizationGroup())
@@ -96,12 +98,8 @@ public class InvoiceMapper {
 			.withOrganizationNumber(dataWarehouseReaderInvoice.getOrganizationNumber())
 			.withInvoiceName(dataWarehouseReaderInvoice.getInvoiceName())
 			.withInvoiceType(toInvoiceType(dataWarehouseReaderInvoice.getInvoiceType()))
-			.withInvoiceDescription(Optional.ofNullable(dataWarehouseReaderInvoice.getInvoiceDescriptions())
-				.flatMap(list -> list.stream().findFirst())
-				.orElse(null))
-			.withFacilityId(Optional.ofNullable(dataWarehouseReaderInvoice.getFacilityIds())
-				.flatMap(list -> list.stream().findFirst())
-				.orElse(null))
+			.withInvoiceDescriptions(dataWarehouseReaderInvoice.getInvoiceDescriptions())
+			.withFacilityIds(dataWarehouseReaderInvoice.getFacilityIds())
 			.withPdfAvailable(dataWarehouseReaderInvoice.getPdfAvailable())
 			.withInvoiceAddress(toAddress(dataWarehouseReaderInvoice))
 			.withInvoiceOrigin(COMMERCIAL);
@@ -255,7 +253,7 @@ public class InvoiceMapper {
 			.withAmountVatExcluded(ofNullable(invoiceCacheInvoice.getAmountVatExcluded()).orElse(ZERO).floatValue())
 			.withVat(ofNullable(invoiceCacheInvoice.getVat()).orElse(ZERO).floatValue())
 			.withInvoiceDate(invoiceCacheInvoice.getInvoiceDate())
-			.withInvoiceDescription(invoiceCacheInvoice.getInvoiceDescription())
+			.withInvoiceDescriptions(ofNullable(invoiceCacheInvoice.getInvoiceDescription()).map(Set::of).orElse(emptySet()))
 			.withInvoiceNumber(invoiceCacheInvoice.getInvoiceNumber())
 			.withOcrNumber(invoiceCacheInvoice.getOcrNumber())
 			.withInvoiceStatus(toInvoiceStatus(invoiceCacheInvoice.getInvoiceStatus()))

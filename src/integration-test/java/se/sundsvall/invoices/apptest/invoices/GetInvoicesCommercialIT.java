@@ -29,7 +29,7 @@ class GetInvoicesCommercialIT extends AbstractAppTest {
 			.withServicePath("/2281/commercial?partyId=EC114D35-A46C-48EF-599E-7E32B5B5939C" +
 				"&page=1" +
 				"&limit=100" +
-				"&facilityId=735999226000" +
+				"&facilityIds=735999226000" +
 				"&invoiceNumber=766763197" +
 				"&invoiceDateFrom=2019-10-01" +
 				"&invoiceDateTo=2019-10-31" +
@@ -72,8 +72,8 @@ class GetInvoicesCommercialIT extends AbstractAppTest {
 	void test05_getInvoicesForMultipleFacilityIds() {
 		setupCall()
 			.withServicePath("/2281/commercial?partyId=AC653C32-B26C-47E8-8C2E-4D18C1B5879C" +
-				"&facilityId=735999109242413886" +
-				"&facilityId=735999109215204886")
+				"&facilityIds=735999109242413886" +
+				"&facilityIds=735999109215204886")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
