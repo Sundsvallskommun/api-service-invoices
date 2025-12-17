@@ -40,13 +40,13 @@ class InvoiceMapperTest {
 	private static final String DATAWAREHOUSEREADER_CURRENCY = "SEK";
 	private static final String DATAWAREHOUSEREADER_CUSTOMER_NUMBER = "1337";
 	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE = LocalDate.now().plusDays(30);
-	private static final String DATAWAREHOUSEREADER_FACILITY_ID = "facilityId";
+	private static final Set<String> DATAWAREHOUSEREADER_FACILITY_IDS = Set.of("facilityId");
 	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE = LocalDate.now();
 	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE_FROM = LocalDate.of(2022, 3, 1);
 	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE_TO = LocalDate.of(2022, 3, 31);
 	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE_FROM = LocalDate.of(2022, 4, 1);
 	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE_TO = LocalDate.of(2022, 4, 30);
-	private static final String DATAWAREHOUSEREADER_INVOICE_DESCRIPTION = "invoiceDescription";
+	private static final Set<String> DATAWAREHOUSEREADER_INVOICE_DESCRIPTIONS = Set.of("invoiceDescription");
 	private static final String DATAWAREHOUSEREADER_INVOICE_NAME = "invoiceName";
 	private static final long DATAWAREHOUSEREADER_INVOICE_NUMBER = 4321;
 	private static final String DATAWAREHOUSEREADER_INVOICE_STATUS = "Betalad";
@@ -238,9 +238,9 @@ class InvoiceMapperTest {
 		dataWarehouseReaderInvoice.setCurrency(DATAWAREHOUSEREADER_CURRENCY);
 		dataWarehouseReaderInvoice.setCustomerNumber(DATAWAREHOUSEREADER_CUSTOMER_NUMBER);
 		dataWarehouseReaderInvoice.setDueDate(DATAWAREHOUSEREADER_DUE_DATE);
-		dataWarehouseReaderInvoice.setFacilityIds(Set.of(DATAWAREHOUSEREADER_FACILITY_ID));
+		dataWarehouseReaderInvoice.setFacilityIds(DATAWAREHOUSEREADER_FACILITY_IDS);
 		dataWarehouseReaderInvoice.setInvoiceDate(DATAWAREHOUSEREADER_INVOICE_DATE);
-		dataWarehouseReaderInvoice.setInvoiceDescriptions(Set.of(DATAWAREHOUSEREADER_INVOICE_DESCRIPTION));
+		dataWarehouseReaderInvoice.setInvoiceDescriptions(DATAWAREHOUSEREADER_INVOICE_DESCRIPTIONS);
 		dataWarehouseReaderInvoice.setInvoiceName(DATAWAREHOUSEREADER_INVOICE_NAME);
 		dataWarehouseReaderInvoice.setInvoiceNumber(DATAWAREHOUSEREADER_INVOICE_NUMBER);
 		dataWarehouseReaderInvoice.setInvoiceStatus(DATAWAREHOUSEREADER_INVOICE_STATUS);
@@ -283,9 +283,9 @@ class InvoiceMapperTest {
 				Invoice::getAmountVatIncluded,
 				Invoice::getCurrency,
 				Invoice::getDueDate,
-				Invoice::getFacilityId,
+				Invoice::getFacilityIds,
 				Invoice::getInvoiceDate,
-				Invoice::getInvoiceDescription,
+				Invoice::getInvoiceDescriptions,
 				Invoice::getInvoiceName,
 				Invoice::getInvoiceNumber,
 				Invoice::getInvoiceStatus,
@@ -304,9 +304,9 @@ class InvoiceMapperTest {
 				AMOUNT_VAT_INCLUDED,
 				CURRENCY,
 				DUE_DATE,
-				DATAWAREHOUSEREADER_FACILITY_ID,
+				DATAWAREHOUSEREADER_FACILITY_IDS,
 				INVOICE_DATE,
-				INVOICE_DESCRIPTION,
+				DATAWAREHOUSEREADER_INVOICE_DESCRIPTIONS,
 				INVOICE_NAME,
 				INVOICE_NUMBER,
 				INVOICE_STATUS,
@@ -368,9 +368,9 @@ class InvoiceMapperTest {
 				Invoice::getAmountVatIncluded,
 				Invoice::getCurrency,
 				Invoice::getDueDate,
-				Invoice::getFacilityId,
+				Invoice::getFacilityIds,
 				Invoice::getInvoiceDate,
-				Invoice::getInvoiceDescription,
+				Invoice::getInvoiceDescriptions,
 				Invoice::getInvoiceNumber,
 				Invoice::getInvoiceStatus,
 				Invoice::getInvoiceType,
@@ -390,7 +390,7 @@ class InvoiceMapperTest {
 				DUE_DATE,
 				null,
 				INVOICE_DATE,
-				INVOICE_DESCRIPTION,
+				DATAWAREHOUSEREADER_INVOICE_DESCRIPTIONS,
 				INVOICE_NUMBER,
 				INVOICE_STATUS,
 				INVOICE_TYPE,
@@ -422,7 +422,7 @@ class InvoiceMapperTest {
 		final var dataWarehouseReaderInvoiceDetail = new generated.se.sundsvall.datawarehousereader.InvoiceDetail();
 		dataWarehouseReaderInvoiceDetail.setAmount(DATAWAREHOUSEREADER_AMOUNT);
 		dataWarehouseReaderInvoiceDetail.setAmountVatExcluded(DATAWAREHOUSEREADER_AMOUNT_VAT_EXCLUDED);
-		dataWarehouseReaderInvoiceDetail.setDescription(DATAWAREHOUSEREADER_INVOICE_DESCRIPTION);
+		dataWarehouseReaderInvoiceDetail.setDescription(DATAWAREHOUSEREADER_INVOICE_DESCRIPTIONS.iterator().next());
 		dataWarehouseReaderInvoiceDetail.setInvoiceNumber(DATAWAREHOUSEREADER_INVOICE_NUMBER);
 		dataWarehouseReaderInvoiceDetail.setPeriodFrom(DATAWAREHOUSEREADER_PERIOD_FROM);
 		dataWarehouseReaderInvoiceDetail.setPeriodTo(DATAWAREHOUSEREADER_PERIOD_TO);
@@ -469,7 +469,7 @@ class InvoiceMapperTest {
 	@Test
 	void toDataWarehouseReaderInvoiceParameters() {
 		final var invoicesParameters = new InvoicesParameters()
-			.withFacilityId(FACILITY_IDS)
+			.withFacilityIds(FACILITY_IDS)
 			.withInvoiceName(INVOICE_NAME)
 			.withInvoiceNumber(INVOICE_NUMBER)
 			.withInvoiceStatus(INVOICE_STATUS)

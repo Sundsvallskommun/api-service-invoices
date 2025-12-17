@@ -31,7 +31,7 @@ public interface DataWarehouseReaderClient {
 	@GetMapping(path = "/{municipalityId}/customer/engagements", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
-	CustomerEngagementResponse getCustomerEngagements(@PathVariable("municipalityId") String municipalityId, @RequestParam(value = "partyId") List<String> partyIds);
+	CustomerEngagementResponse getCustomerEngagements(@PathVariable String municipalityId, @RequestParam(value = "partyId") List<String> partyIds);
 
 	/**
 	 * Get invoices found by searchParams.
@@ -43,7 +43,7 @@ public interface DataWarehouseReaderClient {
 	@GetMapping(path = "/{municipalityId}/invoices", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
-	InvoiceResponse getInvoices(@PathVariable("municipalityId") String municipalityId, @SpringQueryMap InvoiceParameters invoiceParameters);
+	InvoiceResponse getInvoices(@PathVariable String municipalityId, @SpringQueryMap InvoiceParameters invoiceParameters);
 
 	/**
 	 * Get invoice-details of an invoice issued by a specific organization.
@@ -57,7 +57,7 @@ public interface DataWarehouseReaderClient {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	List<InvoiceDetail> getInvoiceDetails(
-		@PathVariable("municipalityId") String municipalityId,
-		@PathVariable(name = "organizationNumber") String organizationNumber,
-		@PathVariable(name = "invoiceNumber") long invoiceNumber);
+		@PathVariable String municipalityId,
+		@PathVariable String organizationNumber,
+		@PathVariable long invoiceNumber);
 }

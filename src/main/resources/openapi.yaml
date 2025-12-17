@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "8.0"
+  version: "9.0"
 servers:
-  - url: http://localhost:65221
+  - url: http://localhost:54657
     description: Generated server url
 tags:
   - name: Invoices
@@ -32,11 +32,150 @@ paths:
           required: true
           schema:
             $ref: "#/components/schemas/InvoiceOrigin"
-        - name: searchParams
+        - name: partyId
           in: query
           required: true
           schema:
-            $ref: "#/components/schemas/InvoicesParameters"
+            type: array
+            items:
+              type: string
+              description: PartyId (e.g. a personId or an organizationId)
+              examples:
+                - 81471222-5798-11e9-ae24-57fa13b361e1
+            minItems: 1
+            uniqueItems: true
+        - name: facilityIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              description: Facility id
+              examples:
+                - "735999109151401011"
+        - name: invoiceNumber
+          in: query
+          description: Invoice number
+          required: false
+          schema:
+            type: string
+            description: Invoice number
+            examples:
+              - "767915994"
+        - name: invoiceDateFrom
+          in: query
+          description: Earliest invoice date. Format is YYYY-MM-DD.
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Earliest invoice date. Format is YYYY-MM-DD.
+            examples:
+              - 2022-01-01
+        - name: invoiceDateTo
+          in: query
+          description: Latest invoice date. Format is YYYY-MM-DD.
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Latest invoice date. Format is YYYY-MM-DD.
+            examples:
+              - 2022-01-31
+        - name: invoiceName
+          in: query
+          description: invoice name
+          required: false
+          schema:
+            type: string
+            description: invoice name
+            examples:
+              - 765801493.pdf
+        - name: invoiceType
+          in: query
+          description: Invoice type
+          required: false
+          schema:
+            $ref: "#/components/schemas/InvoiceType"
+        - name: invoiceStatus
+          in: query
+          description: Invoice status
+          required: false
+          schema:
+            $ref: "#/components/schemas/InvoiceStatus"
+        - name: ocrNumber
+          in: query
+          description: Ocr number
+          required: false
+          schema:
+            type: string
+            description: Ocr number
+            examples:
+              - "767915994"
+        - name: dueDateFrom
+          in: query
+          description: Earliest due date. Format is YYYY-MM-DD.
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Earliest due date. Format is YYYY-MM-DD.
+            examples:
+              - 2022-01-01
+        - name: dueDateTo
+          in: query
+          description: Latest due date. Format is YYYY-MM-DD.
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Latest due date. Format is YYYY-MM-DD.
+            examples:
+              - 2022-01-31
+        - name: organizationNumber
+          in: query
+          description: Creditor organization number
+          required: false
+          schema:
+            type: string
+            description: Creditor organization number
+            examples:
+              - "5564786647"
+        - name: organizationGroup
+          in: query
+          description: Organization group
+          required: false
+          schema:
+            type: string
+            description: Organization group
+            examples:
+              - stadsbacken
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            description: Page number
+            examples:
+              - "1"
+            minimum: 1
+        - name: limit
+          in: query
+          description: Result size per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            description: Result size per page
+            examples:
+              - "100"
+            maximum: 1000
+            minimum: 1
       responses:
         "200":
           description: Successful operation
@@ -231,22 +370,6 @@ components:
         - COMMERCIAL
         - PUBLIC_ADMINISTRATION
       example: COMMERCIAL
-    InvoiceStatus:
-      type: string
-      description: Status of invoice
-      enum:
-        - PAID
-        - SENT
-        - PARTIALLY_PAID
-        - DEBT_COLLECTION
-        - PAID_TOO_MUCH
-        - REMINDER
-        - VOID
-        - CREDITED
-        - WRITTEN_OFF
-        - UNKNOWN
-      examples:
-        - PAID
     InvoiceType:
       type: string
       description: Type of invoice
@@ -264,104 +387,22 @@ components:
         - UNKNOWN
       examples:
         - INVOICE
-    InvoicesParameters:
-      type: object
-      description: Invoice request parameters model
-      properties:
-        page:
-          type: integer
-          format: int32
-          default: 1
-          description: Page number
-          examples:
-            - "1"
-          minimum: 1
-        limit:
-          type: integer
-          format: int32
-          default: 100
-          description: Result size per page
-          examples:
-            - "100"
-          maximum: 1000
-          minimum: 1
-        partyId:
-          type: array
-          items:
-            type: string
-            description: PartyId (e.g. a personId or an organizationId)
-            examples:
-              - 81471222-5798-11e9-ae24-57fa13b361e1
-          minItems: 1
-          uniqueItems: true
-        facilityId:
-          type: array
-          items:
-            type: string
-            description: Facility id
-            examples:
-              - "735999109151401011"
-        invoiceNumber:
-          type: string
-          description: Invoice number
-          examples:
-            - "767915994"
-        invoiceDateFrom:
-          type: string
-          format: date
-          description: Earliest invoice date. Format is YYYY-MM-DD.
-          examples:
-            - 2022-01-01
-        invoiceDateTo:
-          type: string
-          format: date
-          description: Latest invoice date. Format is YYYY-MM-DD.
-          examples:
-            - 2022-01-31
-        invoiceName:
-          type: string
-          description: invoice name
-          examples:
-            - 765801493.pdf
-        invoiceType:
-          $ref: "#/components/schemas/InvoiceType"
-          description: Invoice type
-          examples:
-            - NORMAL
-        invoiceStatus:
-          $ref: "#/components/schemas/InvoiceStatus"
-          description: Invoice status
-          examples:
-            - PAID
-        ocrNumber:
-          type: string
-          description: Ocr number
-          examples:
-            - "767915994"
-        dueDateFrom:
-          type: string
-          format: date
-          description: Earliest due date. Format is YYYY-MM-DD.
-          examples:
-            - 2022-01-01
-        dueDateTo:
-          type: string
-          format: date
-          description: Latest due date. Format is YYYY-MM-DD.
-          examples:
-            - 2022-01-31
-        organizationNumber:
-          type: string
-          description: Creditor organization number
-          examples:
-            - "5564786647"
-        organizationGroup:
-          type: string
-          description: Organization group
-          examples:
-            - stadsbacken
-      required:
-        - partyId
+    InvoiceStatus:
+      type: string
+      description: Status of invoice
+      enum:
+        - PAID
+        - SENT
+        - PARTIALLY_PAID
+        - DEBT_COLLECTION
+        - PAID_TOO_MUCH
+        - REMINDER
+        - VOID
+        - CREDITED
+        - WRITTEN_OFF
+        - UNKNOWN
+      examples:
+        - PAID
     Address:
       type: object
       properties:
@@ -488,17 +529,23 @@ components:
             - faktura-999.pdf
         invoiceType:
           $ref: "#/components/schemas/InvoiceType"
-        invoiceDescription:
-          type: string
+        invoiceDescriptions:
+          type: array
           description: Invoice-description
           examples:
             - Fjärrvärme
+          items:
+            type: string
+          uniqueItems: true
         invoiceAddress:
           $ref: "#/components/schemas/Address"
           description: Invoice-address
-        facilityId:
-          type: string
+        facilityIds:
+          type: array
           description: Facility-id
+          items:
+            type: string
+          uniqueItems: true
         invoiceOrigin:
           $ref: "#/components/schemas/InvoiceOrigin"
     InvoicesResponse:
@@ -554,12 +601,12 @@ components:
     Problem:
       type: object
       properties:
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri
@@ -572,11 +619,11 @@ components:
     StatusType:
       type: object
       properties:
-        reasonPhrase:
-          type: string
         statusCode:
           type: integer
           format: int32
+        reasonPhrase:
+          type: string
     ConstraintViolationProblem:
       type: object
       properties:
@@ -686,12 +733,12 @@ components:
                 type: boolean
         message:
           type: string
+        status:
+          $ref: "#/components/schemas/StatusType"
         title:
           type: string
         detail:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
         instance:
           type: string
           format: uri

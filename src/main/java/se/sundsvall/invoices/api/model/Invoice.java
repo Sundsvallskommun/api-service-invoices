@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
 import java.time.LocalDate;
 import java.util.Objects;
+import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Invoice model")
@@ -67,13 +68,13 @@ public class Invoice {
 	private InvoiceType invoiceType;
 
 	@Schema(examples = "Fjärrvärme", description = "Invoice-description")
-	private String invoiceDescription;
+	private Set<String> invoiceDescriptions;
 
 	@Schema(description = "Invoice-address")
 	private Address invoiceAddress;
 
 	@Schema(description = "Facility-id")
-	private String facilityId;
+	private Set<String> facilityIds;
 
 	@Schema(implementation = InvoiceOrigin.class)
 	private InvoiceOrigin invoiceOrigin;
@@ -86,11 +87,11 @@ public class Invoice {
 		return dueDate;
 	}
 
-	public void setDueDate(LocalDate dueDate) {
+	public void setDueDate(final LocalDate dueDate) {
 		this.dueDate = dueDate;
 	}
 
-	public Invoice withDueDate(LocalDate dueDate) {
+	public Invoice withDueDate(final LocalDate dueDate) {
 		this.dueDate = dueDate;
 		return this;
 	}
@@ -99,11 +100,11 @@ public class Invoice {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(float totalAmount) {
+	public void setTotalAmount(final float totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public Invoice withTotalAmount(float totalAmount) {
+	public Invoice withTotalAmount(final float totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
@@ -112,11 +113,11 @@ public class Invoice {
 		return amountVatIncluded;
 	}
 
-	public void setAmountVatIncluded(float amountVatIncluded) {
+	public void setAmountVatIncluded(final float amountVatIncluded) {
 		this.amountVatIncluded = amountVatIncluded;
 	}
 
-	public Invoice withAmountVatIncluded(float amountVatIncluded) {
+	public Invoice withAmountVatIncluded(final float amountVatIncluded) {
 		this.amountVatIncluded = amountVatIncluded;
 		return this;
 	}
@@ -125,11 +126,11 @@ public class Invoice {
 		return amountVatExcluded;
 	}
 
-	public void setAmountVatExcluded(float amountVatExcluded) {
+	public void setAmountVatExcluded(final float amountVatExcluded) {
 		this.amountVatExcluded = amountVatExcluded;
 	}
 
-	public Invoice withAmountVatExcluded(float amountVatExcluded) {
+	public Invoice withAmountVatExcluded(final float amountVatExcluded) {
 		this.amountVatExcluded = amountVatExcluded;
 		return this;
 	}
@@ -138,11 +139,11 @@ public class Invoice {
 		return vatEligibleAmount;
 	}
 
-	public void setVatEligibleAmount(float vatEligibleAmount) {
+	public void setVatEligibleAmount(final float vatEligibleAmount) {
 		this.vatEligibleAmount = vatEligibleAmount;
 	}
 
-	public Invoice withVatEligibleAmount(float vatEligibleAmount) {
+	public Invoice withVatEligibleAmount(final float vatEligibleAmount) {
 		this.vatEligibleAmount = vatEligibleAmount;
 		return this;
 	}
@@ -151,11 +152,11 @@ public class Invoice {
 		return rounding;
 	}
 
-	public void setRounding(float rounding) {
+	public void setRounding(final float rounding) {
 		this.rounding = rounding;
 	}
 
-	public Invoice withRounding(float rounding) {
+	public Invoice withRounding(final float rounding) {
 		this.rounding = rounding;
 		return this;
 	}
@@ -164,11 +165,11 @@ public class Invoice {
 		return vat;
 	}
 
-	public void setVat(float vat) {
+	public void setVat(final float vat) {
 		this.vat = vat;
 	}
 
-	public Invoice withVat(float vat) {
+	public Invoice withVat(final float vat) {
 		this.vat = vat;
 		return this;
 	}
@@ -177,11 +178,11 @@ public class Invoice {
 		return reversedVat;
 	}
 
-	public void setReversedVat(Boolean reversedVat) {
+	public void setReversedVat(final Boolean reversedVat) {
 		this.reversedVat = reversedVat;
 	}
 
-	public Invoice withReversedVat(Boolean reversedVat) {
+	public Invoice withReversedVat(final Boolean reversedVat) {
 		this.reversedVat = reversedVat;
 		return this;
 	}
@@ -190,11 +191,11 @@ public class Invoice {
 		return pdfAvailable;
 	}
 
-	public void setPdfAvailable(Boolean pdfAvailable) {
+	public void setPdfAvailable(final Boolean pdfAvailable) {
 		this.pdfAvailable = pdfAvailable;
 	}
 
-	public Invoice withPdfAvailable(Boolean pdfAvailable) {
+	public Invoice withPdfAvailable(final Boolean pdfAvailable) {
 		this.pdfAvailable = pdfAvailable;
 		return this;
 	}
@@ -203,11 +204,11 @@ public class Invoice {
 		return currency;
 	}
 
-	public void setCurrency(String currency) {
+	public void setCurrency(final String currency) {
 		this.currency = currency;
 	}
 
-	public Invoice withCurrency(String currency) {
+	public Invoice withCurrency(final String currency) {
 		this.currency = currency;
 		return this;
 	}
@@ -216,11 +217,11 @@ public class Invoice {
 		return invoiceDate;
 	}
 
-	public void setInvoiceDate(LocalDate invoiceDate) {
+	public void setInvoiceDate(final LocalDate invoiceDate) {
 		this.invoiceDate = invoiceDate;
 	}
 
-	public Invoice withInvoiceDate(LocalDate invoiceDate) {
+	public Invoice withInvoiceDate(final LocalDate invoiceDate) {
 		this.invoiceDate = invoiceDate;
 		return this;
 	}
@@ -229,11 +230,11 @@ public class Invoice {
 		return fromDate;
 	}
 
-	public void setFromDate(LocalDate fromDate) {
+	public void setFromDate(final LocalDate fromDate) {
 		this.fromDate = fromDate;
 	}
 
-	public Invoice withFromDate(LocalDate fromDate) {
+	public Invoice withFromDate(final LocalDate fromDate) {
 		this.fromDate = fromDate;
 		return this;
 	}
@@ -242,11 +243,11 @@ public class Invoice {
 		return toDate;
 	}
 
-	public void setToDate(LocalDate toDate) {
+	public void setToDate(final LocalDate toDate) {
 		this.toDate = toDate;
 	}
 
-	public Invoice withToDate(LocalDate toDate) {
+	public Invoice withToDate(final LocalDate toDate) {
 		this.toDate = toDate;
 		return this;
 	}
@@ -255,11 +256,11 @@ public class Invoice {
 		return invoiceNumber;
 	}
 
-	public void setInvoiceNumber(String invoiceNumber) {
+	public void setInvoiceNumber(final String invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 	}
 
-	public Invoice withInvoiceNumber(String invoiceNumber) {
+	public Invoice withInvoiceNumber(final String invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 		return this;
 	}
@@ -268,11 +269,11 @@ public class Invoice {
 		return invoiceStatus;
 	}
 
-	public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
+	public void setInvoiceStatus(final InvoiceStatus invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 	}
 
-	public Invoice withInvoiceStatus(InvoiceStatus invoiceStatus) {
+	public Invoice withInvoiceStatus(final InvoiceStatus invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 		return this;
 	}
@@ -281,11 +282,11 @@ public class Invoice {
 		return ocrNumber;
 	}
 
-	public void setOcrNumber(String ocrNumber) {
+	public void setOcrNumber(final String ocrNumber) {
 		this.ocrNumber = ocrNumber;
 	}
 
-	public Invoice withOcrNumber(String ocrNumber) {
+	public Invoice withOcrNumber(final String ocrNumber) {
 		this.ocrNumber = ocrNumber;
 		return this;
 	}
@@ -294,11 +295,11 @@ public class Invoice {
 		return invoiceName;
 	}
 
-	public void setInvoiceName(String invoiceName) {
+	public void setInvoiceName(final String invoiceName) {
 		this.invoiceName = invoiceName;
 	}
 
-	public Invoice withInvoiceName(String invoiceName) {
+	public Invoice withInvoiceName(final String invoiceName) {
 		this.invoiceName = invoiceName;
 		return this;
 	}
@@ -307,51 +308,51 @@ public class Invoice {
 		return invoiceType;
 	}
 
-	public void setInvoiceType(InvoiceType invoiceType) {
+	public void setInvoiceType(final InvoiceType invoiceType) {
 		this.invoiceType = invoiceType;
 	}
 
-	public Invoice withInvoiceType(InvoiceType invoiceType) {
+	public Invoice withInvoiceType(final InvoiceType invoiceType) {
 		this.invoiceType = invoiceType;
 		return this;
 	}
 
-	public Invoice withInvoiceDescription(String invoiceDescription) {
-		this.invoiceDescription = invoiceDescription;
+	public Set<String> getInvoiceDescriptions() {
+		return invoiceDescriptions;
+	}
+
+	public void setInvoiceDescriptions(final Set<String> invoiceDescriptions) {
+		this.invoiceDescriptions = invoiceDescriptions;
+	}
+
+	public Invoice withInvoiceDescriptions(final Set<String> invoiceDescriptions) {
+		this.invoiceDescriptions = invoiceDescriptions;
 		return this;
-	}
-
-	public String getInvoiceDescription() {
-		return invoiceDescription;
-	}
-
-	public void setInvoiceDescription(String invoiceDescription) {
-		this.invoiceDescription = invoiceDescription;
 	}
 
 	public Address getInvoiceAddress() {
 		return invoiceAddress;
 	}
 
-	public void setInvoiceAddress(Address invoiceAddress) {
+	public void setInvoiceAddress(final Address invoiceAddress) {
 		this.invoiceAddress = invoiceAddress;
 	}
 
-	public Invoice withInvoiceAddress(Address invoiceAddress) {
+	public Invoice withInvoiceAddress(final Address invoiceAddress) {
 		this.invoiceAddress = invoiceAddress;
 		return this;
 	}
 
-	public String getFacilityId() {
-		return facilityId;
+	public Set<String> getFacilityIds() {
+		return facilityIds;
 	}
 
-	public void setFacilityId(String facilityId) {
-		this.facilityId = facilityId;
+	public void setFacilityIds(final Set<String> facilityIds) {
+		this.facilityIds = facilityIds;
 	}
 
-	public Invoice withFacilityId(String facilityId) {
-		this.facilityId = facilityId;
+	public Invoice withFacilityIds(final Set<String> facilityIds) {
+		this.facilityIds = facilityIds;
 		return this;
 	}
 
@@ -359,11 +360,11 @@ public class Invoice {
 		return organizationNumber;
 	}
 
-	public void setOrganizationNumber(String creditorOrganizationNumber) {
+	public void setOrganizationNumber(final String creditorOrganizationNumber) {
 		this.organizationNumber = creditorOrganizationNumber;
 	}
 
-	public Invoice withOrganizationNumber(String creditorOrganizationNumber) {
+	public Invoice withOrganizationNumber(final String creditorOrganizationNumber) {
 		this.organizationNumber = creditorOrganizationNumber;
 		return this;
 	}
@@ -372,49 +373,60 @@ public class Invoice {
 		return invoiceOrigin;
 	}
 
-	public void setInvoiceOrigin(InvoiceOrigin invoiceOrigin) {
+	public void setInvoiceOrigin(final InvoiceOrigin invoiceOrigin) {
 		this.invoiceOrigin = invoiceOrigin;
 	}
 
-	public Invoice withInvoiceOrigin(InvoiceOrigin invoiceOrigin) {
+	public Invoice withInvoiceOrigin(final InvoiceOrigin invoiceOrigin) {
 		this.invoiceOrigin = invoiceOrigin;
 		return this;
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(amountVatExcluded, amountVatIncluded, currency, dueDate, facilityId, fromDate, invoiceAddress, invoiceDate, invoiceDescription, invoiceName, invoiceNumber, invoiceOrigin, invoiceStatus, invoiceType, ocrNumber,
-			organizationNumber, pdfAvailable, reversedVat, rounding, toDate, totalAmount, vat, vatEligibleAmount);
+	public boolean equals(final Object o) {
+		if (o == null || getClass() != o.getClass())
+			return false;
+		final Invoice invoice = (Invoice) o;
+		return Float.compare(totalAmount, invoice.totalAmount) == 0 && Float.compare(amountVatIncluded, invoice.amountVatIncluded) == 0 && Float.compare(amountVatExcluded, invoice.amountVatExcluded) == 0
+			&& Float.compare(vatEligibleAmount, invoice.vatEligibleAmount) == 0 && Float.compare(rounding, invoice.rounding) == 0 && Float.compare(vat, invoice.vat) == 0 && Objects.equals(dueDate, invoice.dueDate)
+			&& Objects.equals(reversedVat, invoice.reversedVat) && Objects.equals(pdfAvailable, invoice.pdfAvailable) && Objects.equals(currency, invoice.currency) && Objects.equals(invoiceDate, invoice.invoiceDate)
+			&& Objects.equals(fromDate, invoice.fromDate) && Objects.equals(toDate, invoice.toDate) && Objects.equals(invoiceNumber, invoice.invoiceNumber) && invoiceStatus == invoice.invoiceStatus && Objects.equals(
+				ocrNumber, invoice.ocrNumber) && Objects.equals(organizationNumber, invoice.organizationNumber) && Objects.equals(invoiceName, invoice.invoiceName) && invoiceType == invoice.invoiceType && Objects.equals(
+					invoiceDescriptions, invoice.invoiceDescriptions) && Objects.equals(invoiceAddress, invoice.invoiceAddress) && Objects.equals(facilityIds, invoice.facilityIds) && invoiceOrigin == invoice.invoiceOrigin;
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (obj == null) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		Invoice other = (Invoice) obj;
-		return Float.floatToIntBits(amountVatExcluded) == Float.floatToIntBits(other.amountVatExcluded) && Float.floatToIntBits(amountVatIncluded) == Float.floatToIntBits(other.amountVatIncluded) && Objects.equals(currency, other.currency) && Objects
-			.equals(dueDate, other.dueDate) && Objects.equals(facilityId, other.facilityId) && Objects.equals(fromDate, other.fromDate) && Objects.equals(invoiceAddress, other.invoiceAddress) && Objects.equals(invoiceDate, other.invoiceDate)
-			&& Objects.equals(invoiceDescription, other.invoiceDescription) && Objects.equals(invoiceName, other.invoiceName) && Objects.equals(invoiceNumber, other.invoiceNumber) && invoiceOrigin == other.invoiceOrigin
-			&& invoiceStatus == other.invoiceStatus && invoiceType == other.invoiceType && Objects.equals(ocrNumber, other.ocrNumber) && Objects.equals(organizationNumber, other.organizationNumber) && Objects.equals(pdfAvailable, other.pdfAvailable)
-			&& Objects.equals(reversedVat, other.reversedVat) && Float.floatToIntBits(rounding) == Float.floatToIntBits(other.rounding) && Objects.equals(toDate, other.toDate) && Float.floatToIntBits(totalAmount) == Float.floatToIntBits(
-				other.totalAmount) && Float.floatToIntBits(vat) == Float.floatToIntBits(other.vat) && Float.floatToIntBits(vatEligibleAmount) == Float.floatToIntBits(other.vatEligibleAmount);
+	public int hashCode() {
+		return Objects.hash(dueDate, totalAmount, amountVatIncluded, amountVatExcluded, vatEligibleAmount, rounding, vat, reversedVat, pdfAvailable, currency, invoiceDate, fromDate, toDate, invoiceNumber, invoiceStatus, ocrNumber, organizationNumber,
+			invoiceName, invoiceType, invoiceDescriptions, invoiceAddress, facilityIds, invoiceOrigin);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("Invoice [dueDate=").append(dueDate).append(", totalAmount=").append(totalAmount).append(", amountVatIncluded=").append(amountVatIncluded).append(", amountVatExcluded=").append(amountVatExcluded).append(", vatEligibleAmount=")
-			.append(vatEligibleAmount).append(", rounding=").append(rounding).append(", vat=").append(vat).append(", reversedVat=").append(reversedVat).append(", pdfAvailable=").append(pdfAvailable).append(", currency=").append(currency).append(
-				", invoiceDate=").append(invoiceDate).append(", fromDate=").append(fromDate).append(", toDate=").append(toDate).append(", invoiceNumber=").append(invoiceNumber).append(", invoiceStatus=").append(invoiceStatus).append(", ocrNumber=")
-			.append(ocrNumber).append(", organizationNumber=").append(organizationNumber).append(", invoiceName=").append(invoiceName).append(", invoiceType=").append(invoiceType).append(", invoiceDescription=").append(invoiceDescription).append(
-				", invoiceAddress=").append(invoiceAddress).append(", facilityId=").append(facilityId).append(", invoiceOrigin=").append(invoiceOrigin).append("]");
-		return builder.toString();
+		return "Invoice{" +
+			"dueDate=" + dueDate +
+			", totalAmount=" + totalAmount +
+			", amountVatIncluded=" + amountVatIncluded +
+			", amountVatExcluded=" + amountVatExcluded +
+			", vatEligibleAmount=" + vatEligibleAmount +
+			", rounding=" + rounding +
+			", vat=" + vat +
+			", reversedVat=" + reversedVat +
+			", pdfAvailable=" + pdfAvailable +
+			", currency='" + currency + '\'' +
+			", invoiceDate=" + invoiceDate +
+			", fromDate=" + fromDate +
+			", toDate=" + toDate +
+			", invoiceNumber='" + invoiceNumber + '\'' +
+			", invoiceStatus=" + invoiceStatus +
+			", ocrNumber='" + ocrNumber + '\'' +
+			", organizationNumber='" + organizationNumber + '\'' +
+			", invoiceName='" + invoiceName + '\'' +
+			", invoiceType=" + invoiceType +
+			", invoiceDescriptions=" + invoiceDescriptions +
+			", invoiceAddress=" + invoiceAddress +
+			", facilityIds=" + facilityIds +
+			", invoiceOrigin=" + invoiceOrigin +
+			'}';
 	}
 }

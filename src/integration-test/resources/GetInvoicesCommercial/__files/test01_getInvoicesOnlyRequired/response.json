@@ -3,8 +3,12 @@
 		{
 			"ocrNumber": "137968392",
 			"invoiceName": "137968392.pdf",
-			"facilityId": "735999109144",
-			"invoiceDescription": "El",
+			"facilityIds": [
+				"735999109144"
+			],
+			"invoiceDescriptions": [
+				"El"
+			],
 			"invoiceOrigin": "COMMERCIAL",
 			"organizationNumber": "5565027223",
 			"dueDate": "2019-10-29",
@@ -31,8 +35,12 @@
 		{
 			"ocrNumber": "137968293",
 			"invoiceName": "137968293.pdf",
-			"facilityId": "735999109140",
-			"invoiceDescription": "El",
+			"facilityIds": [
+				"735999109140"
+			],
+			"invoiceDescriptions": [
+				"El"
+			],
 			"invoiceOrigin": "COMMERCIAL",
 			"organizationNumber": "5565027223",
 			"dueDate": "2019-10-29",
@@ -59,8 +67,12 @@
 		{
 			"ocrNumber": "137968194",
 			"invoiceName": "137968194.pdf",
-			"facilityId": "735999109261",
-			"invoiceDescription": "El",
+			"facilityIds": [
+				"735999109261"
+			],
+			"invoiceDescriptions": [
+				"El"
+			],
 			"invoiceOrigin": "COMMERCIAL",
 			"organizationNumber": "5565027223",
 			"dueDate": "2019-10-29",

@@ -2,7 +2,9 @@
 	"invoices": [
 		{
 			"ocrNumber": "8907136421",
-			"invoiceDescription": "Avdelning 44",
+			"invoiceDescriptions": [
+				"Avdelning 44"
+			],
 			"invoiceOrigin": "PUBLIC_ADMINISTRATION",
 			"dueDate": "2022-09-30",
 			"amountVatIncluded": 4995,
@@ -25,7 +27,9 @@
 		},
 		{
 			"ocrNumber": "8907136422",
-			"invoiceDescription": "Avdelning 44",
+			"invoiceDescriptions": [
+				"Avdelning 44"
+			],
 			"invoiceOrigin": "PUBLIC_ADMINISTRATION",
 			"dueDate": "2022-10-30",
 			"amountVatIncluded": 4995,

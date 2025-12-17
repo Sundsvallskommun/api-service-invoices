@@ -55,7 +55,7 @@ class InvoicesParametersTest {
 		final var invoicesParameters = InvoicesParameters.create()
 			.withDueDateFrom(dueDateFrom)
 			.withDueDateTo(dueDateTo)
-			.withFacilityId(facilityId)
+			.withFacilityIds(facilityId)
 			.withInvoiceNumber(invoiceNumber)
 			.withInvoiceName(invoiceName)
 			.withInvoiceType(invoiceType)
@@ -72,7 +72,7 @@ class InvoicesParametersTest {
 		assertThat(invoicesParameters).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(invoicesParameters.getDueDateFrom()).isEqualTo(dueDateFrom);
 		assertThat(invoicesParameters.getDueDateTo()).isEqualTo(dueDateTo);
-		assertThat(invoicesParameters.getFacilityId()).isEqualTo(facilityId);
+		assertThat(invoicesParameters.getFacilityIds()).isEqualTo(facilityId);
 		assertThat(invoicesParameters.getInvoiceNumber()).isEqualTo(invoiceNumber);
 		assertThat(invoicesParameters.getInvoiceName()).isEqualTo(invoiceName);
 		assertThat(invoicesParameters.getInvoiceType()).isEqualTo(invoiceType);

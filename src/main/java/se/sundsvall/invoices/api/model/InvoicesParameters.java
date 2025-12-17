@@ -6,12 +6,14 @@ import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 
 @Schema(description = "Invoice request parameters model")
+@ParameterObject
 public class InvoicesParameters extends AbstractParameterBase {
 
 	@ArraySchema(schema = @Schema(description = "PartyId (e.g. a personId or an organizationId)", examples = "81471222-5798-11e9-ae24-57fa13b361e1"), minItems = 1, uniqueItems = true)
@@ -19,7 +21,7 @@ public class InvoicesParameters extends AbstractParameterBase {
 	private List<@ValidUuid String> partyId;
 
 	@ArraySchema(schema = @Schema(description = "Facility id", examples = "735999109151401011"))
-	private List<String> facilityId;
+	private List<String> facilityIds;
 
 	@Schema(description = "Invoice number", examples = "767915994")
 	private String invoiceNumber;
@@ -67,25 +69,25 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return partyId;
 	}
 
-	public void setPartyId(List<String> partyId) {
+	public void setPartyId(final List<String> partyId) {
 		this.partyId = partyId;
 	}
 
-	public InvoicesParameters withPartyId(List<String> partyId) {
+	public InvoicesParameters withPartyId(final List<String> partyId) {
 		this.partyId = partyId;
 		return this;
 	}
 
-	public List<String> getFacilityId() {
-		return facilityId;
+	public List<String> getFacilityIds() {
+		return facilityIds;
 	}
 
-	public void setFacilityId(List<String> facilityId) {
-		this.facilityId = facilityId;
+	public void setFacilityIds(final List<String> facilityIds) {
+		this.facilityIds = facilityIds;
 	}
 
-	public InvoicesParameters withFacilityId(List<String> facilityId) {
-		this.facilityId = facilityId;
+	public InvoicesParameters withFacilityIds(final List<String> facilityIds) {
+		this.facilityIds = facilityIds;
 		return this;
 	}
 
@@ -93,11 +95,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return invoiceNumber;
 	}
 
-	public void setInvoiceNumber(String invoiceNumber) {
+	public void setInvoiceNumber(final String invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 	}
 
-	public InvoicesParameters withInvoiceNumber(String invoiceNumber) {
+	public InvoicesParameters withInvoiceNumber(final String invoiceNumber) {
 		this.invoiceNumber = invoiceNumber;
 		return this;
 	}
@@ -106,11 +108,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return invoiceDateFrom;
 	}
 
-	public void setInvoiceDateFrom(LocalDate invoiceDateFrom) {
+	public void setInvoiceDateFrom(final LocalDate invoiceDateFrom) {
 		this.invoiceDateFrom = invoiceDateFrom;
 	}
 
-	public InvoicesParameters withInvoiceDateFrom(LocalDate invoiceDateFrom) {
+	public InvoicesParameters withInvoiceDateFrom(final LocalDate invoiceDateFrom) {
 		this.invoiceDateFrom = invoiceDateFrom;
 		return this;
 	}
@@ -119,11 +121,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return invoiceDateTo;
 	}
 
-	public void setInvoiceDateTo(LocalDate invoiceDateTo) {
+	public void setInvoiceDateTo(final LocalDate invoiceDateTo) {
 		this.invoiceDateTo = invoiceDateTo;
 	}
 
-	public InvoicesParameters withInvoiceDateTo(LocalDate invoiceDateTo) {
+	public InvoicesParameters withInvoiceDateTo(final LocalDate invoiceDateTo) {
 		this.invoiceDateTo = invoiceDateTo;
 		return this;
 	}
@@ -132,11 +134,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return invoiceName;
 	}
 
-	public void setInvoiceName(String invoiceName) {
+	public void setInvoiceName(final String invoiceName) {
 		this.invoiceName = invoiceName;
 	}
 
-	public InvoicesParameters withInvoiceName(String invoiceName) {
+	public InvoicesParameters withInvoiceName(final String invoiceName) {
 		this.invoiceName = invoiceName;
 		return this;
 	}
@@ -145,11 +147,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return invoiceType;
 	}
 
-	public void setInvoiceType(InvoiceType invoiceType) {
+	public void setInvoiceType(final InvoiceType invoiceType) {
 		this.invoiceType = invoiceType;
 	}
 
-	public InvoicesParameters withInvoiceType(InvoiceType invoiceType) {
+	public InvoicesParameters withInvoiceType(final InvoiceType invoiceType) {
 		this.invoiceType = invoiceType;
 		return this;
 	}
@@ -158,11 +160,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return invoiceStatus;
 	}
 
-	public void setInvoiceStatus(InvoiceStatus invoiceStatus) {
+	public void setInvoiceStatus(final InvoiceStatus invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 	}
 
-	public InvoicesParameters withInvoiceStatus(InvoiceStatus invoiceStatus) {
+	public InvoicesParameters withInvoiceStatus(final InvoiceStatus invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 		return this;
 	}
@@ -171,11 +173,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return ocrNumber;
 	}
 
-	public void setOcrNumber(String ocrNumber) {
+	public void setOcrNumber(final String ocrNumber) {
 		this.ocrNumber = ocrNumber;
 	}
 
-	public InvoicesParameters withOcrNumber(String ocrNumber) {
+	public InvoicesParameters withOcrNumber(final String ocrNumber) {
 		this.ocrNumber = ocrNumber;
 		return this;
 	}
@@ -184,11 +186,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return dueDateFrom;
 	}
 
-	public void setDueDateFrom(LocalDate dueDateFrom) {
+	public void setDueDateFrom(final LocalDate dueDateFrom) {
 		this.dueDateFrom = dueDateFrom;
 	}
 
-	public InvoicesParameters withDueDateFrom(LocalDate dueDateFrom) {
+	public InvoicesParameters withDueDateFrom(final LocalDate dueDateFrom) {
 		this.dueDateFrom = dueDateFrom;
 		return this;
 	}
@@ -197,11 +199,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return dueDateTo;
 	}
 
-	public void setDueDateTo(LocalDate dueDateTo) {
+	public void setDueDateTo(final LocalDate dueDateTo) {
 		this.dueDateTo = dueDateTo;
 	}
 
-	public InvoicesParameters withDueDateTo(LocalDate dueDateTo) {
+	public InvoicesParameters withDueDateTo(final LocalDate dueDateTo) {
 		this.dueDateTo = dueDateTo;
 		return this;
 	}
@@ -210,11 +212,11 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return organizationGroup;
 	}
 
-	public void setOrganizationGroup(String organizationGroup) {
+	public void setOrganizationGroup(final String organizationGroup) {
 		this.organizationGroup = organizationGroup;
 	}
 
-	public InvoicesParameters withOrganizationGroup(String organizationGroup) {
+	public InvoicesParameters withOrganizationGroup(final String organizationGroup) {
 		this.organizationGroup = organizationGroup;
 		return this;
 	}
@@ -223,57 +225,61 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return organizationNumber;
 	}
 
-	public void setOrganizationNumber(String organizationNumber) {
+	public void setOrganizationNumber(final String organizationNumber) {
 		this.organizationNumber = organizationNumber;
 	}
 
-	public InvoicesParameters withOrganizationNumber(String organizationNumber) {
+	public InvoicesParameters withOrganizationNumber(final String organizationNumber) {
 		this.organizationNumber = organizationNumber;
 		return this;
 	}
 
-	public InvoicesParameters withLimit(int limit) {
+	public InvoicesParameters withLimit(final int limit) {
 		this.limit = limit;
 		return this;
 	}
 
-	public InvoicesParameters withPage(int page) {
+	public InvoicesParameters withPage(final int page) {
 		this.page = page;
 		return this;
 	}
 
 	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(dueDateFrom, dueDateTo, facilityId, invoiceDateFrom, invoiceDateTo, invoiceName, invoiceNumber, invoiceStatus, invoiceType, ocrNumber, organizationGroup, organizationNumber, partyId);
-		return result;
+	public boolean equals(final Object o) {
+		if (o == null || getClass() != o.getClass())
+			return false;
+		if (!super.equals(o))
+			return false;
+		final InvoicesParameters that = (InvoicesParameters) o;
+		return Objects.equals(partyId, that.partyId) && Objects.equals(facilityIds, that.facilityIds) && Objects.equals(invoiceNumber, that.invoiceNumber) && Objects.equals(invoiceDateFrom, that.invoiceDateFrom)
+			&& Objects.equals(invoiceDateTo, that.invoiceDateTo) && Objects.equals(invoiceName, that.invoiceName) && invoiceType == that.invoiceType && invoiceStatus == that.invoiceStatus && Objects.equals(ocrNumber,
+				that.ocrNumber) && Objects.equals(dueDateFrom, that.dueDateFrom) && Objects.equals(dueDateTo, that.dueDateTo) && Objects.equals(organizationNumber, that.organizationNumber) && Objects.equals(
+					organizationGroup, that.organizationGroup);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!super.equals(obj)) {
-			return false;
-		}
-		if (getClass() != obj.getClass()) {
-			return false;
-		}
-		InvoicesParameters other = (InvoicesParameters) obj;
-		return Objects.equals(dueDateFrom, other.dueDateFrom) && Objects.equals(dueDateTo, other.dueDateTo) && Objects.equals(facilityId, other.facilityId) && Objects.equals(invoiceDateFrom, other.invoiceDateFrom) && Objects.equals(invoiceDateTo,
-			other.invoiceDateTo) && Objects.equals(invoiceName, other.invoiceName) && Objects.equals(invoiceNumber, other.invoiceNumber) && invoiceStatus == other.invoiceStatus && invoiceType == other.invoiceType && Objects.equals(ocrNumber,
-				other.ocrNumber) && Objects.equals(organizationGroup, other.organizationGroup) && Objects.equals(organizationNumber, other.organizationNumber) && Objects.equals(partyId, other.partyId);
+	public int hashCode() {
+		return Objects.hash(super.hashCode(), partyId, facilityIds, invoiceNumber, invoiceDateFrom, invoiceDateTo, invoiceName, invoiceType, invoiceStatus, ocrNumber, dueDateFrom, dueDateTo, organizationNumber, organizationGroup);
 	}
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("InvoicesParameters [partyId=").append(partyId).append(", facilityId=").append(facilityId).append(", invoiceNumber=").append(invoiceNumber).append(", invoiceDateFrom=").append(invoiceDateFrom).append(", invoiceDateTo=").append(
-			invoiceDateTo).append(", invoiceName=").append(invoiceName).append(", invoiceType=").append(invoiceType).append(", invoiceStatus=").append(invoiceStatus).append(", ocrNumber=").append(ocrNumber).append(", dueDateFrom=").append(
-				dueDateFrom).append(", dueDateTo=").append(dueDateTo).append(", organizationNumber=").append(organizationNumber).append(", organizationGroup=").append(organizationGroup).append(", page=").append(page).append(", limit=").append(limit)
-			.append("]");
-		return builder.toString();
+		return "InvoicesParameters{" +
+			"partyId=" + partyId +
+			", facilityIds=" + facilityIds +
+			", invoiceNumber='" + invoiceNumber + '\'' +
+			", invoiceDateFrom=" + invoiceDateFrom +
+			", invoiceDateTo=" + invoiceDateTo +
+			", invoiceName='" + invoiceName + '\'' +
+			", invoiceType=" + invoiceType +
+			", invoiceStatus=" + invoiceStatus +
+			", ocrNumber='" + ocrNumber + '\'' +
+			", dueDateFrom=" + dueDateFrom +
+			", dueDateTo=" + dueDateTo +
+			", organizationNumber='" + organizationNumber + '\'' +
+			", organizationGroup='" + organizationGroup + '\'' +
+			", page=" + page +
+			", limit=" + limit +
+			'}';
 	}
 }

@@ -3,8 +3,12 @@
 		{
 			"ocrNumber": "767180995",
 			"invoiceName": "767180995.pdf",
-			"facilityId": "735999109215204886",
-			"invoiceDescription": "El",
+			"facilityIds": [
+				"735999109215204886"
+			],
+			"invoiceDescriptions": [
+				"El"
+			],
 			"invoiceOrigin": "COMMERCIAL",
 			"organizationNumber": "5565027223",
 			"dueDate": "2019-11-07",
@@ -31,8 +35,12 @@
 		{
 			"ocrNumber": "137993598",
 			"invoiceName": "137993598.pdf",
-			"facilityId": "735999109215204886",
-			"invoiceDescription": "El",
+			"facilityIds": [
+				"735999109215204886"
+			],
+			"invoiceDescriptions": [
+				"El"
+			],
 			"invoiceOrigin": "COMMERCIAL",
 			"organizationNumber": "5565027223",
 			"dueDate": "2019-11-08",
@@ -59,8 +67,12 @@
 		{
 			"ocrNumber": "767917693",
 			"invoiceName": "767917693.pdf",
-			"facilityId": "735999109242413886",
-			"invoiceDescription": "Fjärrvärme",
+			"facilityIds": [
+				"735999109242413886"
+			],
+			"invoiceDescriptions": [
+				"Fjärrvärme"
+			],
 			"invoiceOrigin": "COMMERCIAL",
 			"organizationNumber": "5564786647",
 			"dueDate": "2019-11-13",
@@ -87,8 +99,12 @@
 		{
 			"ocrNumber": "137994091",
 			"invoiceName": "137994091.pdf",
-			"facilityId": "735999109242413886",
-			"invoiceDescription": "Fjärrvärme",
+			"facilityIds": [
+				"735999109242413886"
+			],
+			"invoiceDescriptions": [
+				"Fjärrvärme"
+			],
 			"invoiceOrigin": "COMMERCIAL",
 			"organizationNumber": "5564786647",
 			"dueDate": "2019-11-08",
