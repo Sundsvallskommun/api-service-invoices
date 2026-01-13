@@ -45,7 +45,7 @@ public class InvoiceMapper {
 	public static InvoicesResponse toInvoicesResponse(final InvoiceResponse dataWarehouseReaderInvoiceResponse) {
 		return InvoicesResponse.create()
 			.withMetaData(toMetaData(dataWarehouseReaderInvoiceResponse.getMeta()))
-			.withInvoices(toInvoicesFromDatawarehouseReader(dataWarehouseReaderInvoiceResponse.getInvoices()));
+			.withInvoices(toInvoicesFromDataWarehouseReader(dataWarehouseReaderInvoiceResponse.getInvoices()));
 	}
 
 	public static InvoiceParameters toDataWarehouseReaderInvoiceParameters(final List<String> customerNumbers, final InvoicesParameters invoiceParameters) {
@@ -75,7 +75,7 @@ public class InvoiceMapper {
 			.toList();
 	}
 
-	private static List<Invoice> toInvoicesFromDatawarehouseReader(final List<generated.se.sundsvall.datawarehousereader.Invoice> dataWarehouseReaderInvoices) {
+	private static List<Invoice> toInvoicesFromDataWarehouseReader(final List<generated.se.sundsvall.datawarehousereader.Invoice> dataWarehouseReaderInvoices) {
 		return ofNullable(dataWarehouseReaderInvoices).orElse(emptyList()).stream()
 			.map(InvoiceMapper::toInvoice)
 			.toList();
@@ -106,7 +106,8 @@ public class InvoiceMapper {
 	}
 
 	private static InvoiceDetail toInvoiceDetail(final generated.se.sundsvall.datawarehousereader.InvoiceDetail dataWarehouseReaderInvoiceDetail) {
-		return InvoiceDetail.create().withAmount(ofNullable(dataWarehouseReaderInvoiceDetail.getAmount()).orElse(ZERO).floatValue())
+		return InvoiceDetail.create()
+			.withAmount(ofNullable(dataWarehouseReaderInvoiceDetail.getAmount()).orElse(ZERO).floatValue())
 			.withAmountVatExcluded(ofNullable(dataWarehouseReaderInvoiceDetail.getAmountVatExcluded()).orElse(ZERO).floatValue())
 			.withVat(ofNullable(dataWarehouseReaderInvoiceDetail.getVat()).orElse(ZERO).floatValue())
 			.withUnitPrice(ofNullable(dataWarehouseReaderInvoiceDetail.getUnitPrice()).orElse(ZERO).floatValue())
@@ -118,11 +119,14 @@ public class InvoiceMapper {
 			.withToDate(toLocalDate(dataWarehouseReaderInvoiceDetail.getPeriodTo()))
 			.withProductCode(String.valueOf(dataWarehouseReaderInvoiceDetail.getProductCode()))
 			.withProductName(dataWarehouseReaderInvoiceDetail.getProductName())
-			.withQuantity(ofNullable(dataWarehouseReaderInvoiceDetail.getQuantity()).orElse(0D).floatValue());
+			.withQuantity(ofNullable(dataWarehouseReaderInvoiceDetail.getQuantity()).orElse(0D).floatValue())
+			.withAdministration(dataWarehouseReaderInvoiceDetail.getAdministration())
+			.withFacilityId(dataWarehouseReaderInvoiceDetail.getFacilityId());
 	}
 
 	private static MetaData toMetaData(final generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData pagingAndSortingMetaData) {
-		return MetaData.create().withCount(pagingAndSortingMetaData.getCount())
+		return MetaData.create()
+			.withCount(pagingAndSortingMetaData.getCount())
 			.withLimit(pagingAndSortingMetaData.getLimit())
 			.withTotalPages(pagingAndSortingMetaData.getTotalPages())
 			.withTotalRecords(pagingAndSortingMetaData.getTotalRecords())

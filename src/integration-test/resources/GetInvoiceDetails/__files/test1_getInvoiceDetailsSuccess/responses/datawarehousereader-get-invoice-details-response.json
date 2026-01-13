@@ -11,7 +11,9 @@
 		"vat": 25.76,
 		"periodFrom": "2019-09-01",
 		"productName": "Elöverföring",
-		"amountVatExcluded": 103.02
+		"amountVatExcluded": 103.02,
+		"facilityId": "123456789",
+		"administration": "Main Facility"
 	},
 	{
 		"unitPrice": 0.347,
@@ -25,7 +27,9 @@
 		"vat": 319.17,
 		"periodFrom": "2019-09-01",
 		"productName": "Energiskatt",
-		"amountVatExcluded": 1276.68
+		"amountVatExcluded": 1276.68,
+		"facilityId": "123456789",
+		"administration": "Main Facility"
 	},
 	{
 		"unitPrice": 30.9699,
@@ -39,7 +43,9 @@
 		"vat": 232.27,
 		"periodFrom": "2019-09-01",
 		"productName": "Fast Elnätsavgift",
-		"amountVatExcluded": 929.1
+		"amountVatExcluded": 929.1,
+		"facilityId": "123456789",
+		"administration": "Main Facility"
 	},
 	{
 		"unitPrice": 0.789,
@@ -53,6 +59,8 @@
 		"vat": 134.93,
 		"periodFrom": "2019-09-01",
 		"productName": "Effekt",
-		"amountVatExcluded": 539.7
+		"amountVatExcluded": 539.7,
+		"facilityId": "123456789",
+		"administration": "Main Facility"
 	}
 ]

@@ -46,6 +46,8 @@ class InvoiceDetailTest {
 		final var productName = "productName";
 		final var fromDate = LocalDate.now().minusDays(10);
 		final var toDate = LocalDate.now().plusDays(10);
+		final var facilityId = "facilityId";
+		final var administration = "administration";
 
 		final var invoiceDetail = InvoiceDetail.create()
 			.withAmount(amount)
@@ -59,7 +61,9 @@ class InvoiceDetailTest {
 			.withProductCode(productCode)
 			.withProductName(productName)
 			.withFromDate(fromDate)
-			.withToDate(toDate);
+			.withToDate(toDate)
+			.withFacilityId(facilityId)
+			.withAdministration(administration);
 
 		assertThat(invoiceDetail).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(invoiceDetail.getAmount()).isEqualTo(amount);
@@ -74,6 +78,8 @@ class InvoiceDetailTest {
 		assertThat(invoiceDetail.getProductName()).isEqualTo(productName);
 		assertThat(invoiceDetail.getFromDate()).isEqualTo(fromDate);
 		assertThat(invoiceDetail.getToDate()).isEqualTo(toDate);
+		assertThat(invoiceDetail.getFacilityId()).isEqualTo(facilityId);
+		assertThat(invoiceDetail.getAdministration()).isEqualTo(administration);
 	}
 
 	@Test

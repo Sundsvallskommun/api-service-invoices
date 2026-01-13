@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "5.0"
 servers:
-  - url: http://localhost:56763
+  - url: http://localhost:58207
     description: Generated server url
 tags:
   - name: Measurement
@@ -1020,12 +1020,6 @@ components:
     Problem:
       type: object
       properties:
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -1035,6 +1029,12 @@ components:
         parameters:
           type: object
           additionalProperties: { }
+        status:
+          $ref: "#/components/schemas/StatusType"
+        detail:
+          type: string
+        title:
+          type: string
     StatusType:
       type: object
       properties:
@@ -1083,14 +1083,14 @@ components:
           type: string
         message:
           type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
         parameters:
           type: object
           additionalProperties: { }
+        detail:
+          type: string
         suppressed:
           type: array
           items:
@@ -1152,12 +1152,6 @@ components:
                 type: boolean
         message:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -1167,6 +1161,12 @@ components:
         parameters:
           type: object
           additionalProperties: { }
+        status:
+          $ref: "#/components/schemas/StatusType"
+        detail:
+          type: string
+        title:
+          type: string
         suppressed:
           type: array
           items:
@@ -1222,10 +1222,10 @@ components:
       type: string
       description: Data point aggregation granularity
       enum:
+        - QUARTER
         - HOUR
         - DAY
         - MONTH
-        - YEAR
     Direction:
       type: string
       description: The sort order direction
@@ -1766,6 +1766,18 @@ components:
           description: Organization number of invoice issuer
           examples:
             - "5565027223"
+          readOnly: true
+        administration:
+          type: string
+          description: Administration
+          examples:
+            - Name of the administration
+          readOnly: true
+        facilityId:
+          type: string
+          description: Facility id
+          examples:
+            - "735999109151401011"
           readOnly: true
     InstalledBaseItem:
       type: object
