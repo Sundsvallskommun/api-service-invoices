@@ -43,8 +43,40 @@ public class InvoiceDetail {
 	@Schema(examples = "2022-01-31", description = "Invoice-detail to-date")
 	private LocalDate toDate;
 
+	@Schema(examples = "735999109151401011", description = "Facility id")
+	private String facilityId;
+
+	@Schema(examples = "Sundsvalls Energi AB", description = "Administration")
+	private String administration;
+
 	public static InvoiceDetail create() {
 		return new InvoiceDetail();
+	}
+
+	public String getFacilityId() {
+		return facilityId;
+	}
+
+	public InvoiceDetail withFacilityId(String facilityId) {
+		this.facilityId = facilityId;
+		return this;
+	}
+
+	public void setFacilityId(String facilityId) {
+		this.facilityId = facilityId;
+	}
+
+	public String getAdministration() {
+		return administration;
+	}
+
+	public InvoiceDetail withAdministration(String administration) {
+		this.administration = administration;
+		return this;
+	}
+
+	public void setAdministration(String administration) {
+		this.administration = administration;
 	}
 
 	public float getAmount() {
@@ -204,30 +236,38 @@ public class InvoiceDetail {
 	}
 
 	@Override
-	public int hashCode() {
-		return Objects.hash(amount, amountVatExcluded, description, fromDate, productCode, productName, quantity, toDate, unit, unitPrice, vat, vatRate);
+	public boolean equals(Object o) {
+		if (o == null || getClass() != o.getClass())
+			return false;
+		InvoiceDetail that = (InvoiceDetail) o;
+		return Float.compare(amount, that.amount) == 0 && Float.compare(amountVatExcluded, that.amountVatExcluded) == 0 && Float.compare(vat, that.vat) == 0 && Float.compare(vatRate, that.vatRate) == 0
+			&& Float.compare(quantity, that.quantity) == 0 && Float.compare(unitPrice, that.unitPrice) == 0 && Objects.equals(unit, that.unit) && Objects.equals(description, that.description) && Objects.equals(
+				productCode, that.productCode) && Objects.equals(productName, that.productName) && Objects.equals(fromDate, that.fromDate) && Objects.equals(toDate, that.toDate) && Objects.equals(facilityId, that.facilityId)
+			&& Objects.equals(administration, that.administration);
 	}
 
 	@Override
-	public boolean equals(final Object obj) {
-		if (this == obj) {
-			return true;
-		}
-		if (!(obj instanceof InvoiceDetail other)) {
-			return false;
-		}
-		return (Float.floatToIntBits(amount) == Float.floatToIntBits(other.amount)) && (Float.floatToIntBits(amountVatExcluded) == Float.floatToIntBits(other.amountVatExcluded)) && Objects.equals(description, other.description) && Objects.equals(fromDate,
-			other.fromDate) && Objects.equals(productCode, other.productCode) && Objects.equals(productName, other.productName) && (Float.floatToIntBits(quantity) == Float.floatToIntBits(other.quantity)) && Objects.equals(toDate, other.toDate) && Objects
-				.equals(unit, other.unit) && (Float.floatToIntBits(unitPrice) == Float.floatToIntBits(other.unitPrice)) && (Float.floatToIntBits(vat) == Float.floatToIntBits(other.vat)) && (Float.floatToIntBits(vatRate) == Float.floatToIntBits(
-					other.vatRate));
+	public int hashCode() {
+		return Objects.hash(amount, amountVatExcluded, vat, vatRate, quantity, unit, unitPrice, description, productCode, productName, fromDate, toDate, facilityId, administration);
 	}
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("InvoiceDetail [amount=").append(amount).append(", amountVatExcluded=").append(amountVatExcluded).append(", vat=").append(vat).append(", vatRate=").append(vatRate).append(", quantity=").append(quantity).append(", unit=").append(unit)
-			.append(", unitPrice=").append(unitPrice).append(", description=").append(description).append(", productCode=").append(productCode).append(", productName=").append(productName).append(", fromDate=").append(fromDate).append(", toDate=").append(
-				toDate).append("]");
-		return builder.toString();
+		return "InvoiceDetail{" +
+			"amount=" + amount +
+			", amountVatExcluded=" + amountVatExcluded +
+			", vat=" + vat +
+			", vatRate=" + vatRate +
+			", quantity=" + quantity +
+			", unit='" + unit + '\'' +
+			", unitPrice=" + unitPrice +
+			", description='" + description + '\'' +
+			", productCode='" + productCode + '\'' +
+			", productName='" + productName + '\'' +
+			", fromDate=" + fromDate +
+			", toDate=" + toDate +
+			", facilityId='" + facilityId + '\'' +
+			", administration='" + administration + '\'' +
+			'}';
 	}
 }

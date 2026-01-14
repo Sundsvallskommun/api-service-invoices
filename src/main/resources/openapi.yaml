@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "9.0"
 servers:
-  - url: http://localhost:54657
+  - url: http://localhost:62245
     description: Generated server url
 tags:
   - name: Invoices
@@ -601,12 +601,6 @@ components:
     Problem:
       type: object
       properties:
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -616,6 +610,12 @@ components:
         parameters:
           type: object
           additionalProperties: { }
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
     StatusType:
       type: object
       properties:
@@ -664,14 +664,14 @@ components:
           type: string
         message:
           type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
         parameters:
           type: object
           additionalProperties: { }
+        detail:
+          type: string
         suppressed:
           type: array
           items:
@@ -733,12 +733,6 @@ components:
                 type: boolean
         message:
           type: string
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
@@ -748,6 +742,12 @@ components:
         parameters:
           type: object
           additionalProperties: { }
+        status:
+          $ref: "#/components/schemas/StatusType"
+        title:
+          type: string
+        detail:
+          type: string
         suppressed:
           type: array
           items:
@@ -872,6 +872,16 @@ components:
           description: Invoice-detail to-date
           examples:
             - 2022-01-31
+        facilityId:
+          type: string
+          description: Facility id
+          examples:
+            - "735999109151401011"
+        administration:
+          type: string
+          description: Administration
+          examples:
+            - Sundsvalls Energi AB
     InvoiceDetailsResponse:
       type: object
       properties:
