@@ -1,5 +1,7 @@
 package se.sundsvall.invoices.api.model;
 
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.invoices.api.model.InvoiceType.CONSOLIDATED_INVOICE;
 import static se.sundsvall.invoices.api.model.InvoiceType.CREDIT_INVOICE;
@@ -12,8 +14,6 @@ import static se.sundsvall.invoices.api.model.InvoiceType.REMINDER;
 import static se.sundsvall.invoices.api.model.InvoiceType.SELF_INVOICE;
 import static se.sundsvall.invoices.api.model.InvoiceType.START_INVOICE;
 import static se.sundsvall.invoices.api.model.InvoiceType.UNKNOWN;
-
-import org.junit.jupiter.api.Test;
 
 class InvoiceTypeTest {
 

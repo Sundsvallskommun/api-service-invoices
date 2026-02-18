@@ -1,17 +1,5 @@
 package se.sundsvall.invoices.service;
 
-import static java.lang.Long.parseLong;
-import static java.lang.String.format;
-import static java.util.stream.Collectors.collectingAndThen;
-import static java.util.stream.Collectors.toList;
-import static org.zalando.problem.Status.NOT_FOUND;
-import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
-import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceParameters;
-import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
-import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceDetails;
-import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoicesResponse;
-import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
-
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import java.util.List;
 import java.util.Optional;
@@ -28,6 +16,18 @@ import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReader
 import se.sundsvall.invoices.integration.idata.IdataIntegration;
 import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
 import se.sundsvall.invoices.service.mapper.InvoiceMapper;
+
+import static java.lang.Long.parseLong;
+import static java.lang.String.format;
+import static java.util.stream.Collectors.collectingAndThen;
+import static java.util.stream.Collectors.toList;
+import static org.zalando.problem.Status.NOT_FOUND;
+import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceParameters;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceDetails;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoicesResponse;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
 
 @Service
 public class InvoicesService {

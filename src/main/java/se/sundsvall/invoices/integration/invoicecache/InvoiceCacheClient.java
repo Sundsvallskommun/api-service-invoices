@@ -1,9 +1,5 @@
 package se.sundsvall.invoices.integration.invoicecache;
 
-import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static se.sundsvall.invoices.integration.invoicecache.configuration.InvoiceCacheConfiguration.CLIENT_ID;
-
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
 import generated.se.sundsvall.invoicecache.InvoicePdf;
@@ -15,6 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.invoices.integration.invoicecache.configuration.InvoiceCacheConfiguration;
+
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
+import static se.sundsvall.invoices.integration.invoicecache.configuration.InvoiceCacheConfiguration.CLIENT_ID;
 
 @FeignClient(name = CLIENT_ID, url = "${integration.invoicecache.url}", configuration = InvoiceCacheConfiguration.class)
 @CircuitBreaker(name = CLIENT_ID)

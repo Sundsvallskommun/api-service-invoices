@@ -1,5 +1,7 @@
 package se.sundsvall.invoices.api.model;
 
+import org.junit.jupiter.api.Test;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.CREDITED;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.DEBT_COLLECTION;
@@ -11,8 +13,6 @@ import static se.sundsvall.invoices.api.model.InvoiceStatus.SENT;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.UNKNOWN;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.VOID;
 import static se.sundsvall.invoices.api.model.InvoiceStatus.WRITTEN_OFF;
-
-import org.junit.jupiter.api.Test;
 
 class InvoiceStatusTest {
 
