@@ -1,11 +1,5 @@
 package se.sundsvall.invoices.integration.idata.configuration;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-import static se.sundsvall.invoices.integration.idata.configuration.IdataConfiguration.CLIENT_ID;
-
 import feign.RequestInterceptor;
 import feign.codec.ErrorDecoder;
 import org.junit.jupiter.api.Test;
@@ -20,6 +14,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.dept44.configuration.feign.FeignMultiCustomizer;
 import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
+import static se.sundsvall.invoices.integration.idata.configuration.IdataConfiguration.CLIENT_ID;
 
 @ExtendWith(MockitoExtension.class)
 class IdataConfigurationTest {

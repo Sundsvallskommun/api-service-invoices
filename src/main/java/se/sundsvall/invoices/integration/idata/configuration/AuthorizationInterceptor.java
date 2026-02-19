@@ -1,8 +1,5 @@
 package se.sundsvall.invoices.integration.idata.configuration;
 
-import static java.util.Collections.emptyMap;
-import static java.util.Optional.ofNullable;
-
 import feign.RequestInterceptor;
 import feign.RequestTemplate;
 import java.util.Collection;
@@ -15,6 +12,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.zalando.problem.Problem;
 import org.zalando.problem.Status;
+
+import static java.util.Collections.emptyMap;
+import static java.util.Optional.ofNullable;
 
 /**
  * Interceptor for adding authorization headers to requests made to the IDATA API. This interceptor generates an HMAC

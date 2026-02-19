@@ -1,10 +1,5 @@
 package se.sundsvall.invoices.api.model.converter;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.zalando.problem.Status.BAD_REQUEST;
-
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -12,6 +7,11 @@ import org.junit.jupiter.params.provider.NullSource;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.zalando.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
+
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.zalando.problem.Status.BAD_REQUEST;
 
 class InvoiceOriginConverterTest {
 
