@@ -1,181 +1,181 @@
 openapi: 3.1.0
 info:
   title: api-invoices
-  contact: { }
+  contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
   version: "9.0"
 servers:
-  - url: http://localhost:62245
-    description: Generated server url
+- url: http://localhost:52379
+  description: Generated server url
 tags:
-  - name: Invoices
-    description: Service that delivers invoice information
+- name: Invoices
+  description: Service that delivers invoice information
 paths:
   /{municipalityId}/{invoiceOrigin}:
     get:
       tags:
-        - Invoices
+      - Invoices
       summary: Returns invoices matching sent in search parameters
       operationId: getInvoices
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: invoiceOrigin
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/InvoiceOrigin"
+      - name: partyId
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
             type: string
-          example: 2281
-        - name: invoiceOrigin
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/InvoiceOrigin"
-        - name: partyId
-          in: query
-          required: true
-          schema:
-            type: array
-            items:
-              type: string
-              description: PartyId (e.g. a personId or an organizationId)
-              examples:
-                - 81471222-5798-11e9-ae24-57fa13b361e1
-            minItems: 1
-            uniqueItems: true
-        - name: facilityIds
-          in: query
-          required: false
-          schema:
-            type: array
-            items:
-              type: string
-              description: Facility id
-              examples:
-                - "735999109151401011"
-        - name: invoiceNumber
-          in: query
+            description: PartyId (e.g. a personId or an organizationId)
+            examples:
+            - 81471222-5798-11e9-ae24-57fa13b361e1
+          minItems: 1
+          uniqueItems: true
+      - name: facilityIds
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            description: Facility id
+            examples:
+            - "735999109151401011"
+      - name: invoiceNumber
+        in: query
+        description: Invoice number
+        required: false
+        schema:
+          type: string
           description: Invoice number
-          required: false
-          schema:
-            type: string
-            description: Invoice number
-            examples:
-              - "767915994"
-        - name: invoiceDateFrom
-          in: query
+          examples:
+          - "767915994"
+      - name: invoiceDateFrom
+        in: query
+        description: Earliest invoice date. Format is YYYY-MM-DD.
+        required: false
+        schema:
+          type: string
+          format: date
           description: Earliest invoice date. Format is YYYY-MM-DD.
-          required: false
-          schema:
-            type: string
-            format: date
-            description: Earliest invoice date. Format is YYYY-MM-DD.
-            examples:
-              - 2022-01-01
-        - name: invoiceDateTo
-          in: query
+          examples:
+          - 2022-01-01
+      - name: invoiceDateTo
+        in: query
+        description: Latest invoice date. Format is YYYY-MM-DD.
+        required: false
+        schema:
+          type: string
+          format: date
           description: Latest invoice date. Format is YYYY-MM-DD.
-          required: false
-          schema:
-            type: string
-            format: date
-            description: Latest invoice date. Format is YYYY-MM-DD.
-            examples:
-              - 2022-01-31
-        - name: invoiceName
-          in: query
+          examples:
+          - 2022-01-31
+      - name: invoiceName
+        in: query
+        description: invoice name
+        required: false
+        schema:
+          type: string
           description: invoice name
-          required: false
-          schema:
-            type: string
-            description: invoice name
-            examples:
-              - 765801493.pdf
-        - name: invoiceType
-          in: query
-          description: Invoice type
-          required: false
-          schema:
-            $ref: "#/components/schemas/InvoiceType"
-        - name: invoiceStatus
-          in: query
-          description: Invoice status
-          required: false
-          schema:
-            $ref: "#/components/schemas/InvoiceStatus"
-        - name: ocrNumber
-          in: query
+          examples:
+          - 765801493.pdf
+      - name: invoiceType
+        in: query
+        description: Invoice type
+        required: false
+        schema:
+          $ref: "#/components/schemas/InvoiceType"
+      - name: invoiceStatus
+        in: query
+        description: Invoice status
+        required: false
+        schema:
+          $ref: "#/components/schemas/InvoiceStatus"
+      - name: ocrNumber
+        in: query
+        description: Ocr number
+        required: false
+        schema:
+          type: string
           description: Ocr number
-          required: false
-          schema:
-            type: string
-            description: Ocr number
-            examples:
-              - "767915994"
-        - name: dueDateFrom
-          in: query
+          examples:
+          - "767915994"
+      - name: dueDateFrom
+        in: query
+        description: Earliest due date. Format is YYYY-MM-DD.
+        required: false
+        schema:
+          type: string
+          format: date
           description: Earliest due date. Format is YYYY-MM-DD.
-          required: false
-          schema:
-            type: string
-            format: date
-            description: Earliest due date. Format is YYYY-MM-DD.
-            examples:
-              - 2022-01-01
-        - name: dueDateTo
-          in: query
+          examples:
+          - 2022-01-01
+      - name: dueDateTo
+        in: query
+        description: Latest due date. Format is YYYY-MM-DD.
+        required: false
+        schema:
+          type: string
+          format: date
           description: Latest due date. Format is YYYY-MM-DD.
-          required: false
-          schema:
-            type: string
-            format: date
-            description: Latest due date. Format is YYYY-MM-DD.
-            examples:
-              - 2022-01-31
-        - name: organizationNumber
-          in: query
+          examples:
+          - 2022-01-31
+      - name: organizationNumber
+        in: query
+        description: Creditor organization number
+        required: false
+        schema:
+          type: string
           description: Creditor organization number
-          required: false
-          schema:
-            type: string
-            description: Creditor organization number
-            examples:
-              - "5564786647"
-        - name: organizationGroup
-          in: query
+          examples:
+          - "5564786647"
+      - name: organizationGroup
+        in: query
+        description: Organization group
+        required: false
+        schema:
+          type: string
           description: Organization group
-          required: false
-          schema:
-            type: string
-            description: Organization group
-            examples:
-              - stadsbacken
-        - name: page
-          in: query
+          examples:
+          - stadsbacken
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
           description: Page number
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 1
-            description: Page number
-            examples:
-              - "1"
-            minimum: 1
-        - name: limit
-          in: query
+          examples:
+          - "1"
+          minimum: 1
+      - name: limit
+        in: query
+        description: Result size per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
           description: Result size per page
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 100
-            description: Result size per page
-            examples:
-              - "100"
-            maximum: 1000
-            minimum: 1
+          examples:
+          - "100"
+          maximum: 1000
+          minimum: 1
       responses:
         "200":
           description: Successful operation
@@ -189,8 +189,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "404":
           description: Not found
           content:
@@ -212,43 +212,42 @@ paths:
   /{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf:
     get:
       tags:
-        - Invoices
+      - Invoices
       summary: Returns invoice in pdf-format
       operationId: getPdfInvoice
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: organizationNumber
-          in: path
-          description: Organization number of invoice issuer
-          required: true
-          schema:
-            type: string
-          example: 5565272223
-        - name: invoiceOrigin
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/InvoiceOrigin"
-        - name: invoiceNumber
-          in: path
-          description: Id of invoice
-          required: true
-          schema:
-            type: string
-            minLength: 1
-          example: 333444
-        - name: invoiceType
-          in: query
-          description: InvoiceType filter parameter
-          required: false
-          schema:
-            $ref: "#/components/schemas/InvoiceType"
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: organizationNumber
+        in: path
+        description: Organization number of invoice issuer
+        required: true
+        schema:
+          type: string
+        example: 5565272223
+      - name: invoiceOrigin
+        in: path
+        required: true
+        schema:
+          $ref: "#/components/schemas/InvoiceOrigin"
+      - name: invoiceNumber
+        in: path
+        description: Id of invoice
+        required: true
+        schema:
+          type: string
+        example: 333444
+      - name: invoiceType
+        in: query
+        description: InvoiceType filter parameter
+        required: false
+        schema:
+          $ref: "#/components/schemas/InvoiceType"
       responses:
         "200":
           description: Successful operation
@@ -262,8 +261,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "404":
           description: Not found
           content:
@@ -285,32 +284,31 @@ paths:
   /{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details:
     get:
       tags:
-        - Invoices
+      - Invoices
       summary: Returns invoice-details of an invoice
       operationId: getInvoiceDetails
       parameters:
-        - name: municipalityId
-          in: path
-          description: Municipality ID
-          required: true
-          schema:
-            type: string
-          example: 2281
-        - name: organizationNumber
-          in: path
-          description: Organization number of invoice issuer
-          required: true
-          schema:
-            type: string
-          example: 5565272223
-        - name: invoiceNumber
-          in: path
-          description: Id of invoice
-          required: true
-          schema:
-            type: string
-            minLength: 1
-          example: 333444
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: organizationNumber
+        in: path
+        description: Organization number of invoice issuer
+        required: true
+        schema:
+          type: string
+        example: 5565272223
+      - name: invoiceNumber
+        in: path
+        description: Id of invoice
+        required: true
+        schema:
+          type: string
+        example: 333444
       responses:
         "200":
           description: Successful operation
@@ -324,8 +322,8 @@ paths:
             application/problem+json:
               schema:
                 oneOf:
-                  - $ref: "#/components/schemas/Problem"
-                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
         "404":
           description: Not found
           content:
@@ -347,7 +345,7 @@ paths:
   /api-docs:
     get:
       tags:
-        - API
+      - API
       summary: OpenAPI
       operationId: getApiDocs
       responses:
@@ -367,42 +365,42 @@ components:
       description: Invoice origin (invoices originates from either commercial or public
         activities)
       enum:
-        - COMMERCIAL
-        - PUBLIC_ADMINISTRATION
+      - COMMERCIAL
+      - PUBLIC_ADMINISTRATION
       example: COMMERCIAL
     InvoiceType:
       type: string
       description: Type of invoice
       enum:
-        - INVOICE
-        - CREDIT_INVOICE
-        - START_INVOICE
-        - FINAL_INVOICE
-        - DIRECT_DEBIT
-        - SELF_INVOICE
-        - REMINDER
-        - CONSOLIDATED_INVOICE
-        - INTERNAL_INVOICE
-        - OFFSET_INVOICE
-        - UNKNOWN
+      - INVOICE
+      - CREDIT_INVOICE
+      - START_INVOICE
+      - FINAL_INVOICE
+      - DIRECT_DEBIT
+      - SELF_INVOICE
+      - REMINDER
+      - CONSOLIDATED_INVOICE
+      - INTERNAL_INVOICE
+      - OFFSET_INVOICE
+      - UNKNOWN
       examples:
-        - INVOICE
+      - INVOICE
     InvoiceStatus:
       type: string
       description: Status of invoice
       enum:
-        - PAID
-        - SENT
-        - PARTIALLY_PAID
-        - DEBT_COLLECTION
-        - PAID_TOO_MUCH
-        - REMINDER
-        - VOID
-        - CREDITED
-        - WRITTEN_OFF
-        - UNKNOWN
+      - PAID
+      - SENT
+      - PARTIALLY_PAID
+      - DEBT_COLLECTION
+      - PAID_TOO_MUCH
+      - REMINDER
+      - VOID
+      - CREDITED
+      - WRITTEN_OFF
+      - UNKNOWN
       examples:
-        - PAID
+      - PAID
     Address:
       type: object
       properties:
@@ -410,22 +408,22 @@ components:
           type: string
           description: Street-address
           examples:
-            - Storgatan 1
+          - Storgatan 1
         postcode:
           type: string
           description: Post-code
           examples:
-            - "11122"
+          - "11122"
         city:
           type: string
           description: City
           examples:
-            - Sundsvall
+          - Sundsvall
         careOf:
           type: string
           description: Care-of
           examples:
-            - Kalle
+          - Kalle
     Invoice:
       type: object
       description: Invoice model
@@ -435,105 +433,105 @@ components:
           format: date
           description: Due date
           examples:
-            - 2022-02-28
+          - 2022-02-28
         totalAmount:
           type: number
           format: float
           description: Invoice-amount including VAT and rounding
           examples:
-            - "814.00"
+          - "814.00"
         amountVatIncluded:
           type: number
           format: float
           description: Invoice-amount including VAT
           examples:
-            - "813.50"
+          - "813.50"
         amountVatExcluded:
           type: number
           format: float
           description: Invoice-amount excluding VAT
           examples:
-            - "651.20"
+          - "651.20"
         vatEligibleAmount:
           type: number
           format: float
           description: Amount which VAT is applied on
           examples:
-            - "651.20"
+          - "651.20"
         rounding:
           type: number
           format: float
           description: Equalization to integer
           examples:
-            - "0.50"
+          - "0.50"
         vat:
           type: number
           format: float
           description: VAT
           examples:
-            - "162.80"
+          - "162.80"
         reversedVat:
           type: boolean
           description: Is VAT reversed
           examples:
-            - "false"
+          - "false"
         pdfAvailable:
           type: boolean
           description: Is invoice-pdf available
           examples:
-            - "false"
+          - "false"
         currency:
           type: string
           description: Currency
           examples:
-            - SEK
+          - SEK
         invoiceDate:
           type: string
           format: date
           description: Invoice-date
           examples:
-            - 2022-01-15
+          - 2022-01-15
         fromDate:
           type: string
           format: date
           description: Invoice from-date
           examples:
-            - 2022-01-01
+          - 2022-01-01
         toDate:
           type: string
           format: date
           description: Invoice to-date
           examples:
-            - 2022-01-31
+          - 2022-01-31
         invoiceNumber:
           type: string
           description: Invoice-number
           examples:
-            - "999"
+          - "999"
         invoiceStatus:
           $ref: "#/components/schemas/InvoiceStatus"
         ocrNumber:
           type: string
           description: OCR-number
           examples:
-            - "96758235"
+          - "96758235"
         organizationNumber:
           type: string
           description: Organization number of the creditor
           examples:
-            - "5565027223"
+          - "5565027223"
         invoiceName:
           type: string
           description: Invoice-name
           examples:
-            - faktura-999.pdf
+          - faktura-999.pdf
         invoiceType:
           $ref: "#/components/schemas/InvoiceType"
         invoiceDescriptions:
           type: array
           description: Invoice-description
           examples:
-            - Fjärrvärme
+          - Fjärrvärme
           items:
             type: string
           uniqueItems: true
@@ -568,219 +566,91 @@ components:
           format: int32
           description: Current page
           examples:
-            - "5"
+          - "5"
           readOnly: true
         limit:
           type: integer
           format: int32
           description: Displayed objects per page
           examples:
-            - "20"
+          - "20"
           readOnly: true
         count:
           type: integer
           format: int32
           description: Displayed objects on current page
           examples:
-            - "13"
+          - "13"
           readOnly: true
         totalRecords:
           type: integer
           format: int64
           description: Total amount of hits based on provided search parameters
           examples:
-            - "98"
+          - "98"
           readOnly: true
         totalPages:
           type: integer
           format: int32
           description: Total amount of pages based on provided search parameters
           examples:
-            - "23"
+          - "23"
           readOnly: true
     Problem:
       type: object
       properties:
+        title:
+          type: string
+        detail:
+          type: string
         instance:
           type: string
           format: uri
         type:
           type: string
           format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
         status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
-    StatusType:
-      type: object
-      properties:
-        statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
-        cause:
-          $ref: "#/components/schemas/ThrowableProblem"
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              className:
-                type: string
-              nativeMethod:
-                type: boolean
         type:
           type: string
           format: uri
         status:
-          $ref: "#/components/schemas/StatusType"
+          type: integer
+          format: int32
         violations:
           type: array
           items:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        message:
+        detail:
           type: string
+        causeAsProblem:
+          $ref: "#/components/schemas/ThrowableProblem"
         instance:
           type: string
           format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
-        detail:
-          type: string
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    className:
-                      type: string
-                    nativeMethod:
-                      type: boolean
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
     ThrowableProblem:
       type: object
       properties:
-        cause: { }
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              className:
-                type: string
-              nativeMethod:
-                type: boolean
-        message:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
           type: string
         instance:
           type: string
           format: uri
-        type:
-          type: string
-          format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
-        status:
-          $ref: "#/components/schemas/StatusType"
-        title:
-          type: string
-        detail:
-          type: string
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    className:
-                      type: string
-                    nativeMethod:
-                      type: boolean
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
+        causeAsProblem: {}
     Violation:
       type: object
       properties:
@@ -795,7 +665,7 @@ components:
           type: string
           description: File-name
           examples:
-            - faktura-999.pdf
+          - faktura-999.pdf
         file:
           type: string
           format: byte
@@ -809,79 +679,79 @@ components:
           format: float
           description: Amount
           examples:
-            - "814.00"
+          - "814.00"
         amountVatExcluded:
           type: number
           format: float
           description: Invoice-amount excluding VAT
           examples:
-            - "651.20"
+          - "651.20"
         vat:
           type: number
           format: float
           description: VAT
           examples:
-            - "162.80"
+          - "162.80"
         vatRate:
           type: number
           format: float
           description: VAT-rate in percent
           examples:
-            - "25.00"
+          - "25.00"
         quantity:
           type: number
           format: float
           description: Quantity of product
           examples:
-            - "3.45"
+          - "3.45"
         unit:
           type: string
           description: Unit in quantity
           examples:
-            - kWh
+          - kWh
         unitPrice:
           type: number
           format: float
           description: Unit-price
           examples:
-            - "271.30"
+          - "271.30"
         description:
           type: string
           description: Description of detail
           examples:
-            - Förbrukning el
+          - Förbrukning el
         productCode:
           type: string
           description: Product code
           examples:
-            - "999"
+          - "999"
         productName:
           type: string
           description: Product name
           examples:
-            - Elförbrukning
+          - Elförbrukning
         fromDate:
           type: string
           format: date
           description: Invoice-detail from-date
           examples:
-            - 2022-01-01
+          - 2022-01-01
         toDate:
           type: string
           format: date
           description: Invoice-detail to-date
           examples:
-            - 2022-01-31
+          - 2022-01-31
         facilityId:
           type: string
           description: Facility id
           examples:
-            - "735999109151401011"
+          - "735999109151401011"
         administration:
           type: string
           description: Administration
           examples:
-            - Sundsvalls Energi AB
+          - Sundsvalls Energi AB
     InvoiceDetailsResponse:
       type: object
       properties:
@@ -889,4 +759,4 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/InvoiceDetail"
-  securitySchemes: { }
+  securitySchemes: {}
