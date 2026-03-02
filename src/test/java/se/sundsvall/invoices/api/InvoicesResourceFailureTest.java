@@ -4,14 +4,15 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.zalando.problem.Problem;
-import org.zalando.problem.violations.ConstraintViolationProblem;
-import org.zalando.problem.violations.Violation;
+import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.invoices.Application;
 import se.sundsvall.invoices.service.InvoicesService;
 
@@ -21,10 +22,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 import static org.mockito.Mockito.verifyNoInteractions;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
-import static org.zalando.problem.Status.BAD_REQUEST;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 
+@AutoConfigureWebTestClient
 @SpringBootTest(classes = Application.class, webEnvironment = RANDOM_PORT)
 @ActiveProfiles("junit")
 class InvoicesResourceFailureTest {
@@ -62,7 +64,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("partyId", "must not be empty"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -87,7 +89,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("partyId[0]", "not a valid UUID"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -112,7 +114,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("organizationNumber", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -137,7 +139,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getInvoices.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -162,7 +164,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("invoiceDateFrom",
 				"Failed to convert property value of type 'java.lang.String' to required type 'java.time.LocalDate' for property 'invoiceDateFrom'; Failed to convert from type [java.lang.String] to type [@org.springframework.format.annotation.DateTimeFormat @io.swagger.v3.oas.annotations.media.Schema java.time.LocalDate] for value [22-01-01]"));
 
@@ -188,7 +190,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("invoiceType",
 				"Failed to convert property value of type 'java.lang.String' to required type 'se.sundsvall.invoices.api.model.InvoiceType' for property 'invoiceType'; Failed to convert from type [java.lang.String] to type [@io.swagger.v3.oas.annotations.media.Schema se.sundsvall.invoices.api.model.InvoiceType] for value [Not valid]"));
 
@@ -214,7 +216,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("invoiceStatus",
 				"Failed to convert property value of type 'java.lang.String' to required type 'se.sundsvall.invoices.api.model.InvoiceStatus' for property 'invoiceStatus'; Failed to convert from type [java.lang.String] to type [@io.swagger.v3.oas.annotations.media.Schema se.sundsvall.invoices.api.model.InvoiceStatus] for value [Not valid]"));
 
@@ -238,7 +240,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getInvoiceDetails.invoiceNumber", "must not be blank"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -261,7 +263,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getInvoiceDetails.organizationNumber", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -284,7 +286,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getInvoiceDetails.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -307,8 +309,7 @@ class InvoicesResourceFailureTest {
 		// Assert
 		assertThat(response.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).isEqualTo(
-			"Method parameter 'invoiceOrigin': Failed to convert value of type 'java.lang.String' to required type 'se.sundsvall.invoices.api.model.InvoiceOrigin'; Failed to convert from type [java.lang.String] to type [@org.springframework.web.bind.annotation.PathVariable se.sundsvall.invoices.api.model.InvoiceOrigin] for value [not-valid]");
+		assertThat(response.getDetail()).isEqualTo("Failed to convert 'invoiceOrigin' with value: 'not-valid'");
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
@@ -331,7 +332,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getPdfInvoice.organizationNumber", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -355,7 +356,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getPdfInvoice.invoiceNumber", "must not be blank"));
 
 		verifyNoInteractions(invoicesServiceMock);
@@ -379,7 +380,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::getField, Violation::getMessage)
+			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getPdfInvoice.municipalityId", "not a valid municipality ID"));
 
 		verifyNoInteractions(invoicesServiceMock);

@@ -3,12 +3,12 @@ package se.sundsvall.invoices.api.model.converter;
 import java.util.stream.Stream;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
-import org.zalando.problem.Problem;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
 
 import static java.lang.String.format;
 import static org.apache.commons.lang3.StringUtils.trim;
-import static org.zalando.problem.Status.BAD_REQUEST;
+import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static se.sundsvall.invoices.service.Constants.INVALID_PARAMETER_INVOICE_ORIGIN;
 
 @Component

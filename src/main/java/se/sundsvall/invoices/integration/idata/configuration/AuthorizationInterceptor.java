@@ -10,11 +10,11 @@ import javax.crypto.spec.SecretKeySpec;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.zalando.problem.Problem;
-import org.zalando.problem.Status;
+import se.sundsvall.dept44.problem.Problem;
 
 import static java.util.Collections.emptyMap;
 import static java.util.Optional.ofNullable;
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 
 /**
  * Interceptor for adding authorization headers to requests made to the IDATA API. This interceptor generates an HMAC
@@ -71,7 +71,7 @@ public class AuthorizationInterceptor implements RequestInterceptor {
 			return Hex.encodeHexString(mac.doFinal(message.getBytes()));
 		} catch (Exception e) {
 			LOGGER.error("Error generating HMAC: {}", e.getMessage());
-			throw Problem.valueOf(Status.INTERNAL_SERVER_ERROR, "Error occurred when trying to generate authorization header");
+			throw Problem.valueOf(INTERNAL_SERVER_ERROR, "Error occurred when trying to generate authorization header");
 		}
 	}
 
