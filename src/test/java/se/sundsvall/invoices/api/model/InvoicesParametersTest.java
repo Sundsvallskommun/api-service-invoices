@@ -10,7 +10,7 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
-import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
+import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSettersExcluding;
 import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
 import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -28,7 +28,7 @@ class InvoicesParametersTest {
 	void testBean() {
 		assertThat(InvoicesParameters.class, allOf(
 			hasValidBeanConstructor(),
-			hasValidGettersAndSetters(),
+			hasValidGettersAndSettersExcluding("organizationNumber"),
 			hasValidBeanHashCode(),
 			hasValidBeanEquals(),
 			hasValidBeanToString()));
@@ -47,7 +47,7 @@ class InvoicesParametersTest {
 		final var invoiceDateTo = LocalDate.now();
 		final var limit = 123;
 		final var organizationGroup = "organizationGroup";
-		final var organizationNumber = "organizationNumber";
+		final var organizationNumbers = List.of("5564786647");
 		final var ocrNumber = "ocrNumber";
 		final var page = 321;
 		final var partyId = List.of("partyId-1", "partyId-2");
@@ -64,7 +64,7 @@ class InvoicesParametersTest {
 			.withInvoiceDateTo(invoiceDateTo)
 			.withLimit(limit)
 			.withOrganizationGroup(organizationGroup)
-			.withOrganizationNumber(organizationNumber)
+			.withOrganizationNumbers(organizationNumbers)
 			.withOcrNumber(ocrNumber)
 			.withPage(page)
 			.withPartyId(partyId);
@@ -81,7 +81,7 @@ class InvoicesParametersTest {
 		assertThat(invoicesParameters.getInvoiceDateTo()).isEqualTo(invoiceDateTo);
 		assertThat(invoicesParameters.getLimit()).isEqualTo(limit);
 		assertThat(invoicesParameters.getOrganizationGroup()).isEqualTo(organizationGroup);
-		assertThat(invoicesParameters.getOrganizationNumber()).isEqualTo(organizationNumber);
+		assertThat(invoicesParameters.getOrganizationNumbers()).isEqualTo(organizationNumbers);
 		assertThat(invoicesParameters.getOcrNumber()).isEqualTo(ocrNumber);
 		assertThat(invoicesParameters.getPage()).isEqualTo(page);
 		assertThat(invoicesParameters.getPartyId()).isEqualTo(partyId);

@@ -82,7 +82,7 @@ class InvoicesServiceTest {
 			.limit(100)
 			.invoiceName(invoiceName)
 			.customerNumber(customerNumbers)
-			.organizationNumber(organizationNumber)
+			.organizationNumber(List.of(organizationNumber))
 			.facilityIds(null)
 			.sortBy(List.of(invoiceDate))
 			.sortDirection(Direction.DESC);
@@ -91,7 +91,7 @@ class InvoicesServiceTest {
 		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(List.of(customerEngagementMock, customerEngagementMock));
 		when(customerEngagementMock.getCustomerNumber()).thenReturn(customerNumber_1, customerNumber_2);
 		when(dataWarehouseReaderClientMock.getInvoices(municipalityId, dataWarehouseReaderParameters)).thenReturn(createDataWarehouseReaderInvoiceResponse());
-		final var invoicesResponse = invoicesService.getInvoices(municipalityId, COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumber(organizationNumber).withPartyId(partyIds));
+		final var invoicesResponse = invoicesService.getInvoices(municipalityId, COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumbers(List.of(organizationNumber)).withPartyId(partyIds));
 
 		assertThat(invoicesResponse.getInvoices()).hasSize(2);
 		assertThat(invoicesResponse.getInvoices().getFirst().getInvoiceType()).isEqualTo(INVOICE);
@@ -116,7 +116,7 @@ class InvoicesServiceTest {
 			.limit(100)
 			.invoiceName(invoiceName)
 			.customerNumber(customerNumbers)
-			.organizationNumber(organizationNumber)
+			.organizationNumber(List.of(organizationNumber))
 			.facilityIds(null)
 			.sortBy(List.of(invoiceDate))
 			.sortDirection(Direction.DESC);
@@ -126,7 +126,7 @@ class InvoicesServiceTest {
 		when(customerEngagementMock.getCustomerNumber()).thenReturn(customerNumber);
 		when(dataWarehouseReaderClientMock.getInvoices(municipalityId, dataWarehouseReaderParameters)).thenReturn(new InvoiceResponse().invoices(emptyList()).meta(createPagingAndSortingMetaData()));
 
-		final var invoicesResponse = invoicesService.getInvoices(municipalityId, COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumber(organizationNumber).withPartyId(partyIds));
+		final var invoicesResponse = invoicesService.getInvoices(municipalityId, COMMERCIAL, InvoicesParameters.create().withInvoiceName(invoiceName).withOrganizationNumbers(List.of(organizationNumber)).withPartyId(partyIds));
 
 		assertThat(invoicesResponse).isNotNull();
 		assertThat(invoicesResponse.getInvoices()).isEmpty();
@@ -144,7 +144,7 @@ class InvoicesServiceTest {
 		final var invoiceName = "invoiceName";
 		final var invoiceParameters = InvoicesParameters.create()
 			.withInvoiceName(invoiceName)
-			.withOrganizationNumber(organizationNumber)
+			.withOrganizationNumbers(List.of(organizationNumber))
 			.withPartyId(partyIds);
 
 		when(dataWarehouseReaderClientMock.getCustomerEngagements(municipalityId, partyIds)).thenReturn(customerEngagementResponseMock);

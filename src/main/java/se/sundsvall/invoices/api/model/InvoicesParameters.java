@@ -1,5 +1,6 @@
 package se.sundsvall.invoices.api.model;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
@@ -54,9 +55,9 @@ public class InvoicesParameters extends AbstractParameterBase {
 	@Schema(description = "Latest due date. Format is YYYY-MM-DD.", examples = "2022-01-31")
 	private LocalDate dueDateTo;
 
-	@Schema(description = "Creditor organization number", examples = "5564786647")
-	@ValidOrganizationNumber(nullable = true)
-	private String organizationNumber;
+	@ArraySchema(schema = @Schema(description = "Creditor organization number", examples = "5564786647"))
+	@JsonProperty("organizationNumber")
+	private List<@ValidOrganizationNumber(nullable = true) String> organizationNumbers;
 
 	@Schema(description = "Organization group", examples = "stadsbacken")
 	private String organizationGroup;
@@ -221,16 +222,20 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return this;
 	}
 
-	public String getOrganizationNumber() {
-		return organizationNumber;
+	public void setOrganizationNumber(final List<String> organizationNumber) {
+		this.organizationNumbers = organizationNumber;
 	}
 
-	public void setOrganizationNumber(final String organizationNumber) {
-		this.organizationNumber = organizationNumber;
+	public List<String> getOrganizationNumbers() {
+		return organizationNumbers;
 	}
 
-	public InvoicesParameters withOrganizationNumber(final String organizationNumber) {
-		this.organizationNumber = organizationNumber;
+	public void setOrganizationNumbers(final List<String> organizationNumbers) {
+		this.organizationNumbers = organizationNumbers;
+	}
+
+	public InvoicesParameters withOrganizationNumbers(final List<String> organizationNumbers) {
+		this.organizationNumbers = organizationNumbers;
 		return this;
 	}
 
@@ -253,13 +258,13 @@ public class InvoicesParameters extends AbstractParameterBase {
 		final InvoicesParameters that = (InvoicesParameters) o;
 		return Objects.equals(partyId, that.partyId) && Objects.equals(facilityIds, that.facilityIds) && Objects.equals(invoiceNumber, that.invoiceNumber) && Objects.equals(invoiceDateFrom, that.invoiceDateFrom)
 			&& Objects.equals(invoiceDateTo, that.invoiceDateTo) && Objects.equals(invoiceName, that.invoiceName) && invoiceType == that.invoiceType && invoiceStatus == that.invoiceStatus && Objects.equals(ocrNumber,
-				that.ocrNumber) && Objects.equals(dueDateFrom, that.dueDateFrom) && Objects.equals(dueDateTo, that.dueDateTo) && Objects.equals(organizationNumber, that.organizationNumber) && Objects.equals(
+				that.ocrNumber) && Objects.equals(dueDateFrom, that.dueDateFrom) && Objects.equals(dueDateTo, that.dueDateTo) && Objects.equals(organizationNumbers, that.organizationNumbers) && Objects.equals(
 					organizationGroup, that.organizationGroup);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), partyId, facilityIds, invoiceNumber, invoiceDateFrom, invoiceDateTo, invoiceName, invoiceType, invoiceStatus, ocrNumber, dueDateFrom, dueDateTo, organizationNumber, organizationGroup);
+		return Objects.hash(super.hashCode(), partyId, facilityIds, invoiceNumber, invoiceDateFrom, invoiceDateTo, invoiceName, invoiceType, invoiceStatus, ocrNumber, dueDateFrom, dueDateTo, organizationNumbers, organizationGroup);
 	}
 
 	@Override
@@ -276,7 +281,7 @@ public class InvoicesParameters extends AbstractParameterBase {
 			", ocrNumber='" + ocrNumber + '\'' +
 			", dueDateFrom=" + dueDateFrom +
 			", dueDateTo=" + dueDateTo +
-			", organizationNumber='" + organizationNumber + '\'' +
+			", organizationNumbers=" + organizationNumbers +
 			", organizationGroup='" + organizationGroup + '\'' +
 			", page=" + page +
 			", limit=" + limit +

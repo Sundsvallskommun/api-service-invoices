@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "5.0"
+  version: "5.2"
 servers:
-  - url: http://localhost:58207
+  - url: http://localhost:55506
     description: Generated server url
 tags:
   - name: Measurement
@@ -55,15 +55,20 @@ paths:
             description: PartyId (e.g. a personId or an organizationId)
             examples:
               - 81471222-5798-11e9-ae24-57fa13b361e1
-        - name: facilityId
+        - name: facilityIds
           in: query
-          description: Facility id
+          description: Facility id (one or more)
           required: false
           schema:
-            type: string
-            description: Facility id
+            type: array
+            description: Facility id (one or more)
             examples:
               - "735999109151401011"
+            items:
+              type: string
+              description: Facility id (one or more)
+              examples:
+                - "735999109151401011"
         - name: fromDateTime
           in: query
           description: "Date and time for oldest measurement point to return. Format\
@@ -84,56 +89,27 @@ paths:
             format: date-time
             description: "Date and time for youngest measurement point to return. Format\
             \ is yyyy-MM-dd'T'HH:mm:ss.SSSXXX, for example '2000-10-31T01:30:00.000-05:00'"
-        - name: sortBy
+        - name: display
           in: query
+          description: Display mode for aggregated series
           required: false
           schema:
-            type: array
-            items:
-              type: string
-              description: The properties to sort on
-              example: propertyName
-        - name: sortDirection
-          in: query
-          description: The sort order direction
-          required: false
-          schema:
-            $ref: "#/components/schemas/Direction"
-          example: ASC
-        - name: page
-          in: query
-          description: Page number
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 1
-            description: Page number
-            example: 1
-            minimum: 1
-          example: 1
-        - name: limit
-          in: query
-          description: Result size per page. Maximum allowed value is dynamically configured
-          required: false
-          schema:
-            type: integer
-            format: int32
-            description: Result size per page. Maximum allowed value is dynamically
-              configured
-            example: 15
-            minimum: 1
-          example: 15
+            $ref: "#/components/schemas/Display"
+            description: Display mode for aggregated series
       responses:
         "200":
           description: Successful operation
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/MeasurementResponse"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Measurement"
             application/problem+json:
               schema:
-                $ref: "#/components/schemas/MeasurementResponse"
+                type: array
+                items:
+                  $ref: "#/components/schemas/Measurement"
         "400":
           description: Bad request
           content:
@@ -370,14 +346,14 @@ paths:
             items:
               type: string
               description: The properties to sort on
-              example: propertyName
+              examples:
+                - propertyName
         - name: sortDirection
           in: query
           description: The sort order direction
           required: false
           schema:
             $ref: "#/components/schemas/Direction"
-          example: ASC
         - name: page
           in: query
           description: Page number
@@ -387,9 +363,9 @@ paths:
             format: int32
             default: 1
             description: Page number
-            example: 1
+            examples:
+              - "1"
             minimum: 1
-          example: 1
         - name: limit
           in: query
           description: Result size per page. Maximum allowed value is dynamically configured
@@ -399,9 +375,9 @@ paths:
             format: int32
             description: Result size per page. Maximum allowed value is dynamically
               configured
-            example: 15
+            examples:
+              - "15"
             minimum: 1
-          example: 15
       responses:
         "200":
           description: Successful operation
@@ -493,14 +469,14 @@ paths:
             items:
               type: string
               description: The properties to sort on
-              example: propertyName
+              examples:
+                - propertyName
         - name: sortDirection
           in: query
           description: The sort order direction
           required: false
           schema:
             $ref: "#/components/schemas/Direction"
-          example: ASC
         - name: page
           in: query
           description: Page number
@@ -510,9 +486,9 @@ paths:
             format: int32
             default: 1
             description: Page number
-            example: 1
+            examples:
+              - "1"
             minimum: 1
-          example: 1
         - name: limit
           in: query
           description: Result size per page. Maximum allowed value is dynamically configured
@@ -522,9 +498,9 @@ paths:
             format: int32
             description: Result size per page. Maximum allowed value is dynamically
               configured
-            example: 15
+            examples:
+              - "15"
             minimum: 1
-          example: 15
       responses:
         "200":
           description: Successful operation
@@ -607,14 +583,14 @@ paths:
             items:
               type: string
               description: The properties to sort on
-              example: propertyName
+              examples:
+                - propertyName
         - name: sortDirection
           in: query
           description: The sort order direction
           required: false
           schema:
             $ref: "#/components/schemas/Direction"
-          example: ASC
         - name: page
           in: query
           description: Page number
@@ -624,9 +600,9 @@ paths:
             format: int32
             default: 1
             description: Page number
-            example: 1
+            examples:
+              - "1"
             minimum: 1
-          example: 1
         - name: limit
           in: query
           description: Result size per page. Maximum allowed value is dynamically configured
@@ -636,9 +612,9 @@ paths:
             format: int32
             description: Result size per page. Maximum allowed value is dynamically
               configured
-            example: 15
+            examples:
+              - "15"
             minimum: 1
-          example: 15
       responses:
         "200":
           description: Successful operation
@@ -717,14 +693,14 @@ paths:
             items:
               type: string
               description: The properties to sort on
-              example: propertyName
+              examples:
+                - propertyName
         - name: sortDirection
           in: query
           description: The sort order direction
           required: false
           schema:
             $ref: "#/components/schemas/Direction"
-          example: ASC
         - name: page
           in: query
           description: Page number
@@ -734,9 +710,9 @@ paths:
             format: int32
             default: 1
             description: Page number
-            example: 1
+            examples:
+              - "1"
             minimum: 1
-          example: 1
         - name: limit
           in: query
           description: Result size per page. Maximum allowed value is dynamically configured
@@ -746,9 +722,9 @@ paths:
             format: int32
             description: Result size per page. Maximum allowed value is dynamically
               configured
-            example: 15
+            examples:
+              - "15"
             minimum: 1
-          example: 15
       responses:
         "200":
           description: Successful operation
@@ -946,14 +922,14 @@ paths:
             items:
               type: string
               description: The properties to sort on
-              example: propertyName
+              examples:
+                - propertyName
         - name: sortDirection
           in: query
           description: The sort order direction
           required: false
           schema:
             $ref: "#/components/schemas/Direction"
-          example: ASC
         - name: page
           in: query
           description: Page number
@@ -963,9 +939,9 @@ paths:
             format: int32
             default: 1
             description: Page number
-            example: 1
+            examples:
+              - "1"
             minimum: 1
-          example: 1
         - name: limit
           in: query
           description: Result size per page. Maximum allowed value is dynamically configured
@@ -975,9 +951,9 @@ paths:
             format: int32
             description: Result size per page. Maximum allowed value is dynamically
               configured
-            example: 15
+            examples:
+              - "15"
             minimum: 1
-          example: 15
       responses:
         "200":
           description: OK - Successful operation
@@ -1020,186 +996,58 @@ components:
     Problem:
       type: object
       properties:
+        title:
+          type: string
+        detail:
+          type: string
         instance:
           type: string
           format: uri
         type:
           type: string
           format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
         status:
-          $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
-        title:
-          type: string
-    StatusType:
-      type: object
-      properties:
-        statusCode:
           type: integer
           format: int32
-        reasonPhrase:
-          type: string
     ConstraintViolationProblem:
       type: object
       properties:
-        cause:
-          $ref: "#/components/schemas/ThrowableProblem"
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              className:
-                type: string
-              nativeMethod:
-                type: boolean
         type:
           type: string
           format: uri
         status:
-          $ref: "#/components/schemas/StatusType"
+          type: integer
+          format: int32
         violations:
           type: array
           items:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        message:
+        causeAsProblem:
+          $ref: "#/components/schemas/ThrowableProblem"
+        detail:
           type: string
         instance:
           type: string
           format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
-        detail:
-          type: string
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    className:
-                      type: string
-                    nativeMethod:
-                      type: boolean
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
     ThrowableProblem:
       type: object
       properties:
-        cause: { }
-        stackTrace:
-          type: array
-          items:
-            type: object
-            properties:
-              classLoaderName:
-                type: string
-              moduleName:
-                type: string
-              moduleVersion:
-                type: string
-              methodName:
-                type: string
-              fileName:
-                type: string
-              lineNumber:
-                type: integer
-                format: int32
-              className:
-                type: string
-              nativeMethod:
-                type: boolean
-        message:
+        type:
+          type: string
+          format: uri
+        title:
+          type: string
+        status:
+          type: integer
+          format: int32
+        detail:
           type: string
         instance:
           type: string
           format: uri
-        type:
-          type: string
-          format: uri
-        parameters:
-          type: object
-          additionalProperties: { }
-        status:
-          $ref: "#/components/schemas/StatusType"
-        detail:
-          type: string
-        title:
-          type: string
-        suppressed:
-          type: array
-          items:
-            type: object
-            properties:
-              stackTrace:
-                type: array
-                items:
-                  type: object
-                  properties:
-                    classLoaderName:
-                      type: string
-                    moduleName:
-                      type: string
-                    moduleVersion:
-                      type: string
-                    methodName:
-                      type: string
-                    fileName:
-                      type: string
-                    lineNumber:
-                      type: integer
-                      format: int32
-                    className:
-                      type: string
-                    nativeMethod:
-                      type: boolean
-              message:
-                type: string
-              localizedMessage:
-                type: string
-        localizedMessage:
-          type: string
+        causeAsProblem: { }
     Violation:
       type: object
       properties:
@@ -1226,38 +1074,37 @@ components:
         - HOUR
         - DAY
         - MONTH
-    Direction:
+    Display:
       type: string
-      description: The sort order direction
+      description: Display mode for aggregated series
       enum:
-        - ASC
-        - DESC
-      example: ASC
+        - AGGREGATE
+        - ONLYAGGREGATED
     Measurement:
       type: object
       description: Measurement model
       properties:
-        partyId:
+        uuid:
           type: string
-          description: PartyId (e.g. a personId or an organizationId)
+          description: Unique identifier for the measurement
           examples:
-            - 81471222-5798-11e9-ae24-57fa13b361e1
+            - 550e8400-e29b-41d4-a716-446655440000
+          readOnly: true
+        customerOrgId:
+          type: string
+          description: Customer organization identifier
+          examples:
+            - "5534567890"
           readOnly: true
         facilityId:
           type: string
-          description: Facility id
+          description: Facility identifier
           examples:
             - "735999109151401011"
           readOnly: true
-        category:
-          $ref: "#/components/schemas/Category"
-          readOnly: true
-        aggregatedOn:
-          $ref: "#/components/schemas/Aggregation"
-          readOnly: true
-        measurementType:
+        feedType:
           type: string
-          description: Measurement type
+          description: Type of feed
           examples:
             - Energy
           readOnly: true
@@ -1267,108 +1114,26 @@ components:
           examples:
             - kWh
           readOnly: true
-        value:
+        usage:
           type: number
-          description: Measurement value
+          description: Usage value
           examples:
-            - "1292.7500000000"
-          readOnly: true
-        timestamp:
-          type: string
-          format: date-time
-          description: "Date and time for measurement point. Format is yyyy-MM-dd'T'HH:mm:ss.SSSXXX,\
-            \ for example '2000-10-31T01:30:00.000-05:00'"
-          readOnly: true
-        metaData:
-          type: array
-          items:
-            $ref: "#/components/schemas/MeasurementMetaData"
-            readOnly: true
+            - "1500"
           readOnly: true
         interpolation:
           type: integer
           format: int32
-          description: Interpolation information. Zero means that no interpolations
-            has been done. Value greater than zero tells how many values in the serie
-            that has been interpolated/calculated.
+          description: Interpolation value indicating data quality
           examples:
-            - "13"
+            - "0"
           readOnly: true
-    MeasurementMetaData:
-      type: object
-      description: Measurement meta data model
-      properties:
-        key:
+        dateAndTime:
           type: string
-          description: Key connected to the meta data
+          format: date-time
+          description: Date and time of the measurement
           examples:
-            - READING_SEQ
+            - 2024-01-15T10:30:00Z
           readOnly: true
-        value:
-          type: string
-          description: Value for the meta data
-          examples:
-            - "5733010"
-          readOnly: true
-    MeasurementResponse:
-      type: object
-      description: Measurement response model
-      properties:
-        measurements:
-          type: array
-          items:
-            $ref: "#/components/schemas/Measurement"
-            readOnly: true
-          readOnly: true
-        _meta:
-          $ref: "#/components/schemas/PagingAndSortingMetaData"
-          readOnly: true
-    PagingAndSortingMetaData:
-      type: object
-      description: PagingAndSortingMetaData model
-      properties:
-        page:
-          type: integer
-          format: int32
-          description: Current page
-          example: 5
-          readOnly: true
-        limit:
-          type: integer
-          format: int32
-          description: Displayed objects per page
-          example: 20
-          readOnly: true
-        count:
-          type: integer
-          format: int32
-          description: Displayed objects on current page
-          example: 13
-          readOnly: true
-        totalRecords:
-          type: integer
-          format: int64
-          description: Total amount of hits based on provided search parameters
-          example: 98
-          readOnly: true
-        totalPages:
-          type: integer
-          format: int32
-          description: Total amount of pages based on provided search parameters
-          example: 23
-          readOnly: true
-        sortBy:
-          type: array
-          items:
-            type: string
-            description: The properties to sort by
-            example: property
-            readOnly: true
-          readOnly: true
-        sortDirection:
-          $ref: "#/components/schemas/Direction"
-          description: The sort order direction
-          example: ASC
     CustomerType:
       type: string
       description: Customer type
@@ -1377,6 +1142,11 @@ components:
         - Private
       examples:
         - Enterprise
+    Direction:
+      type: string
+      enum:
+        - ASC
+        - DESC
     InvoiceParameters:
       type: object
       description: Invoice request parameters model
@@ -1386,25 +1156,27 @@ components:
           format: int32
           default: 1
           description: Page number
-          example: 1
+          examples:
+            - "1"
           minimum: 1
         limit:
           type: integer
           format: int32
           description: Result size per page. Maximum allowed value is dynamically
             configured
-          example: 15
+          examples:
+            - "15"
           minimum: 1
         sortBy:
           type: array
           items:
             type: string
             description: The properties to sort on
-            example: propertyName
+            examples:
+              - propertyName
         sortDirection:
           $ref: "#/components/schemas/Direction"
           description: The sort order direction
-          example: ASC
         customerNumber:
           type: array
           items:
@@ -1478,10 +1250,12 @@ components:
           examples:
             - stadsbacken
         organizationNumber:
-          type: string
-          description: Organization number of invoice issuer
-          examples:
-            - "5565027223"
+          type: array
+          items:
+            type: string
+            description: Organization number of invoice issuer
+            examples:
+              - "5565027223"
         administration:
           type: string
           description: Administration
@@ -1671,10 +1445,61 @@ components:
           items:
             $ref: "#/components/schemas/Invoice"
             readOnly: true
-          readOnly: true
         _meta:
           $ref: "#/components/schemas/PagingAndSortingMetaData"
           readOnly: true
+    PagingAndSortingMetaData:
+      type: object
+      description: PagingAndSortingMetaData model
+      properties:
+        page:
+          type: integer
+          format: int32
+          description: Current page
+          examples:
+            - "5"
+          readOnly: true
+        limit:
+          type: integer
+          format: int32
+          description: Displayed objects per page
+          examples:
+            - "20"
+          readOnly: true
+        count:
+          type: integer
+          format: int32
+          description: Displayed objects on current page
+          examples:
+            - "13"
+          readOnly: true
+        totalRecords:
+          type: integer
+          format: int64
+          description: Total amount of hits based on provided search parameters
+          examples:
+            - "98"
+          readOnly: true
+        totalPages:
+          type: integer
+          format: int32
+          description: Total amount of pages based on provided search parameters
+          examples:
+            - "23"
+          readOnly: true
+        sortBy:
+          type: array
+          items:
+            type: string
+            description: The properties to sort by
+            examples:
+              - property
+            readOnly: true
+        sortDirection:
+          $ref: "#/components/schemas/Direction"
+          description: The sort order direction
+          examples:
+            - ASC
     InvoiceDetail:
       type: object
       description: Invoice detail model
@@ -1872,7 +1697,6 @@ components:
             maxItems: 1000
             readOnly: true
           maxItems: 1000
-          readOnly: true
     InstalledBaseItemMetaData:
       type: object
       description: Installed base item metadata model
@@ -1910,7 +1734,6 @@ components:
           items:
             $ref: "#/components/schemas/InstalledBaseItem"
             readOnly: true
-          readOnly: true
         _meta:
           $ref: "#/components/schemas/PagingAndSortingMetaData"
           readOnly: true
@@ -2001,7 +1824,6 @@ components:
             maxItems: 1000
             readOnly: true
           maxItems: 1000
-          readOnly: true
     InstallationDetailsResponse:
       type: object
       properties:
@@ -2010,7 +1832,6 @@ components:
           items:
             $ref: "#/components/schemas/InstallationDetails"
             readOnly: true
-          readOnly: true
         _meta:
           $ref: "#/components/schemas/PagingAndSortingMetaData"
           readOnly: true
@@ -2094,7 +1915,6 @@ components:
           items:
             $ref: "#/components/schemas/CustomerEngagement"
             readOnly: true
-          readOnly: true
         _meta:
           $ref: "#/components/schemas/PagingAndSortingMetaData"
           readOnly: true
@@ -2165,7 +1985,6 @@ components:
             examples:
               - 076-1234567
             readOnly: true
-          readOnly: true
         emails:
           type: array
           items:
@@ -2174,7 +1993,6 @@ components:
             examples:
               - test@test.se
             readOnly: true
-          readOnly: true
         customerCategoryID:
           type: integer
           format: int32
@@ -2223,7 +2041,6 @@ components:
           items:
             $ref: "#/components/schemas/CustomerDetails"
             readOnly: true
-          readOnly: true
         _meta:
           $ref: "#/components/schemas/PagingAndSortingMetaData"
           readOnly: true
@@ -2339,7 +2156,6 @@ components:
           items:
             $ref: "#/components/schemas/Agreement"
             readOnly: true
-          readOnly: true
         _meta:
           $ref: "#/components/schemas/PagingAndSortingMetaData"
           readOnly: true

@@ -115,7 +115,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("organizationNumber", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
+			.containsExactly(tuple("organizationNumbers[0]", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
