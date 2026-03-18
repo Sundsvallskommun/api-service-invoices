@@ -32,7 +32,7 @@ import static java.util.Optional.ofNullable;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
 
-public class InvoiceMapper {
+public final class InvoiceMapper {
 
 	private static final Decoder DECODER = Base64.getDecoder();
 
@@ -44,7 +44,7 @@ public class InvoiceMapper {
 
 	public static InvoicesResponse toInvoicesResponse(final InvoiceResponse dataWarehouseReaderInvoiceResponse) {
 		return InvoicesResponse.create()
-			.withMetaData(toMetaData(dataWarehouseReaderInvoiceResponse.getMeta()))
+			.withMetaData(ofNullable(dataWarehouseReaderInvoiceResponse.getMeta()).map(InvoiceMapper::toMetaData).orElse(null))
 			.withInvoices(toInvoicesFromDataWarehouseReader(dataWarehouseReaderInvoiceResponse.getInvoices()));
 	}
 
@@ -55,7 +55,7 @@ public class InvoiceMapper {
 			.invoiceName(invoiceParameters.getInvoiceName())
 			.invoiceNumber(toLong(invoiceParameters.getInvoiceNumber()))
 			.organizationGroup(invoiceParameters.getOrganizationGroup())
-			.organizationNumber(invoiceParameters.getOrganizationNumber())
+			.organizationNumber(invoiceParameters.getOrganizationNumbers())
 			.invoiceDateFrom(invoiceParameters.getInvoiceDateFrom())
 			.invoiceDateTo(invoiceParameters.getInvoiceDateTo())
 			.dueDateFrom(invoiceParameters.getDueDateFrom())
@@ -126,11 +126,11 @@ public class InvoiceMapper {
 
 	private static MetaData toMetaData(final generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData pagingAndSortingMetaData) {
 		return MetaData.create()
-			.withCount(pagingAndSortingMetaData.getCount())
-			.withLimit(pagingAndSortingMetaData.getLimit())
-			.withTotalPages(pagingAndSortingMetaData.getTotalPages())
-			.withTotalRecords(pagingAndSortingMetaData.getTotalRecords())
-			.withPage(pagingAndSortingMetaData.getPage());
+			.withCount(ofNullable(pagingAndSortingMetaData.getCount()).orElse(0))
+			.withLimit(ofNullable(pagingAndSortingMetaData.getLimit()).orElse(0))
+			.withTotalPages(ofNullable(pagingAndSortingMetaData.getTotalPages()).orElse(0))
+			.withTotalRecords(ofNullable(pagingAndSortingMetaData.getTotalRecords()).orElse(0L))
+			.withPage(ofNullable(pagingAndSortingMetaData.getPage()).orElse(0));
 	}
 
 	private static Address toAddress(final generated.se.sundsvall.datawarehousereader.Invoice dataWarehouseReaderInvoice) {
@@ -225,7 +225,7 @@ public class InvoiceMapper {
 
 	public static InvoicesResponse toInvoicesResponse(final generated.se.sundsvall.invoicecache.InvoicesResponse invoiceCacheInvoiceResponse) {
 		return InvoicesResponse.create()
-			.withMetaData(toMetaData(invoiceCacheInvoiceResponse.getMeta()))
+			.withMetaData(ofNullable(invoiceCacheInvoiceResponse.getMeta()).map(InvoiceMapper::toMetaData).orElse(null))
 			.withInvoices(toInvoicesFromInvoiceCache(invoiceCacheInvoiceResponse.getInvoices()));
 	}
 
@@ -281,8 +281,7 @@ public class InvoiceMapper {
 			.map(invoiceStatus -> switch (invoiceStatus)
 			{
 				case PAID -> InvoiceStatus.PAID;
-				case UNPAID -> InvoiceStatus.SENT;
-				case SENT -> InvoiceStatus.SENT;
+				case UNPAID, SENT -> InvoiceStatus.SENT;
 				case PARTIALLY_PAID -> InvoiceStatus.PARTIALLY_PAID;
 				case DEBT_COLLECTION -> InvoiceStatus.DEBT_COLLECTION;
 				case PAID_TOO_MUCH -> InvoiceStatus.PAID_TOO_MUCH;
@@ -309,11 +308,12 @@ public class InvoiceMapper {
 	}
 
 	private static MetaData toMetaData(final generated.se.sundsvall.invoicecache.MetaData invoiceCacheMetaData) {
-		return MetaData.create().withCount(invoiceCacheMetaData.getCount())
-			.withLimit(invoiceCacheMetaData.getLimit())
-			.withTotalPages(invoiceCacheMetaData.getTotalPages())
-			.withTotalRecords(invoiceCacheMetaData.getTotalRecords())
-			.withPage(invoiceCacheMetaData.getPage());
+		return MetaData.create()
+			.withCount(ofNullable(invoiceCacheMetaData.getCount()).orElse(0))
+			.withLimit(ofNullable(invoiceCacheMetaData.getLimit()).orElse(0))
+			.withTotalPages(ofNullable(invoiceCacheMetaData.getTotalPages()).orElse(0))
+			.withTotalRecords(ofNullable(invoiceCacheMetaData.getTotalRecords()).orElse(0L))
+			.withPage(ofNullable(invoiceCacheMetaData.getPage()).orElse(0));
 	}
 
 	public static PdfInvoice toPdfInvoice(final InvoicePdf invoicePdf) {
@@ -328,7 +328,7 @@ public class InvoiceMapper {
 
 	public static PdfInvoice toPdfInvoice(final byte[] file, final String invoiceNumber) {
 		return ofNullable(file)
-			.map(i -> PdfInvoice.create()
+			.map(_ -> PdfInvoice.create()
 				.withFileName(invoiceNumber + ".pdf")
 				.withFile(file))
 			.orElse(null);

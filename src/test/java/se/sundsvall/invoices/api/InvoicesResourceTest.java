@@ -90,7 +90,7 @@ class InvoicesResourceTest {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(PAGE, LIMIT, FACILITY_IDS, INVOICE_NUMBER, INVOICE_DATE_FROM, INVOICE_DATE_TO, INVOICE_NAME,
-					INVOICE_TYPE, INVOICE_STATUS, OCR_NUMBER, DUE_DATE_FROM, DUE_DATE_TO, ORGANIZATION_GROUP, ORGANIZATION_NUMBER, PARTY_IDS))
+					INVOICE_TYPE, INVOICE_STATUS, OCR_NUMBER, DUE_DATE_FROM, DUE_DATE_TO, ORGANIZATION_GROUP, List.of(ORGANIZATION_NUMBER), PARTY_IDS))
 				.build(MUNICIPALITY_ID, COMMERCIAL))
 			.exchange()
 			.expectStatus().isOk()
@@ -114,7 +114,7 @@ class InvoicesResourceTest {
 		assertThat(parameters.getLimit()).isEqualTo(LIMIT);
 		assertThat(parameters.getOcrNumber()).isEqualTo(OCR_NUMBER);
 		assertThat(parameters.getOrganizationGroup()).isEqualTo(ORGANIZATION_GROUP);
-		assertThat(parameters.getOrganizationNumber()).isEqualTo(ORGANIZATION_NUMBER);
+		assertThat(parameters.getOrganizationNumbers()).isEqualTo(List.of(ORGANIZATION_NUMBER));
 		assertThat(parameters.getPage()).isEqualTo(PAGE);
 		assertThat(parameters.getPartyId()).isEqualTo(PARTY_IDS);
 		assertThat(response).isNotNull().isEqualTo(InvoicesResponse.create());
@@ -219,7 +219,7 @@ class InvoicesResourceTest {
 	private MultiValueMap<String, String> createParameterMap(final Integer page, final Integer limit, final List<String> facilityIds, final String invoiceNumber, final LocalDate invoiceDateFrom,
 		final LocalDate invoiceDateTo, final String invoiceName, final InvoiceType invoiceType, final InvoiceStatus invoiceStatus,
 		final String ocrNumber, final LocalDate dueDateFrom, final LocalDate dueDateTo, final String organizationGroup,
-		final String organizationNumber, final List<String> partyIds) {
+		final List<String> organizationNumber, final List<String> partyIds) {
 
 		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 
@@ -236,7 +236,7 @@ class InvoicesResourceTest {
 		ofNullable(dueDateFrom).ifPresent(p -> parameters.add("dueDateFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(dueDateTo).ifPresent(p -> parameters.add("dueDateTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(organizationGroup).ifPresent(p -> parameters.add("organizationGroup", p));
-		ofNullable(organizationNumber).ifPresent(p -> parameters.add("organizationNumber", p));
+		ofNullable(organizationNumber).ifPresent(p -> parameters.addAll("organizationNumber", p));
 		ofNullable(partyIds).ifPresent(p -> parameters.addAll("partyId", p));
 
 		return parameters;

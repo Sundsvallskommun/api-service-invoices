@@ -188,7 +188,7 @@ class InvoiceMapperTest {
 			Arguments.of(null, null));
 	}
 
-	private static Stream<Arguments> toInvoiceStatusFromDatawarehouseReaderStatusArguments() {
+	private static Stream<Arguments> toInvoiceStatusFromDataWarehouseReaderStatusArguments() {
 		return Stream.of(
 			Arguments.of("Betalad", InvoiceStatus.PAID),
 			Arguments.of("Krediterad", InvoiceStatus.CREDITED),
@@ -476,7 +476,7 @@ class InvoiceMapperTest {
 			.withInvoiceType(INVOICE_TYPE)
 			.withOcrNumber(OCR_NUMBER)
 			.withOrganizationGroup(ORGANIZATION_GROUP)
-			.withOrganizationNumber(ORGANIZATION_NUMBER)
+			.withOrganizationNumbers(List.of(ORGANIZATION_NUMBER))
 			.withInvoiceDateFrom(INVOICE_DATE_FROM)
 			.withInvoiceDateTo(INVOICE_DATE_TO)
 			.withDueDateFrom(DUE_DATE_FROM)
@@ -522,7 +522,7 @@ class InvoiceMapperTest {
 				DATAWAREHOUSEREADER_LIMIT,
 				DATAWAREHOUSEREADER_OCR_NUMBER,
 				DATAWAREHOUSEREADER_ORGANIZATION_GROUP,
-				DATAWAREHOUSEREADER_ORGANIZATION_NUMBER,
+				List.of(DATAWAREHOUSEREADER_ORGANIZATION_NUMBER),
 				DATAWAREHOUSEREADER_PAGE,
 				List.of(SORT_BY),
 				Direction.DESC);
@@ -574,7 +574,7 @@ class InvoiceMapperTest {
 	@Test
 	void toPdfInvoice() {
 		final var name = "name";
-		final var content = "filecontent".getBytes(StandardCharsets.UTF_8);
+		final var content = "fileContent".getBytes(StandardCharsets.UTF_8);
 		final var invoicePdf = new InvoicePdf()
 			.name(name)
 			.content(Base64.getEncoder().encodeToString(content));
@@ -628,8 +628,8 @@ class InvoiceMapperTest {
 	}
 
 	@ParameterizedTest
-	@MethodSource("toInvoiceStatusFromDatawarehouseReaderStatusArguments")
-	void toInvoiceStatusFromDatawarehouseReaderStatus(final String source, final InvoiceStatus target) {
+	@MethodSource("toInvoiceStatusFromDataWarehouseReaderStatusArguments")
+	void toInvoiceStatusFromDataWarehouseReaderStatus(final String source, final InvoiceStatus target) {
 		assertThat(InvoiceMapper.toInvoiceStatus(source)).isEqualTo(target);
 	}
 

@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "9.0"
+  version: "9.1"
 servers:
-  - url: http://localhost:49188
+  - url: http://localhost:57313
     description: Generated server url
 tags:
   - name: Invoices
@@ -133,15 +133,16 @@ paths:
             description: Latest due date. Format is YYYY-MM-DD.
             examples:
               - 2022-01-31
-        - name: organizationNumber
+        - name: organizationNumbers
           in: query
-          description: Creditor organization number
           required: false
           schema:
-            type: string
-            description: Creditor organization number
-            examples:
-              - "5564786647"
+            type: array
+            items:
+              type: string
+              description: Creditor organization number
+              examples:
+                - "5564786647"
         - name: organizationGroup
           in: query
           description: Organization group
@@ -629,10 +630,10 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        causeAsProblem:
-          $ref: "#/components/schemas/ThrowableProblem"
         detail:
           type: string
+        causeAsProblem:
+          $ref: "#/components/schemas/ThrowableProblem"
         instance:
           type: string
           format: uri
