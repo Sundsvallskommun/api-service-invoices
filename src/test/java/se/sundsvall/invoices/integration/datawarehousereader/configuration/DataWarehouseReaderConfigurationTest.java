@@ -1,6 +1,7 @@
 package se.sundsvall.invoices.integration.datawarehousereader.configuration;
 
 import feign.codec.ErrorDecoder;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -19,6 +20,7 @@ import se.sundsvall.dept44.configuration.feign.decoder.ProblemErrorDecoder;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.invoices.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration.CLIENT_ID;
 
 @ExtendWith(MockitoExtension.class)
@@ -73,6 +75,7 @@ class DataWarehouseReaderConfigurationTest {
 		// Assert ErrorDecoder
 		assertThat(errorDecoderCaptor.getValue())
 			.isInstanceOf(ProblemErrorDecoder.class)
-			.hasFieldOrPropertyWithValue("integrationName", CLIENT_ID);
+			.hasFieldOrPropertyWithValue("integrationName", CLIENT_ID)
+			.hasFieldOrPropertyWithValue("bypassResponseCodes", List.of(NOT_FOUND.value()));
 	}
 }

@@ -29,7 +29,7 @@ public interface InvoiceCacheClient {
 	@GetMapping(path = "/{municipalityId}/invoices", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
-	InvoicesResponse getInvoices(@PathVariable(name = "municipalityId") String municipalityId, @SpringQueryMap InvoiceFilterRequest invoiceParameters);
+	InvoicesResponse getInvoices(@PathVariable String municipalityId, @SpringQueryMap InvoiceFilterRequest invoiceParameters);
 
 	/**
 	 * Get invoice pdf.
@@ -43,7 +43,7 @@ public interface InvoiceCacheClient {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	InvoicePdf getInvoicePdf(
-		@PathVariable(name = "municipalityId") String municipalityId,
+		@PathVariable String municipalityId,
 		@PathVariable(name = "issuerlegalid") String issuerLegalId,
 		@PathVariable(name = "invoicenumber") String invoiceNumber,
 		@RequestParam("invoiceType") InvoiceTypeEnum invoiceType);

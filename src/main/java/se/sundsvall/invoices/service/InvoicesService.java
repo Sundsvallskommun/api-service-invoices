@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.Problem;
+import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
 import se.sundsvall.invoices.api.model.InvoiceType;
@@ -19,13 +20,13 @@ import se.sundsvall.invoices.service.mapper.InvoiceMapper;
 
 import static java.lang.Long.parseLong;
 import static java.lang.String.format;
+import static java.util.Collections.emptyList;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceParameters;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
-import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceDetails;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoicesResponse;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
 
@@ -59,7 +60,15 @@ public class InvoicesService {
 	}
 
 	public List<InvoiceDetail> getInvoiceDetails(final String municipalityId, final String organizationNumber, final String invoiceNumber) {
-		return toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(municipalityId, organizationNumber, parseLong(invoiceNumber)));
+		try {
+			return InvoiceMapper.toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(municipalityId, organizationNumber, parseLong(invoiceNumber)));
+		} catch (final ThrowableProblem e) {
+			// If we get a 404 just return an empty list instead of throwing a BAD_GATEWAY
+			if (NOT_FOUND.equals(e.getStatus())) {
+				return emptyList();
+			}
+			throw e;
+		}
 	}
 
 	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {

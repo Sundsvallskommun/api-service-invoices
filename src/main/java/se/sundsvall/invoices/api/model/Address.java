@@ -91,9 +91,6 @@ public class Address {
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("Address [street=").append(street).append(", postcode=").append(postcode).append(", city=").append(city)
-			.append(", careOf=").append(careOf).append("]");
-		return builder.toString();
+		return "Address [street=" + street + ", postcode=" + postcode + ", city=" + city + ", careOf=" + careOf + "]";
 	}
 }

@@ -45,8 +45,6 @@ public class InvoiceDetailsResponse {
 
 	@Override
 	public String toString() {
-		final StringBuilder builder = new StringBuilder();
-		builder.append("InvoiceDetailsResponse [details=").append(details).append("]");
-		return builder.toString();
+		return "InvoiceDetailsResponse [details=" + details + "]";
 	}
 }
