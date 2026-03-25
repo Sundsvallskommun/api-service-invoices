@@ -6,7 +6,6 @@ import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.invoices.Application;
 
 import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.BAD_GATEWAY;
 import static org.springframework.http.HttpStatus.OK;
 
 @WireMockAppTestSuite(files = "classpath:/GetInvoiceDetails/", classes = Application.class)
@@ -36,7 +35,7 @@ class GetInvoiceDetailsIT extends AbstractAppTest {
 		setupCall()
 			.withServicePath(DETAILS_PATH + organizationNumber + "/" + invoiceNumber + DETAILS_RESOURCE)
 			.withHttpMethod(GET)
-			.withExpectedResponseStatus(BAD_GATEWAY)
+			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}

@@ -17,7 +17,10 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static se.sundsvall.invoices.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration.CLIENT_ID;
 
-@FeignClient(name = CLIENT_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class)
+@FeignClient(
+	name = CLIENT_ID,
+	url = "${integration.datawarehousereader.url}",
+	configuration = DataWarehouseReaderConfiguration.class)
 @CircuitBreaker(name = CLIENT_ID)
 public interface DataWarehouseReaderClient {
 

@@ -56,7 +56,7 @@ class InvoicesResource {
 	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<InvoicesResponse> getInvoices(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@PathVariable(name = "invoiceOrigin") final InvoiceOrigin invoiceOrigin,
+		@PathVariable final InvoiceOrigin invoiceOrigin,
 		@Valid final InvoicesParameters searchParams) {
 
 		return ok(invoicesService.getInvoices(municipalityId, invoiceOrigin, searchParams));
@@ -73,8 +73,8 @@ class InvoicesResource {
 	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<InvoiceDetailsResponse> getInvoiceDetails(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @PathVariable(name = "organizationNumber") @ValidOrganizationNumber final String organizationNumber,
-		@Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank @PathVariable("invoiceNumber") final String invoiceNumber) {
+		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
+		@PathVariable @Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank final String invoiceNumber) {
 
 		return ok(InvoiceDetailsResponse.create().withDetails(invoicesService.getInvoiceDetails(municipalityId, organizationNumber, invoiceNumber)));
 	}
@@ -90,10 +90,10 @@ class InvoicesResource {
 	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<PdfInvoice> getPdfInvoice(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @PathVariable(name = "organizationNumber") @ValidOrganizationNumber final String organizationNumber,
+		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
+		@PathVariable @Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank final String invoiceNumber,
 		@PathVariable(name = "invoiceOrigin") final InvoiceOrigin invoiceOrigin,
-		@Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank @PathVariable("invoiceNumber") final String invoiceNumber,
-		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter", required = false) @RequestParam(value = "invoiceType", required = false) final InvoiceType invoiceType) {
+		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter") @RequestParam(value = "invoiceType", required = false) final InvoiceType invoiceType) {
 
 		return ok(invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType, municipalityId));
 	}

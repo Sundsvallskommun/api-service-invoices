@@ -20,6 +20,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
@@ -214,6 +215,22 @@ class InvoicesServiceTest {
 		assertThat(invoiceDetails).hasSize(1);
 		assertThat(invoiceDetails.getFirst()).hasFieldOrPropertyWithValue("amount", expectedInvoiceDetail.getAmount());
 		assertThat(invoiceDetails.getFirst()).hasFieldOrPropertyWithValue("quantity", expectedInvoiceDetail.getQuantity());
+		verify(dataWarehouseReaderClientMock).getInvoiceDetails(municipalityId, organizationNumber, Long.parseLong(invoiceNumber));
+	}
+
+	@Test
+	void getInvoiceDetailsNotFound() {
+
+		final var municipalityId = "municipalityId";
+		final var organizationNumber = "5523456789";
+		final var invoiceNumber = "111222";
+
+		when(dataWarehouseReaderClientMock.getInvoiceDetails(municipalityId, organizationNumber, Long.parseLong(invoiceNumber)))
+			.thenThrow(Problem.valueOf(NOT_FOUND));
+
+		final var invoiceDetails = invoicesService.getInvoiceDetails(municipalityId, organizationNumber, invoiceNumber);
+
+		assertThat(invoiceDetails).isEmpty();
 		verify(dataWarehouseReaderClientMock).getInvoiceDetails(municipalityId, organizationNumber, Long.parseLong(invoiceNumber));
 	}
 

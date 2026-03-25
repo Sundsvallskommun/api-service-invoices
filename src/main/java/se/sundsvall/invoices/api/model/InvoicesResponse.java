@@ -69,8 +69,6 @@ public class InvoicesResponse {
 
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("InvoicesResponse [invoices=").append(invoices).append(", metaData=").append(metaData).append("]");
-		return builder.toString();
+		return "InvoicesResponse [invoices=" + invoices + ", metaData=" + metaData + "]";
 	}
 }

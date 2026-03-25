@@ -13,5 +13,5 @@ public enum InvoiceStatus {
 	VOID,
 	CREDITED,
 	WRITTEN_OFF,
-	UNKNOWN;
+	UNKNOWN
 }
