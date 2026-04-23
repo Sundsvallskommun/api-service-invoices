@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.invoices.integration.datawarehousereader.configuration.DataWarehouseReaderConfiguration;
 
-@FeignClient(name = CLIENT_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class)
+@FeignClient(name = CLIENT_ID, url = "${integration.datawarehousereader.url}", configuration = DataWarehouseReaderConfiguration.class, dismiss404 = true)
 @CircuitBreaker(name = CLIENT_ID)
 public interface DataWarehouseReaderClient {
 
