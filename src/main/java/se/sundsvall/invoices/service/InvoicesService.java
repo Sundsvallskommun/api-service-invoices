@@ -1,6 +1,8 @@
 package se.sundsvall.invoices.service;
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
+import generated.se.sundsvall.datawarehousereader.Direction;
+import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import java.util.List;
 import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
@@ -21,11 +23,13 @@ import se.sundsvall.invoices.service.mapper.InvoiceMapper;
 import static java.lang.Long.parseLong;
 import static java.lang.String.format;
 import static java.util.Collections.emptyList;
+import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
-import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceParameters;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceStatus;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceType;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoicesResponse;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
@@ -45,9 +49,34 @@ public class InvoicesService {
 
 	public InvoicesResponse getInvoices(final String municipalityId, final InvoiceOrigin invoiceOrigin, final InvoicesParameters invoiceParameters) {
 		return switch (invoiceOrigin) {
-			case COMMERCIAL -> toInvoicesResponse(dataWarehouseReaderClient.getInvoices(municipalityId, toDataWarehouseReaderInvoiceParameters(getCustomerNumbers(municipalityId, invoiceParameters.getPartyId()), invoiceParameters)));
+			case COMMERCIAL -> toInvoicesResponse(getCommercialInvoices(municipalityId, invoiceParameters));
 			case PUBLIC_ADMINISTRATION -> toInvoicesResponse(invoiceCacheClient.getInvoices(municipalityId, InvoiceMapper.toInvoiceCacheParameters(invoiceParameters)));
 		};
+	}
+
+	private InvoiceResponse getCommercialInvoices(final String municipalityId, final InvoicesParameters invoiceParameters) {
+		final var customerNumbers = getCustomerNumbers(municipalityId, invoiceParameters.getPartyId());
+		return dataWarehouseReaderClient.getInvoices(
+			municipalityId,
+			customerNumbers,
+			null,
+			invoiceParameters.getFacilityIds(),
+			ofNullable(invoiceParameters.getInvoiceNumber()).map(Long::parseLong).orElse(null),
+			invoiceParameters.getInvoiceDateFrom(),
+			invoiceParameters.getInvoiceDateTo(),
+			invoiceParameters.getInvoiceName(),
+			toDataWarehouseReaderInvoiceType(invoiceParameters.getInvoiceType()),
+			toDataWarehouseReaderInvoiceStatus(invoiceParameters.getInvoiceStatus()),
+			ofNullable(invoiceParameters.getOcrNumber()).map(Long::parseLong).orElse(null),
+			invoiceParameters.getDueDateFrom(),
+			invoiceParameters.getDueDateTo(),
+			invoiceParameters.getOrganizationGroup(),
+			invoiceParameters.getOrganizationNumbers(),
+			null,
+			List.of("invoiceDate"),
+			Direction.DESC,
+			invoiceParameters.getPage(),
+			invoiceParameters.getLimit());
 	}
 
 	private List<String> getCustomerNumbers(final String municipalityId, final List<String> partyIds) {

@@ -19,7 +19,7 @@
 			"ocrNumber": {
 				"equalTo": "766763197"
 			},
-			"organizationNumber": {
+			"organizationNumbers": {
 				"equalTo": "5564786647"
 			},
 			"customerNumber": {

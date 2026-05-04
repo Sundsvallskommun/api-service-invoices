@@ -1,7 +1,5 @@
 package se.sundsvall.invoices.service.mapper;
 
-import generated.se.sundsvall.datawarehousereader.Direction;
-import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
@@ -42,10 +40,6 @@ class InvoiceMapperTest {
 	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE = LocalDate.now().plusDays(30);
 	private static final Set<String> DATAWAREHOUSEREADER_FACILITY_IDS = Set.of("facilityId");
 	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE = LocalDate.now();
-	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE_FROM = LocalDate.of(2022, 3, 1);
-	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE_TO = LocalDate.of(2022, 3, 31);
-	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE_FROM = LocalDate.of(2022, 4, 1);
-	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE_TO = LocalDate.of(2022, 4, 30);
 	private static final Set<String> DATAWAREHOUSEREADER_INVOICE_DESCRIPTIONS = Set.of("invoiceDescription");
 	private static final String DATAWAREHOUSEREADER_INVOICE_NAME = "invoiceName";
 	private static final long DATAWAREHOUSEREADER_INVOICE_NUMBER = 4321;
@@ -70,10 +64,7 @@ class InvoiceMapperTest {
 	private static final BigDecimal DATAWAREHOUSEREADER_UNIT_PRICE = BigDecimal.valueOf(13.45d);
 	private static final double DATAWAREHOUSEREADER_VAT_RATE = 13.46;
 	private static final String DATAWAREHOUSEREADER_STREET = "street";
-	private static final Integer DATAWAREHOUSEREADER_LIMIT = 50;
-	private static final Integer DATAWAREHOUSEREADER_PAGE = 5;
 	private static final Boolean DATAWAREHOUSEREADER_PDF_AVAILABLE = false;
-	private static final String SORT_BY = "invoiceDate";
 
 	private static final String INVOICECACHE_INVOICE_NUMBER = "4321";
 	private static final InvoiceStatusEnum INVOICECACHE_INVOICE_STATUS = InvoiceStatusEnum.PAID;
@@ -91,8 +82,6 @@ class InvoiceMapperTest {
 		.city("city")
 		.postcode("postalCode");
 
-	private static final List<String> CUSTOMER_NUMBERS = List.of(DATAWAREHOUSEREADER_CUSTOMER_NUMBER);
-	private static final String ORGANIZATION_GROUP = "organizationGroup";
 	private static final String ORGANIZATION_NUMBER = "1234567890";
 	private static final float AMOUNT_VAT_EXCLUDED = 13.37f;
 	private static final float AMOUNT_VAT_INCLUDED = 26.779999f;
@@ -464,68 +453,6 @@ class InvoiceMapperTest {
 				UNIT_PRICE,
 				VAT,
 				VAT_RATE));
-	}
-
-	@Test
-	void toDataWarehouseReaderInvoiceParameters() {
-		final var invoicesParameters = new InvoicesParameters()
-			.withFacilityIds(FACILITY_IDS)
-			.withInvoiceName(INVOICE_NAME)
-			.withInvoiceNumber(INVOICE_NUMBER)
-			.withInvoiceStatus(INVOICE_STATUS)
-			.withInvoiceType(INVOICE_TYPE)
-			.withOcrNumber(OCR_NUMBER)
-			.withOrganizationGroup(ORGANIZATION_GROUP)
-			.withOrganizationNumbers(List.of(ORGANIZATION_NUMBER))
-			.withInvoiceDateFrom(INVOICE_DATE_FROM)
-			.withInvoiceDateTo(INVOICE_DATE_TO)
-			.withDueDateFrom(DUE_DATE_FROM)
-			.withDueDateTo(DUE_DATE_TO)
-			.withLimit(LIMIT)
-			.withPage(PAGE);
-
-		final var invoiceParameters = InvoiceMapper.toDataWarehouseReaderInvoiceParameters(CUSTOMER_NUMBERS, invoicesParameters);
-
-		assertThat(invoiceParameters).extracting(
-			InvoiceParameters::getAdministration,
-			InvoiceParameters::getCustomerNumber,
-			InvoiceParameters::getCustomerType,
-			InvoiceParameters::getDueDateFrom,
-			InvoiceParameters::getDueDateTo,
-			InvoiceParameters::getFacilityIds,
-			InvoiceParameters::getInvoiceDateFrom,
-			InvoiceParameters::getInvoiceDateTo,
-			InvoiceParameters::getInvoiceName,
-			InvoiceParameters::getInvoiceNumber,
-			InvoiceParameters::getInvoiceStatus,
-			InvoiceParameters::getInvoiceType,
-			InvoiceParameters::getLimit,
-			InvoiceParameters::getOcrNumber,
-			InvoiceParameters::getOrganizationGroup,
-			InvoiceParameters::getOrganizationNumber,
-			InvoiceParameters::getPage,
-			InvoiceParameters::getSortBy,
-			InvoiceParameters::getSortDirection)
-			.containsExactly(
-				null,
-				CUSTOMER_NUMBERS,
-				null,
-				DATAWAREHOUSEREADER_DUE_DATE_FROM,
-				DATAWAREHOUSEREADER_DUE_DATE_TO,
-				FACILITY_IDS,
-				DATAWAREHOUSEREADER_INVOICE_DATE_FROM,
-				DATAWAREHOUSEREADER_INVOICE_DATE_TO,
-				DATAWAREHOUSEREADER_INVOICE_NAME,
-				DATAWAREHOUSEREADER_INVOICE_NUMBER,
-				DATAWAREHOUSEREADER_INVOICE_STATUS,
-				DATAWAREHOUSEREADER_INVOICE_TYPE,
-				DATAWAREHOUSEREADER_LIMIT,
-				DATAWAREHOUSEREADER_OCR_NUMBER,
-				DATAWAREHOUSEREADER_ORGANIZATION_GROUP,
-				List.of(DATAWAREHOUSEREADER_ORGANIZATION_NUMBER),
-				DATAWAREHOUSEREADER_PAGE,
-				List.of(SORT_BY),
-				Direction.DESC);
 	}
 
 	@ParameterizedTest

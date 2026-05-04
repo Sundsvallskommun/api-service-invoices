@@ -1,7 +1,5 @@
 package se.sundsvall.invoices.service.mapper;
 
-import generated.se.sundsvall.datawarehousereader.Direction;
-import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
@@ -46,27 +44,6 @@ public final class InvoiceMapper {
 		return InvoicesResponse.create()
 			.withMetaData(ofNullable(dataWarehouseReaderInvoiceResponse.getMeta()).map(InvoiceMapper::toMetaData).orElse(null))
 			.withInvoices(toInvoicesFromDataWarehouseReader(dataWarehouseReaderInvoiceResponse.getInvoices()));
-	}
-
-	public static InvoiceParameters toDataWarehouseReaderInvoiceParameters(final List<String> customerNumbers, final InvoicesParameters invoiceParameters) {
-		return new InvoiceParameters()
-			.customerNumber(customerNumbers)
-			.facilityIds(invoiceParameters.getFacilityIds())
-			.invoiceName(invoiceParameters.getInvoiceName())
-			.invoiceNumber(toLong(invoiceParameters.getInvoiceNumber()))
-			.organizationGroup(invoiceParameters.getOrganizationGroup())
-			.organizationNumber(invoiceParameters.getOrganizationNumbers())
-			.invoiceDateFrom(invoiceParameters.getInvoiceDateFrom())
-			.invoiceDateTo(invoiceParameters.getInvoiceDateTo())
-			.dueDateFrom(invoiceParameters.getDueDateFrom())
-			.dueDateTo(invoiceParameters.getDueDateTo())
-			.invoiceType(toDataWarehouseReaderInvoiceType(invoiceParameters.getInvoiceType()))
-			.invoiceStatus(toDataWarehouseReaderInvoiceStatus(invoiceParameters.getInvoiceStatus()))
-			.ocrNumber(toLong(invoiceParameters.getOcrNumber()))
-			.page(invoiceParameters.getPage())
-			.limit(invoiceParameters.getLimit())
-			.sortBy(List.of("invoiceDate"))
-			.sortDirection(Direction.DESC);
 	}
 
 	public static List<InvoiceDetail> toInvoiceDetails(final List<generated.se.sundsvall.datawarehousereader.InvoiceDetail> dataWarehouseReaderInvoiceDetails) {
@@ -172,7 +149,7 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	static String toDataWarehouseReaderInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public static String toDataWarehouseReaderInvoiceStatus(final InvoiceStatus invoiceStatus) {
 		return ofNullable(invoiceStatus)
 			.map(status -> switch (status)
 			{
@@ -188,7 +165,7 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	static String toDataWarehouseReaderInvoiceType(final InvoiceType invoiceType) {
+	public static String toDataWarehouseReaderInvoiceType(final InvoiceType invoiceType) {
 		return ofNullable(invoiceType)
 			.map(type -> switch (type)
 			{
@@ -341,12 +318,6 @@ public final class InvoiceMapper {
 	private static String toString(final Long value) {
 		return ofNullable(value)
 			.map(String::valueOf)
-			.orElse(null);
-	}
-
-	private static Long toLong(final String value) {
-		return ofNullable(value)
-			.map(Long::parseLong)
 			.orElse(null);
 	}
 
