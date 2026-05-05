@@ -24,6 +24,8 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 	}
 
 	@Test
+	// All query parameters populated. Upstream detail intentionally omits administration/facilityId
+	// to verify the mapper passes nulls through cleanly.
 	void test02_getInvoicesForCustomerAllParameters() {
 		setupCall()
 			.withServicePath("/2281/COMMERCIAL/customers/600606/invoices" +

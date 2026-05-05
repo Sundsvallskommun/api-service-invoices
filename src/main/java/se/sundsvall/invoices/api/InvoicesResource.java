@@ -58,7 +58,6 @@ class InvoicesResource {
 	})
 	@Operation(summary = "Returns invoices matching sent in search parameters")
 	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = InvoicesResponse.class)))
-
 	ResponseEntity<InvoicesResponse> getInvoices(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable final InvoiceOrigin invoiceOrigin,

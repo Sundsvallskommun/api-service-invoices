@@ -30,7 +30,40 @@
 			"careOf": "Anka Kalle",
 			"invoiceReference": "ref-1",
 			"pdfAvailable": true,
-			"details": []
+			"details": [
+				{
+					"amount": 128.78,
+					"amountVatExcluded": 103.02,
+					"vat": 25.76,
+					"vatRate": 25,
+					"quantity": 3679.2,
+					"unit": "kWh",
+					"unitPrice": 0.028,
+					"description": "Förbrukning el",
+					"productCode": "1404",
+					"productName": "Elöverföring",
+					"fromDate": "2025-09-01",
+					"toDate": "2025-09-30",
+					"facilityId": "735999109425048010",
+					"administration": "Sundsvall Elnät"
+				},
+				{
+					"amount": 1595.85,
+					"amountVatExcluded": 1276.68,
+					"vat": 319.17,
+					"vatRate": 25,
+					"quantity": 3679.2,
+					"unit": "kWh",
+					"unitPrice": 0.347,
+					"description": "Energiskatt",
+					"productCode": "1413",
+					"productName": "Energiskatt",
+					"fromDate": "2025-09-01",
+					"toDate": "2025-09-30",
+					"facilityId": "735999109425048010",
+					"administration": "Sundsvall Elnät"
+				}
+			]
 		}
 	],
 	"_meta": {
