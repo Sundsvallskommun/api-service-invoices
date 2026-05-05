@@ -2,6 +2,8 @@ package se.sundsvall.invoices.service;
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagement;
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
+import generated.se.sundsvall.datawarehousereader.CustomerInvoice;
+import generated.se.sundsvall.datawarehousereader.CustomerInvoiceResponse;
 import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.Invoice;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
@@ -21,6 +23,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.ThrowableProblem;
+import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
@@ -254,6 +257,58 @@ class InvoicesServiceTest {
 		});
 
 		verify(idataIntegrationMock).getInvoice(invoiceNumber);
+	}
+
+	@Test
+	void getInvoicesForCustomerSuccess() {
+		final var municipalityId = "municipalityId";
+		final var customerNumber = "216870";
+		final var organizationIds = List.of("5565027223");
+		final var periodFrom = java.time.LocalDate.of(2025, 1, 1);
+		final var periodTo = java.time.LocalDate.of(2025, 12, 31);
+		final var sortBy = "periodFrom";
+		final var page = 1;
+		final var limit = 100;
+
+		final var parameters = CustomerInvoicesParameters.create()
+			.withOrganizationIds(organizationIds)
+			.withPeriodFrom(periodFrom)
+			.withPeriodTo(periodTo)
+			.withSortBy(sortBy)
+			.withPage(page)
+			.withLimit(limit);
+
+		final var upstreamResponse = new CustomerInvoiceResponse()
+			.invoices(List.of(new CustomerInvoice().customerNumber(customerNumber).invoiceType("Faktura").invoiceStatus("Betalad")))
+			.meta(createPagingAndSortingMetaData());
+
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumber, organizationIds, periodFrom, periodTo, sortBy, page, limit)).thenReturn(upstreamResponse);
+
+		final var response = invoicesService.getInvoicesForCustomer(municipalityId, customerNumber, parameters);
+
+		assertThat(response).isNotNull();
+		assertThat(response.getInvoices()).hasSize(1);
+		assertThat(response.getInvoices().getFirst().getCustomerNumber()).isEqualTo(customerNumber);
+		assertThat(response.getInvoices().getFirst().getInvoiceType()).isEqualTo(INVOICE);
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumber, organizationIds, periodFrom, periodTo, sortBy, page, limit);
+		verifyNoInteractions(invoiceCacheClientMock, idataIntegrationMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerNoHits() {
+		final var municipalityId = "municipalityId";
+		final var customerNumber = "216870";
+		final var parameters = CustomerInvoicesParameters.create();
+
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumber, null, null, null, null, 1, 100))
+			.thenReturn(new CustomerInvoiceResponse().invoices(emptyList()).meta(createPagingAndSortingMetaData()));
+
+		final var response = invoicesService.getInvoicesForCustomer(municipalityId, customerNumber, parameters);
+
+		assertThat(response).isNotNull();
+		assertThat(response.getInvoices()).isEmpty();
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumber, null, null, null, null, 1, 100);
+		verifyNoInteractions(invoiceCacheClientMock, idataIntegrationMock);
 	}
 
 	private InvoiceResponse createDataWarehouseReaderInvoiceResponse() {

@@ -9,6 +9,8 @@ import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.ThrowableProblem;
+import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
+import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
 import se.sundsvall.invoices.api.model.InvoiceType;
@@ -28,6 +30,7 @@ import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toCustomerInvoicesResponse;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceStatus;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceType;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
@@ -106,6 +109,18 @@ public class InvoicesService {
 		}
 
 		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
+	}
+
+	public CustomerInvoicesResponse getInvoicesForCustomer(final String municipalityId, final String customerNumber, final CustomerInvoicesParameters parameters) {
+		return toCustomerInvoicesResponse(dataWarehouseReaderClient.getInvoicesForCustomer(
+			municipalityId,
+			customerNumber,
+			parameters.getOrganizationIds(),
+			parameters.getPeriodFrom(),
+			parameters.getPeriodTo(),
+			parameters.getSortBy(),
+			parameters.getPage(),
+			parameters.getLimit()));
 	}
 
 	boolean isInvoicesStoredAtIdata(final String organizationNumber) {

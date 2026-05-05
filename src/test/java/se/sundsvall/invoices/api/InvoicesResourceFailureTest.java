@@ -34,6 +34,7 @@ class InvoicesResourceFailureTest {
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
+	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices";
 	private static final String INVOICE_NUMBER = "333";
 	private static final String ORGANIZATION_NUMBER = "5565732223";
 	private static final List<String> PARTY_IDS = List.of(randomUUID().toString());
@@ -127,7 +128,7 @@ class InvoicesResourceFailureTest {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(INVOICES_PATH)
 				.queryParams(createParameterMap(null, null, null, null, PARTY_IDS))
-				.build("invalid-municipality-id", COMMERCIAL))
+				.build("9999", COMMERCIAL))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -274,7 +275,7 @@ class InvoicesResourceFailureTest {
 
 		// Act
 		final var response = webTestClient.get().uri(uriBuilder -> uriBuilder.path(DETAILS_PATH)
-			.build("invalid-municipality-id", ORGANIZATION_NUMBER, INVOICE_NUMBER))
+			.build("9999", ORGANIZATION_NUMBER, INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -368,7 +369,7 @@ class InvoicesResourceFailureTest {
 		// Act
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(PDF_PATH)
-				.build("invalid-municipality-id", COMMERCIAL, ORGANIZATION_NUMBER, INVOICE_NUMBER))
+				.build("9999", COMMERCIAL, ORGANIZATION_NUMBER, INVOICE_NUMBER))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -382,6 +383,92 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("getPdfInvoice.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerInvalidMunicipalityId() {
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.build("9999", "216870"))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("getInvoicesForCustomer.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerBlankCustomerNumber() {
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.build(MUNICIPALITY_ID, " "))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("getInvoicesForCustomer.customerNumber", "must not be blank"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerInvalidOrganizationId() {
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("organizationIds", "190010301234")
+				.build(MUNICIPALITY_ID, "216870"))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("organizationIds[0]", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerInvalidPeriodFrom() {
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("periodFrom", "25-01-01")
+				.build(MUNICIPALITY_ID, "216870"))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field)
+			.containsExactly("periodFrom");
 
 		verifyNoInteractions(invoicesServiceMock);
 	}

@@ -19,6 +19,8 @@ import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
+import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
+import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
 import se.sundsvall.invoices.api.model.InvoiceDetailsResponse;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
 import se.sundsvall.invoices.api.model.InvoiceType;
@@ -32,8 +34,16 @@ import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
 @RestController
-@RequestMapping("/{municipalityId}")
+// Regex-constrain {municipalityId} to digits so non-numeric prefixes (e.g. /swagger-ui/index.html, /actuator/...) fall through to their real
+// handlers instead of being routed here and failing with a 400 on path-variable conversion.
+@RequestMapping("/{municipalityId:\\d+}")
 @Validated
+@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
+	Problem.class, ConstraintViolationProblem.class
+})))
+@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 @Tag(name = "Invoices", description = "Service that delivers invoice information")
 class InvoicesResource {
 
@@ -48,12 +58,7 @@ class InvoicesResource {
 	})
 	@Operation(summary = "Returns invoices matching sent in search parameters")
 	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = InvoicesResponse.class)))
-	@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
-		Problem.class, ConstraintViolationProblem.class
-	})))
-	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+
 	ResponseEntity<InvoicesResponse> getInvoices(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable final InvoiceOrigin invoiceOrigin,
@@ -65,12 +70,6 @@ class InvoicesResource {
 	@GetMapping(value = "/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Returns invoice-details of an invoice")
 	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = InvoiceDetailsResponse.class)))
-	@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
-		Problem.class, ConstraintViolationProblem.class
-	})))
-	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<InvoiceDetailsResponse> getInvoiceDetails(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
@@ -82,12 +81,6 @@ class InvoicesResource {
 	@GetMapping(value = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Returns invoice in pdf-format")
 	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PdfInvoice.class)))
-	@ApiResponse(responseCode = "400", description = "Bad request", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(oneOf = {
-		Problem.class, ConstraintViolationProblem.class
-	})))
-	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(responseCode = "500", description = "Internal Server error", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
-	@ApiResponse(responseCode = "502", description = "Bad Gateway", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<PdfInvoice> getPdfInvoice(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
@@ -96,5 +89,18 @@ class InvoicesResource {
 		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter") @RequestParam(value = "invoiceType", required = false) final InvoiceType invoiceType) {
 
 		return ok(invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType, municipalityId));
+	}
+
+	@GetMapping(value = "/COMMERCIAL/customers/{customerNumber}/invoices", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
+	@Operation(summary = "Returns invoices for a customer (commercial source)")
+	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = CustomerInvoicesResponse.class)))
+	ResponseEntity<CustomerInvoicesResponse> getInvoicesForCustomer(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Parameter(name = "customerNumber", description = "Customer number", example = "216870", required = true) @PathVariable @NotBlank final String customerNumber,
+		@Valid final CustomerInvoicesParameters searchParams) {
+
+		return ok(invoicesService.getInvoicesForCustomer(municipalityId, customerNumber, searchParams));
 	}
 }

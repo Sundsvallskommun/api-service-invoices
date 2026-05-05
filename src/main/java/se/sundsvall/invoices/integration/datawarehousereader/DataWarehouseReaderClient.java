@@ -1,6 +1,7 @@
 package se.sundsvall.invoices.integration.datawarehousereader;
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
+import generated.se.sundsvall.datawarehousereader.CustomerInvoiceResponse;
 import generated.se.sundsvall.datawarehousereader.CustomerType;
 import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceDetail;
@@ -83,4 +84,30 @@ public interface DataWarehouseReaderClient {
 		@PathVariable String municipalityId,
 		@PathVariable String organizationNumber,
 		@PathVariable long invoiceNumber);
+
+	/**
+	 * Get invoices for a customer.
+	 *
+	 * @param  municipalityId  a municipalityId.
+	 * @param  customerNumber  the customer number.
+	 * @param  organizationIds optional list of organization ids of invoice issuers.
+	 * @param  periodFrom      optional earliest invoice period start.
+	 * @param  periodTo        optional latest invoice period end.
+	 * @param  sortBy          optional column to sort by.
+	 * @param  page            optional page number.
+	 * @param  limit           optional result size per page.
+	 * @return                 a customerInvoiceResponse
+	 */
+	@GetMapping(path = "/{municipalityId}/invoices/customers/{customerNumber}", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
+	CustomerInvoiceResponse getInvoicesForCustomer(
+		@PathVariable String municipalityId,
+		@PathVariable String customerNumber,
+		@RequestParam(value = "organizationIds", required = false) List<String> organizationIds,
+		@RequestParam(value = "periodFrom", required = false) LocalDate periodFrom,
+		@RequestParam(value = "periodTo", required = false) LocalDate periodTo,
+		@RequestParam(value = "sortBy", required = false) String sortBy,
+		@RequestParam(value = "page", required = false) Integer page,
+		@RequestParam(value = "limit", required = false) Integer limit);
 }
