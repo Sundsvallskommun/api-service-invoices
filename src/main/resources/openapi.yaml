@@ -1,13 +1,13 @@
 openapi: 3.1.0
 info:
   title: api-invoices
-  contact: { }
+  contact: {}
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "9.1"
+  version: "9.2"
 servers:
-  - url: http://localhost:57313
+  - url: http://localhost:50421
     description: Generated server url
 tags:
   - name: Invoices
@@ -184,6 +184,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InvoicesResponse"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
         "400":
           description: Bad request
           content:
@@ -192,12 +198,6 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "404":
-          description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
         "500":
           description: Internal Server error
           content:
@@ -231,11 +231,6 @@ paths:
           schema:
             type: string
           example: 5565272223
-        - name: invoiceOrigin
-          in: path
-          required: true
-          schema:
-            $ref: "#/components/schemas/InvoiceOrigin"
         - name: invoiceNumber
           in: path
           description: Id of invoice
@@ -244,6 +239,11 @@ paths:
             type: string
             minLength: 1
           example: 333444
+        - name: invoiceOrigin
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/InvoiceOrigin"
         - name: invoiceType
           in: query
           description: InvoiceType filter parameter
@@ -257,6 +257,12 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PdfInvoice"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
         "400":
           description: Bad request
           content:
@@ -265,12 +271,6 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "404":
-          description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
         "500":
           description: Internal Server error
           content:
@@ -313,12 +313,6 @@ paths:
             minLength: 1
           example: 333444
       responses:
-        "200":
-          description: Successful operation
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/InvoiceDetailsResponse"
         "400":
           description: Bad request
           content:
@@ -327,12 +321,6 @@ paths:
                 oneOf:
                   - $ref: "#/components/schemas/Problem"
                   - $ref: "#/components/schemas/ConstraintViolationProblem"
-        "404":
-          description: Not found
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
         "500":
           description: Internal Server error
           content:
@@ -345,6 +333,131 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoiceDetailsResponse"
+  /{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices:
+    get:
+      tags:
+        - Invoices
+      summary: Returns invoices for a customer (commercial source)
+      operationId: getInvoicesForCustomer
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: customerNumber
+          in: path
+          description: Customer number
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          example: 216870
+        - name: organizationIds
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              description: "Organization id of invoice issuer, if not provided all will\
+              \ be returned."
+              examples:
+                - "5565027223"
+        - name: periodFrom
+          in: query
+          description: Earliest invoice period start. Format is YYYY-MM-DD.
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Earliest invoice period start. Format is YYYY-MM-DD.
+            examples:
+              - 2025-01-01
+        - name: periodTo
+          in: query
+          description: Latest invoice period end. Format is YYYY-MM-DD.
+          required: false
+          schema:
+            type: string
+            format: date
+            description: Latest invoice period end. Format is YYYY-MM-DD.
+            examples:
+              - 2025-12-31
+        - name: sortBy
+          in: query
+          description: Column to sort by
+          required: false
+          schema:
+            type: string
+            description: Column to sort by
+            examples:
+              - periodFrom
+              - periodTo
+              - InvoiceDate
+              - DueDate
+              - InvoiceNumber
+              - TotalAmount
+        - name: page
+          in: query
+          description: Page number
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 1
+            description: Page number
+            examples:
+              - "1"
+            minimum: 1
+        - name: limit
+          in: query
+          description: Result size per page
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 100
+            description: Result size per page
+            examples:
+              - "100"
+            maximum: 1000
+            minimum: 1
+      responses:
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CustomerInvoicesResponse"
   /api-docs:
     get:
       tags:
@@ -630,10 +743,10 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        detail:
-          type: string
         causeAsProblem:
           $ref: "#/components/schemas/ThrowableProblem"
+        detail:
+          type: string
         instance:
           type: string
           format: uri
@@ -653,7 +766,7 @@ components:
         instance:
           type: string
           format: uri
-        causeAsProblem: { }
+        causeAsProblem: {}
     Violation:
       type: object
       properties:
@@ -762,4 +875,176 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/InvoiceDetail"
-  securitySchemes: { }
+    CustomerInvoice:
+      type: object
+      description: Customer invoice model
+      properties:
+        customerNumber:
+          type: string
+          description: Customer number
+          examples:
+            - "123456"
+        customerType:
+          $ref: "#/components/schemas/CustomerType"
+        facilityId:
+          type: string
+          description: Facility id
+          examples:
+            - "735999109425048010"
+        invoiceNumber:
+          type: string
+          description: Invoice number
+          examples:
+            - "999"
+        invoiceId:
+          type: integer
+          format: int64
+          description: Invoice id
+          examples:
+            - "1062916396"
+        jointInvoiceId:
+          type: integer
+          format: int64
+          description: Joint invoice id
+          examples:
+            - "123"
+        invoiceDate:
+          type: string
+          format: date
+          description: Invoice date
+          examples:
+            - 2025-10-08
+        invoiceName:
+          type: string
+          description: Invoice name
+          examples:
+            - 123456789.pdf
+        invoiceType:
+          $ref: "#/components/schemas/InvoiceType"
+        invoiceDescription:
+          type: string
+          description: Invoice description
+          examples:
+            - El
+        invoiceStatus:
+          $ref: "#/components/schemas/InvoiceStatus"
+        ocrNumber:
+          type: string
+          description: OCR number
+          examples:
+            - "295334999"
+        dueDate:
+          type: string
+          format: date
+          description: Due date
+          examples:
+            - 2025-10-28
+        periodFrom:
+          type: string
+          format: date
+          description: Invoice period start
+          examples:
+            - 2025-09-01
+        periodTo:
+          type: string
+          format: date
+          description: Invoice period end
+          examples:
+            - 2025-09-30
+        totalAmount:
+          type: number
+          format: float
+          description: Total amount
+          examples:
+            - "1234.00"
+        amountVatIncluded:
+          type: number
+          format: float
+          description: Amount included VAT
+          examples:
+            - "1233.51"
+        amountVatExcluded:
+          type: number
+          format: float
+          description: Amount excluded VAT
+          examples:
+            - "986.81"
+        vatEligibleAmount:
+          type: number
+          format: float
+          description: Amount eligible for VAT
+          examples:
+            - "986.81"
+        rounding:
+          type: number
+          format: float
+          description: Rounding
+          examples:
+            - "0.49"
+        organizationGroup:
+          type: string
+          description: Organization group
+          examples:
+            - stadsbacken
+        organizationNumber:
+          type: string
+          description: Organization number of invoice issuer
+          examples:
+            - "5565027223"
+        administration:
+          type: string
+          description: Administration
+          examples:
+            - Sundsvall Elnät
+        street:
+          type: string
+          description: Street
+          examples:
+            - Ankeborgsvägen 11
+        postCode:
+          type: string
+          description: Postal code
+          examples:
+            - "87654"
+        city:
+          type: string
+          description: City
+          examples:
+            - Sundsvall
+        careOf:
+          type: string
+          description: Care of address
+          examples:
+            - Anka Kalle
+        invoiceReference:
+          type: string
+          description: Invoice reference
+        pdfAvailable:
+          type: boolean
+          description: Is pdf-version of invoice available
+          examples:
+            - "true"
+        details:
+          type: array
+          items:
+            $ref: "#/components/schemas/InvoiceDetail"
+    CustomerType:
+      type: string
+      description: Customer type
+      enum:
+        - ENTERPRISE
+        - PRIVATE
+      examples:
+        - ENTERPRISE
+    CustomerInvoicesResponse:
+      type: object
+      description: CustomerInvoicesResponse model
+      properties:
+        invoices:
+          type: array
+          items:
+            $ref: "#/components/schemas/CustomerInvoice"
+        _meta:
+          $ref: "#/components/schemas/MetaData"
+          readOnly: true
+  securitySchemes: {}

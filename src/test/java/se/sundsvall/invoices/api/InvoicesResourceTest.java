@@ -19,6 +19,8 @@ import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import se.sundsvall.invoices.Application;
+import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
+import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceDetailsResponse;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
@@ -51,6 +53,7 @@ class InvoicesResourceTest {
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
+	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices";
 
 	private static final int DEFAULT_PAGE = 1;
 	private static final int DEFAULT_LIMIT = 100;
@@ -76,6 +79,9 @@ class InvoicesResourceTest {
 
 	@Captor
 	private ArgumentCaptor<InvoicesParameters> parametersCaptor;
+
+	@Captor
+	private ArgumentCaptor<CustomerInvoicesParameters> customerParametersCaptor;
 
 	@Autowired
 	private WebTestClient webTestClient;
@@ -214,6 +220,76 @@ class InvoicesResourceTest {
 		// Assert
 		assertThat(response).isNotNull().isEqualTo(PdfInvoice.create());
 		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, null, MUNICIPALITY_ID);
+	}
+
+	@Test
+	void getInvoicesForCustomerAllParameters() {
+		final var customerNumber = "216870";
+		final var organizationIds = List.of("5565027223", "5564786647");
+		final var periodFrom = LocalDate.of(2025, 1, 1);
+		final var periodTo = LocalDate.of(2025, 12, 31);
+		final var sortBy = "periodFrom";
+
+		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
+
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParams(createCustomerParameterMap(PAGE, LIMIT, organizationIds, periodFrom, periodTo, sortBy))
+				.build(MUNICIPALITY_ID, customerNumber))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(CustomerInvoicesResponse.class)
+			.returnResult()
+			.getResponseBody();
+
+		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), eq(customerNumber), customerParametersCaptor.capture());
+		final CustomerInvoicesParameters parameters = customerParametersCaptor.getValue();
+		assertThat(parameters.getOrganizationIds()).isEqualTo(organizationIds);
+		assertThat(parameters.getPeriodFrom()).isEqualTo(periodFrom);
+		assertThat(parameters.getPeriodTo()).isEqualTo(periodTo);
+		assertThat(parameters.getSortBy()).isEqualTo(sortBy);
+		assertThat(parameters.getPage()).isEqualTo(PAGE);
+		assertThat(parameters.getLimit()).isEqualTo(LIMIT);
+		assertThat(response).isNotNull().isEqualTo(CustomerInvoicesResponse.create());
+	}
+
+	@Test
+	void getInvoicesForCustomerOnlyMandatoryParameters() {
+		final var customerNumber = "216870";
+
+		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
+
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParams(createCustomerParameterMap(null, null, null, null, null, null))
+				.build(MUNICIPALITY_ID, customerNumber))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(CustomerInvoicesResponse.class)
+			.returnResult()
+			.getResponseBody();
+
+		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), eq(customerNumber), customerParametersCaptor.capture());
+		final CustomerInvoicesParameters parameters = customerParametersCaptor.getValue();
+		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
+		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);
+		assertThat(parameters).hasAllNullFieldsOrPropertiesExcept("page", "limit");
+		assertThat(response).isNotNull().isEqualTo(CustomerInvoicesResponse.create());
+	}
+
+	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> organizationIds,
+		final LocalDate periodFrom, final LocalDate periodTo, final String sortBy) {
+
+		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
+		ofNullable(page).ifPresent(p -> parameters.add("page", valueOf(p)));
+		ofNullable(limit).ifPresent(p -> parameters.add("limit", valueOf(p)));
+		ofNullable(organizationIds).ifPresent(p -> parameters.addAll("organizationIds", p));
+		ofNullable(periodFrom).ifPresent(p -> parameters.add("periodFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+		ofNullable(periodTo).ifPresent(p -> parameters.add("periodTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
+		ofNullable(sortBy).ifPresent(p -> parameters.add("sortBy", p));
+		return parameters;
 	}
 
 	private MultiValueMap<String, String> createParameterMap(final Integer page, final Integer limit, final List<String> facilityIds, final String invoiceNumber, final LocalDate invoiceDateFrom,

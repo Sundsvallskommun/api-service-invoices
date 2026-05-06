@@ -1,7 +1,6 @@
 package se.sundsvall.invoices.service.mapper;
 
-import generated.se.sundsvall.datawarehousereader.Direction;
-import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
+import generated.se.sundsvall.datawarehousereader.CustomerInvoiceResponse;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
 import generated.se.sundsvall.invoicecache.InvoiceFilterRequest;
@@ -20,6 +19,8 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
 import se.sundsvall.invoices.api.model.Address;
+import se.sundsvall.invoices.api.model.CustomerInvoice;
+import se.sundsvall.invoices.api.model.CustomerType;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceStatus;
@@ -42,10 +43,6 @@ class InvoiceMapperTest {
 	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE = LocalDate.now().plusDays(30);
 	private static final Set<String> DATAWAREHOUSEREADER_FACILITY_IDS = Set.of("facilityId");
 	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE = LocalDate.now();
-	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE_FROM = LocalDate.of(2022, 3, 1);
-	private static final LocalDate DATAWAREHOUSEREADER_INVOICE_DATE_TO = LocalDate.of(2022, 3, 31);
-	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE_FROM = LocalDate.of(2022, 4, 1);
-	private static final LocalDate DATAWAREHOUSEREADER_DUE_DATE_TO = LocalDate.of(2022, 4, 30);
 	private static final Set<String> DATAWAREHOUSEREADER_INVOICE_DESCRIPTIONS = Set.of("invoiceDescription");
 	private static final String DATAWAREHOUSEREADER_INVOICE_NAME = "invoiceName";
 	private static final long DATAWAREHOUSEREADER_INVOICE_NUMBER = 4321;
@@ -70,10 +67,7 @@ class InvoiceMapperTest {
 	private static final BigDecimal DATAWAREHOUSEREADER_UNIT_PRICE = BigDecimal.valueOf(13.45d);
 	private static final double DATAWAREHOUSEREADER_VAT_RATE = 13.46;
 	private static final String DATAWAREHOUSEREADER_STREET = "street";
-	private static final Integer DATAWAREHOUSEREADER_LIMIT = 50;
-	private static final Integer DATAWAREHOUSEREADER_PAGE = 5;
 	private static final Boolean DATAWAREHOUSEREADER_PDF_AVAILABLE = false;
-	private static final String SORT_BY = "invoiceDate";
 
 	private static final String INVOICECACHE_INVOICE_NUMBER = "4321";
 	private static final InvoiceStatusEnum INVOICECACHE_INVOICE_STATUS = InvoiceStatusEnum.PAID;
@@ -91,8 +85,6 @@ class InvoiceMapperTest {
 		.city("city")
 		.postcode("postalCode");
 
-	private static final List<String> CUSTOMER_NUMBERS = List.of(DATAWAREHOUSEREADER_CUSTOMER_NUMBER);
-	private static final String ORGANIZATION_GROUP = "organizationGroup";
 	private static final String ORGANIZATION_NUMBER = "1234567890";
 	private static final float AMOUNT_VAT_EXCLUDED = 13.37f;
 	private static final float AMOUNT_VAT_INCLUDED = 26.779999f;
@@ -466,68 +458,6 @@ class InvoiceMapperTest {
 				VAT_RATE));
 	}
 
-	@Test
-	void toDataWarehouseReaderInvoiceParameters() {
-		final var invoicesParameters = new InvoicesParameters()
-			.withFacilityIds(FACILITY_IDS)
-			.withInvoiceName(INVOICE_NAME)
-			.withInvoiceNumber(INVOICE_NUMBER)
-			.withInvoiceStatus(INVOICE_STATUS)
-			.withInvoiceType(INVOICE_TYPE)
-			.withOcrNumber(OCR_NUMBER)
-			.withOrganizationGroup(ORGANIZATION_GROUP)
-			.withOrganizationNumbers(List.of(ORGANIZATION_NUMBER))
-			.withInvoiceDateFrom(INVOICE_DATE_FROM)
-			.withInvoiceDateTo(INVOICE_DATE_TO)
-			.withDueDateFrom(DUE_DATE_FROM)
-			.withDueDateTo(DUE_DATE_TO)
-			.withLimit(LIMIT)
-			.withPage(PAGE);
-
-		final var invoiceParameters = InvoiceMapper.toDataWarehouseReaderInvoiceParameters(CUSTOMER_NUMBERS, invoicesParameters);
-
-		assertThat(invoiceParameters).extracting(
-			InvoiceParameters::getAdministration,
-			InvoiceParameters::getCustomerNumber,
-			InvoiceParameters::getCustomerType,
-			InvoiceParameters::getDueDateFrom,
-			InvoiceParameters::getDueDateTo,
-			InvoiceParameters::getFacilityIds,
-			InvoiceParameters::getInvoiceDateFrom,
-			InvoiceParameters::getInvoiceDateTo,
-			InvoiceParameters::getInvoiceName,
-			InvoiceParameters::getInvoiceNumber,
-			InvoiceParameters::getInvoiceStatus,
-			InvoiceParameters::getInvoiceType,
-			InvoiceParameters::getLimit,
-			InvoiceParameters::getOcrNumber,
-			InvoiceParameters::getOrganizationGroup,
-			InvoiceParameters::getOrganizationNumber,
-			InvoiceParameters::getPage,
-			InvoiceParameters::getSortBy,
-			InvoiceParameters::getSortDirection)
-			.containsExactly(
-				null,
-				CUSTOMER_NUMBERS,
-				null,
-				DATAWAREHOUSEREADER_DUE_DATE_FROM,
-				DATAWAREHOUSEREADER_DUE_DATE_TO,
-				FACILITY_IDS,
-				DATAWAREHOUSEREADER_INVOICE_DATE_FROM,
-				DATAWAREHOUSEREADER_INVOICE_DATE_TO,
-				DATAWAREHOUSEREADER_INVOICE_NAME,
-				DATAWAREHOUSEREADER_INVOICE_NUMBER,
-				DATAWAREHOUSEREADER_INVOICE_STATUS,
-				DATAWAREHOUSEREADER_INVOICE_TYPE,
-				DATAWAREHOUSEREADER_LIMIT,
-				DATAWAREHOUSEREADER_OCR_NUMBER,
-				DATAWAREHOUSEREADER_ORGANIZATION_GROUP,
-				List.of(DATAWAREHOUSEREADER_ORGANIZATION_NUMBER),
-				DATAWAREHOUSEREADER_PAGE,
-				List.of(SORT_BY),
-				Direction.DESC);
-	}
-
 	@ParameterizedTest
 	@MethodSource("toInvoiceCacheInvoiceTypeArguments")
 	void toInvoiceCacheInvoiceType(final InvoiceType source, final generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum target) {
@@ -643,5 +573,161 @@ class InvoiceMapperTest {
 	@MethodSource("toInvoiceTypeFromInvoiceCacheStatusArguments")
 	void toInvoiceTypeFromInvoiceCacheType(final InvoiceTypeEnum source, final InvoiceType target) {
 		assertThat(InvoiceMapper.toInvoiceType(source)).isEqualTo(target);
+	}
+
+	private static Stream<Arguments> toCustomerTypeArguments() {
+		return Stream.of(
+			Arguments.of(generated.se.sundsvall.datawarehousereader.CustomerType.ENTERPRISE, CustomerType.ENTERPRISE),
+			Arguments.of(generated.se.sundsvall.datawarehousereader.CustomerType.PRIVATE, CustomerType.PRIVATE),
+			Arguments.of(null, null));
+	}
+
+	@ParameterizedTest
+	@MethodSource("toCustomerTypeArguments")
+	void toCustomerType(final generated.se.sundsvall.datawarehousereader.CustomerType source, final CustomerType target) {
+		assertThat(InvoiceMapper.toCustomerType(source)).isEqualTo(target);
+	}
+
+	@Test
+	void toCustomerInvoicesResponseFromNull() {
+		assertThat(InvoiceMapper.toCustomerInvoicesResponse(null)).isNull();
+	}
+
+	@Test
+	void toCustomerInvoicesResponseEmpty() {
+		final var response = InvoiceMapper.toCustomerInvoicesResponse(new CustomerInvoiceResponse());
+		assertThat(response).isNotNull();
+		assertThat(response.getInvoices()).isEmpty();
+		assertThat(response.getMetaData()).isNull();
+	}
+
+	@Test
+	void toCustomerInvoicesResponse() {
+		final var customerNumber = "123456";
+		final var facilityId = "facilityId";
+		final var invoiceNumber = 999L;
+		final var invoiceId = 1062916396L;
+		final var jointInvoiceId = 123L;
+		final var invoiceDate = LocalDate.of(2025, 10, 8);
+		final var invoiceName = "invoiceName";
+		final var invoiceDescription = "El";
+		final var ocrNumber = 295334999L;
+		final var dueDate = LocalDate.of(2025, 10, 28);
+		final var periodFrom = LocalDate.of(2025, 9, 1);
+		final var periodTo = LocalDate.of(2025, 9, 30);
+		final var totalAmount = BigDecimal.valueOf(1234.0d);
+		final var amountVatIncluded = BigDecimal.valueOf(1233.51d);
+		final var amountVatExcluded = BigDecimal.valueOf(986.81d);
+		final var vatEligibleAmount = BigDecimal.valueOf(986.81d);
+		final var rounding = BigDecimal.valueOf(0.49d);
+		final var organizationGroup = "stadsbacken";
+		final var organizationNumber = "5565027223";
+		final var administration = "Sundsvall Elnät";
+		final var street = "Ankeborgsvägen 11";
+		final var postCode = "87654";
+		final var city = "Sundsvall";
+		final var careOf = "Anka Kalle";
+		final var invoiceReference = "ref-1";
+
+		final var upstream = new generated.se.sundsvall.datawarehousereader.CustomerInvoice()
+			.customerNumber(customerNumber)
+			.customerType(generated.se.sundsvall.datawarehousereader.CustomerType.ENTERPRISE)
+			.facilityId(facilityId)
+			.invoiceNumber(invoiceNumber)
+			.invoiceId(invoiceId)
+			.jointInvoiceId(jointInvoiceId)
+			.invoiceDate(invoiceDate)
+			.invoiceName(invoiceName)
+			.invoiceType("Faktura")
+			.invoiceDescription(invoiceDescription)
+			.invoiceStatus("Betalad")
+			.ocrNumber(ocrNumber)
+			.dueDate(dueDate)
+			.periodFrom(periodFrom)
+			.periodTo(periodTo)
+			.totalAmount(totalAmount)
+			.amountVatIncluded(amountVatIncluded)
+			.amountVatExcluded(amountVatExcluded)
+			.vatEligibleAmount(vatEligibleAmount)
+			.rounding(rounding)
+			.organizationGroup(organizationGroup)
+			.organizationNumber(organizationNumber)
+			.administration(administration)
+			.street(street)
+			.postCode(postCode)
+			.city(city)
+			.careOf(careOf)
+			.invoiceReference(invoiceReference)
+			.pdfAvailable(true);
+
+		final var pagingAndSortingMetaData = new generated.se.sundsvall.datawarehousereader.PagingAndSortingMetaData()
+			.totalRecords(1L)
+			.page(1)
+			.totalPages(1)
+			.limit(100)
+			.count(1);
+
+		final var upstreamResponse = new CustomerInvoiceResponse()
+			.invoices(List.of(upstream))
+			.meta(pagingAndSortingMetaData);
+
+		final var response = InvoiceMapper.toCustomerInvoicesResponse(upstreamResponse);
+
+		assertThat(response).isNotNull();
+		assertThat(response.getInvoices()).hasSize(1);
+		final var mapped = response.getInvoices().getFirst();
+		assertThat(mapped.getCustomerNumber()).isEqualTo(customerNumber);
+		assertThat(mapped.getCustomerType()).isEqualTo(CustomerType.ENTERPRISE);
+		assertThat(mapped.getFacilityId()).isEqualTo(facilityId);
+		assertThat(mapped.getInvoiceNumber()).isEqualTo(String.valueOf(invoiceNumber));
+		assertThat(mapped.getInvoiceId()).isEqualTo(invoiceId);
+		assertThat(mapped.getJointInvoiceId()).isEqualTo(jointInvoiceId);
+		assertThat(mapped.getInvoiceDate()).isEqualTo(invoiceDate);
+		assertThat(mapped.getInvoiceName()).isEqualTo(invoiceName);
+		assertThat(mapped.getInvoiceType()).isEqualTo(InvoiceType.INVOICE);
+		assertThat(mapped.getInvoiceDescription()).isEqualTo(invoiceDescription);
+		assertThat(mapped.getInvoiceStatus()).isEqualTo(InvoiceStatus.PAID);
+		assertThat(mapped.getOcrNumber()).isEqualTo(String.valueOf(ocrNumber));
+		assertThat(mapped.getDueDate()).isEqualTo(dueDate);
+		assertThat(mapped.getPeriodFrom()).isEqualTo(periodFrom);
+		assertThat(mapped.getPeriodTo()).isEqualTo(periodTo);
+		assertThat(mapped.getTotalAmount()).isEqualTo(totalAmount.floatValue());
+		assertThat(mapped.getAmountVatIncluded()).isEqualTo(amountVatIncluded.floatValue());
+		assertThat(mapped.getAmountVatExcluded()).isEqualTo(amountVatExcluded.floatValue());
+		assertThat(mapped.getVatEligibleAmount()).isEqualTo(vatEligibleAmount.floatValue());
+		assertThat(mapped.getRounding()).isEqualTo(rounding.floatValue());
+		assertThat(mapped.getOrganizationGroup()).isEqualTo(organizationGroup);
+		assertThat(mapped.getOrganizationNumber()).isEqualTo(organizationNumber);
+		assertThat(mapped.getAdministration()).isEqualTo(administration);
+		assertThat(mapped.getStreet()).isEqualTo(street);
+		assertThat(mapped.getPostCode()).isEqualTo(postCode);
+		assertThat(mapped.getCity()).isEqualTo(city);
+		assertThat(mapped.getCareOf()).isEqualTo(careOf);
+		assertThat(mapped.getInvoiceReference()).isEqualTo(invoiceReference);
+		assertThat(mapped.getPdfAvailable()).isTrue();
+		assertThat(mapped.getDetails()).isEmpty();
+
+		assertThat(response.getMetaData()).isEqualTo(MetaData.create()
+			.withTotalRecords(1)
+			.withPage(1)
+			.withTotalPages(1)
+			.withLimit(100)
+			.withCount(1));
+	}
+
+	@Test
+	void toCustomerInvoicesResponseWithNullAmounts() {
+		final var upstream = new generated.se.sundsvall.datawarehousereader.CustomerInvoice();
+		final var upstreamResponse = new CustomerInvoiceResponse().invoices(List.of(upstream));
+
+		final var response = InvoiceMapper.toCustomerInvoicesResponse(upstreamResponse);
+
+		assertThat(response.getInvoices()).hasSize(1);
+		final CustomerInvoice mapped = response.getInvoices().getFirst();
+		assertThat(mapped.getTotalAmount()).isZero();
+		assertThat(mapped.getAmountVatIncluded()).isZero();
+		assertThat(mapped.getAmountVatExcluded()).isZero();
+		assertThat(mapped.getVatEligibleAmount()).isZero();
+		assertThat(mapped.getRounding()).isZero();
 	}
 }
