@@ -10,6 +10,8 @@ import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -53,14 +55,14 @@ public interface DataWarehouseReaderClient {
 		@RequestParam(value = "customerType", required = false) CustomerType customerType,
 		@RequestParam(value = "facilityIds", required = false) List<String> facilityIds,
 		@RequestParam(value = "invoiceNumber", required = false) Long invoiceNumber,
-		@RequestParam(value = "invoiceDateFrom", required = false) LocalDate invoiceDateFrom,
-		@RequestParam(value = "invoiceDateTo", required = false) LocalDate invoiceDateTo,
+		@RequestParam(value = "invoiceDateFrom", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate invoiceDateFrom,
+		@RequestParam(value = "invoiceDateTo", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate invoiceDateTo,
 		@RequestParam(value = "invoiceName", required = false) String invoiceName,
 		@RequestParam(value = "invoiceType", required = false) String invoiceType,
 		@RequestParam(value = "invoiceStatus", required = false) String invoiceStatus,
 		@RequestParam(value = "ocrNumber", required = false) Long ocrNumber,
-		@RequestParam(value = "dueDateFrom", required = false) LocalDate dueDateFrom,
-		@RequestParam(value = "dueDateTo", required = false) LocalDate dueDateTo,
+		@RequestParam(value = "dueDateFrom", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dueDateFrom,
+		@RequestParam(value = "dueDateTo", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dueDateTo,
 		@RequestParam(value = "organizationGroup", required = false) String organizationGroup,
 		@RequestParam(value = "organizationNumbers", required = false) List<String> organizationNumbers,
 		@RequestParam(value = "administration", required = false) String administration,
@@ -105,8 +107,8 @@ public interface DataWarehouseReaderClient {
 		@PathVariable String municipalityId,
 		@PathVariable String customerNumber,
 		@RequestParam(value = "organizationIds", required = false) List<String> organizationIds,
-		@RequestParam(value = "periodFrom", required = false) LocalDate periodFrom,
-		@RequestParam(value = "periodTo", required = false) LocalDate periodTo,
+		@RequestParam(value = "periodFrom", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate periodFrom,
+		@RequestParam(value = "periodTo", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate periodTo,
 		@RequestParam(value = "sortBy", required = false) String sortBy,
 		@RequestParam(value = "page", required = false) Integer page,
 		@RequestParam(value = "limit", required = false) Integer limit);
