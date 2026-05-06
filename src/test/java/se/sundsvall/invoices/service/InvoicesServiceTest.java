@@ -21,7 +21,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -204,14 +203,14 @@ class InvoicesServiceTest {
 	}
 
 	@Test
-	void getInvoiceDetailsNotFound() {
+	void getInvoiceDetailsEmpty() {
 
 		final var municipalityId = "municipalityId";
 		final var organizationNumber = "5523456789";
 		final var invoiceNumber = "111222";
 
 		when(dataWarehouseReaderClientMock.getInvoiceDetails(municipalityId, organizationNumber, Long.parseLong(invoiceNumber)))
-			.thenThrow(Problem.valueOf(NOT_FOUND));
+			.thenReturn(emptyList());
 
 		final var invoiceDetails = invoicesService.getInvoiceDetails(municipalityId, organizationNumber, invoiceNumber);
 

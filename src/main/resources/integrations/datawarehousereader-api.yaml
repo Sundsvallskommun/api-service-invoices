@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "5.4"
+  version: "5.5"
 servers:
-  - url: http://localhost:55930
+  - url: http://localhost:53261
     description: Generated server url
 tags:
   - name: Measurement
@@ -385,12 +385,6 @@ paths:
                   $ref: "#/components/schemas/InvoiceDetail"
         "400":
           description: Bad request
-          content:
-            application/problem+json:
-              schema:
-                $ref: "#/components/schemas/Problem"
-        "404":
-          description: Not found
           content:
             application/problem+json:
               schema:
@@ -1383,9 +1377,9 @@ components:
     Problem:
       type: object
       properties:
-        title:
-          type: string
         detail:
+          type: string
+        title:
           type: string
         instance:
           type: string

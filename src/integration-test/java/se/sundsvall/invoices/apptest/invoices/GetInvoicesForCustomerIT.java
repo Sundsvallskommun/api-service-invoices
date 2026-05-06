@@ -2,6 +2,7 @@ package se.sundsvall.invoices.apptest.invoices;
 
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static org.springframework.http.HttpStatus.OK;
 
 import org.junit.jupiter.api.Test;
@@ -47,6 +48,18 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 			.withServicePath("/2281/COMMERCIAL/customers/999999/invoices")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(BAD_GATEWAY)
+			.withExpectedResponse(RESPONSE_FILE)
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	// DataWarehouseReader's Feign decoder is configured to pass 404 through unchanged (rather than wrap as 502).
+	// This test pins that behavior: an upstream 404 surfaces as a 404 to the caller.
+	void test04_getInvoicesForCustomerNotFound() {
+		setupCall()
+			.withServicePath("/2281/COMMERCIAL/customers/777777/invoices")
+			.withHttpMethod(GET)
+			.withExpectedResponseStatus(NOT_FOUND)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}

@@ -8,7 +8,6 @@ import java.util.Optional;
 import org.apache.commons.lang3.ObjectUtils;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.Problem;
-import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
 import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -24,7 +23,6 @@ import se.sundsvall.invoices.service.mapper.InvoiceMapper;
 
 import static java.lang.Long.parseLong;
 import static java.lang.String.format;
-import static java.util.Collections.emptyList;
 import static java.util.Optional.ofNullable;
 import static java.util.stream.Collectors.collectingAndThen;
 import static java.util.stream.Collectors.toList;
@@ -92,15 +90,7 @@ public class InvoicesService {
 	}
 
 	public List<InvoiceDetail> getInvoiceDetails(final String municipalityId, final String organizationNumber, final String invoiceNumber) {
-		try {
-			return InvoiceMapper.toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(municipalityId, organizationNumber, parseLong(invoiceNumber)));
-		} catch (final ThrowableProblem e) {
-			// If we get a 404 just return an empty list instead of throwing a BAD_GATEWAY
-			if (NOT_FOUND.equals(e.getStatus())) {
-				return emptyList();
-			}
-			throw e;
-		}
+		return InvoiceMapper.toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(municipalityId, organizationNumber, parseLong(invoiceNumber)));
 	}
 
 	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {
