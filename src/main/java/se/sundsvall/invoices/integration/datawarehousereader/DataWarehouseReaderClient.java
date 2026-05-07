@@ -2,14 +2,13 @@ package se.sundsvall.invoices.integration.datawarehousereader;
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import generated.se.sundsvall.datawarehousereader.CustomerInvoiceResponse;
-import generated.se.sundsvall.datawarehousereader.CustomerType;
-import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceDetail;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import java.time.LocalDate;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.cloud.openfeign.SpringQueryMap;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -41,35 +40,16 @@ public interface DataWarehouseReaderClient {
 	CustomerEngagementResponse getCustomerEngagements(@PathVariable String municipalityId, @RequestParam(value = "partyId") List<String> partyIds);
 
 	/**
-	 * Get invoices found by searchParams.
+	 * Get invoices found by the supplied search parameters.
 	 *
 	 * @param  municipalityId a municipalityId.
+	 * @param  parameters     query parameters serialized via {@link SpringQueryMap}.
 	 * @return                an invoiceResponse
 	 */
 	@GetMapping(path = "/{municipalityId}/invoices", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
-	InvoiceResponse getInvoices(
-		@PathVariable String municipalityId,
-		@RequestParam(value = "customerNumber", required = false) List<String> customerNumber,
-		@RequestParam(value = "customerType", required = false) CustomerType customerType,
-		@RequestParam(value = "facilityIds", required = false) List<String> facilityIds,
-		@RequestParam(value = "invoiceNumber", required = false) Long invoiceNumber,
-		@RequestParam(value = "invoiceDateFrom", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate invoiceDateFrom,
-		@RequestParam(value = "invoiceDateTo", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate invoiceDateTo,
-		@RequestParam(value = "invoiceName", required = false) String invoiceName,
-		@RequestParam(value = "invoiceType", required = false) String invoiceType,
-		@RequestParam(value = "invoiceStatus", required = false) String invoiceStatus,
-		@RequestParam(value = "ocrNumber", required = false) Long ocrNumber,
-		@RequestParam(value = "dueDateFrom", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dueDateFrom,
-		@RequestParam(value = "dueDateTo", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate dueDateTo,
-		@RequestParam(value = "organizationGroup", required = false) String organizationGroup,
-		@RequestParam(value = "organizationNumbers", required = false) List<String> organizationNumbers,
-		@RequestParam(value = "administration", required = false) String administration,
-		@RequestParam(value = "sortBy", required = false) List<String> sortBy,
-		@RequestParam(value = "sortDirection", required = false) Direction sortDirection,
-		@RequestParam(value = "page", required = false) Integer page,
-		@RequestParam(value = "limit", required = false) Integer limit);
+	InvoiceResponse getInvoices(@PathVariable String municipalityId, @SpringQueryMap InvoicesQueryParameters parameters);
 
 	/**
 	 * Get invoice-details of an invoice issued by a specific organization.

@@ -17,6 +17,7 @@ import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.PdfInvoice;
 import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
+import se.sundsvall.invoices.integration.datawarehousereader.InvoicesQueryParameters;
 import se.sundsvall.invoices.integration.idata.IdataIntegration;
 import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
 import se.sundsvall.invoices.service.mapper.InvoiceMapper;
@@ -56,28 +57,25 @@ public class InvoicesService {
 	}
 
 	private InvoiceResponse getCommercialInvoices(final String municipalityId, final InvoicesParameters invoiceParameters) {
-		final var customerNumbers = getCustomerNumbers(municipalityId, invoiceParameters.getPartyId());
-		return dataWarehouseReaderClient.getInvoices(
-			municipalityId,
-			customerNumbers,
-			null,
-			invoiceParameters.getFacilityIds(),
-			ofNullable(invoiceParameters.getInvoiceNumber()).map(Long::parseLong).orElse(null),
-			invoiceParameters.getInvoiceDateFrom(),
-			invoiceParameters.getInvoiceDateTo(),
-			invoiceParameters.getInvoiceName(),
-			toDataWarehouseReaderInvoiceType(invoiceParameters.getInvoiceType()),
-			toDataWarehouseReaderInvoiceStatus(invoiceParameters.getInvoiceStatus()),
-			ofNullable(invoiceParameters.getOcrNumber()).map(Long::parseLong).orElse(null),
-			invoiceParameters.getDueDateFrom(),
-			invoiceParameters.getDueDateTo(),
-			invoiceParameters.getOrganizationGroup(),
-			invoiceParameters.getOrganizationNumbers(),
-			null,
-			List.of("invoiceDate"),
-			Direction.DESC,
-			invoiceParameters.getPage(),
-			invoiceParameters.getLimit());
+		final var query = InvoicesQueryParameters.create()
+			.withCustomerNumber(getCustomerNumbers(municipalityId, invoiceParameters.getPartyId()))
+			.withFacilityIds(invoiceParameters.getFacilityIds())
+			.withInvoiceNumber(ofNullable(invoiceParameters.getInvoiceNumber()).map(Long::parseLong).orElse(null))
+			.withInvoiceDateFrom(invoiceParameters.getInvoiceDateFrom())
+			.withInvoiceDateTo(invoiceParameters.getInvoiceDateTo())
+			.withInvoiceName(invoiceParameters.getInvoiceName())
+			.withInvoiceType(toDataWarehouseReaderInvoiceType(invoiceParameters.getInvoiceType()))
+			.withInvoiceStatus(toDataWarehouseReaderInvoiceStatus(invoiceParameters.getInvoiceStatus()))
+			.withOcrNumber(ofNullable(invoiceParameters.getOcrNumber()).map(Long::parseLong).orElse(null))
+			.withDueDateFrom(invoiceParameters.getDueDateFrom())
+			.withDueDateTo(invoiceParameters.getDueDateTo())
+			.withOrganizationGroup(invoiceParameters.getOrganizationGroup())
+			.withOrganizationNumbers(invoiceParameters.getOrganizationNumbers())
+			.withSortBy(List.of("invoiceDate"))
+			.withSortDirection(Direction.DESC)
+			.withPage(invoiceParameters.getPage())
+			.withLimit(invoiceParameters.getLimit());
+		return dataWarehouseReaderClient.getInvoices(municipalityId, query);
 	}
 
 	private List<String> getCustomerNumbers(final String municipalityId, final List<String> partyIds) {
