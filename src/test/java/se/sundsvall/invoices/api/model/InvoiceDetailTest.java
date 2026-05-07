@@ -1,6 +1,7 @@
 package se.sundsvall.invoices.api.model;
 
 import com.google.code.beanmatchers.BeanMatchers;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeAll;
@@ -20,6 +21,7 @@ class InvoiceDetailTest {
 	@BeforeAll
 	static void setup() {
 		BeanMatchers.registerValueGenerator(() -> LocalDate.now().plusDays(new Random().nextInt()), LocalDate.class);
+		BeanMatchers.registerValueGenerator(() -> BigDecimal.valueOf(new Random().nextDouble()), BigDecimal.class);
 	}
 
 	@Test
@@ -34,13 +36,13 @@ class InvoiceDetailTest {
 
 	@Test
 	void testBuilderMethods() {
-		final var amount = 100;
-		final var amountVatExcluded = 80;
-		final var vat = 20;
-		final var vatRate = 25;
-		final var quantity = 10;
+		final var amount = BigDecimal.valueOf(100);
+		final var amountVatExcluded = BigDecimal.valueOf(80);
+		final var vat = BigDecimal.valueOf(20);
+		final var vatRate = BigDecimal.valueOf(25);
+		final var quantity = BigDecimal.valueOf(10);
 		final var unit = "unit";
-		final var unitPrice = 10;
+		final var unitPrice = BigDecimal.valueOf(10);
 		final var description = "description";
 		final var productCode = "productCode";
 		final var productName = "productName";
@@ -84,7 +86,6 @@ class InvoiceDetailTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(InvoiceDetail.create())
-			.hasAllNullFieldsOrPropertiesExcept("amount", "amountVatExcluded", "vat", "vatRate", "quantity", "unitPrice");
+		assertThat(InvoiceDetail.create()).hasAllNullFieldsOrProperties();
 	}
 }

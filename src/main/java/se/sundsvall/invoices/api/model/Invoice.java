@@ -2,6 +2,7 @@ package se.sundsvall.invoices.api.model;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import io.swagger.v3.oas.annotations.media.Schema;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 import java.util.Set;
@@ -14,22 +15,22 @@ public class Invoice {
 	private LocalDate dueDate;
 
 	@Schema(examples = "814.00", description = "Invoice-amount including VAT and rounding")
-	private float totalAmount;
+	private BigDecimal totalAmount;
 
 	@Schema(examples = "813.50", description = "Invoice-amount including VAT")
-	private float amountVatIncluded;
+	private BigDecimal amountVatIncluded;
 
 	@Schema(examples = "651.20", description = "Invoice-amount excluding VAT")
-	private float amountVatExcluded;
+	private BigDecimal amountVatExcluded;
 
 	@Schema(examples = "651.20", description = "Amount which VAT is applied on")
-	private float vatEligibleAmount;
+	private BigDecimal vatEligibleAmount;
 
 	@Schema(examples = "0.50", description = "Equalization to integer")
-	private float rounding;
+	private BigDecimal rounding;
 
 	@Schema(examples = "162.80", description = "VAT")
-	private float vat;
+	private BigDecimal vat;
 
 	@Schema(examples = "false", description = "Is VAT reversed")
 	private Boolean reversedVat;
@@ -96,80 +97,80 @@ public class Invoice {
 		return this;
 	}
 
-	public float getTotalAmount() {
+	public BigDecimal getTotalAmount() {
 		return totalAmount;
 	}
 
-	public void setTotalAmount(final float totalAmount) {
+	public void setTotalAmount(final BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 	}
 
-	public Invoice withTotalAmount(final float totalAmount) {
+	public Invoice withTotalAmount(final BigDecimal totalAmount) {
 		this.totalAmount = totalAmount;
 		return this;
 	}
 
-	public float getAmountVatIncluded() {
+	public BigDecimal getAmountVatIncluded() {
 		return amountVatIncluded;
 	}
 
-	public void setAmountVatIncluded(final float amountVatIncluded) {
+	public void setAmountVatIncluded(final BigDecimal amountVatIncluded) {
 		this.amountVatIncluded = amountVatIncluded;
 	}
 
-	public Invoice withAmountVatIncluded(final float amountVatIncluded) {
+	public Invoice withAmountVatIncluded(final BigDecimal amountVatIncluded) {
 		this.amountVatIncluded = amountVatIncluded;
 		return this;
 	}
 
-	public float getAmountVatExcluded() {
+	public BigDecimal getAmountVatExcluded() {
 		return amountVatExcluded;
 	}
 
-	public void setAmountVatExcluded(final float amountVatExcluded) {
+	public void setAmountVatExcluded(final BigDecimal amountVatExcluded) {
 		this.amountVatExcluded = amountVatExcluded;
 	}
 
-	public Invoice withAmountVatExcluded(final float amountVatExcluded) {
+	public Invoice withAmountVatExcluded(final BigDecimal amountVatExcluded) {
 		this.amountVatExcluded = amountVatExcluded;
 		return this;
 	}
 
-	public float getVatEligibleAmount() {
+	public BigDecimal getVatEligibleAmount() {
 		return vatEligibleAmount;
 	}
 
-	public void setVatEligibleAmount(final float vatEligibleAmount) {
+	public void setVatEligibleAmount(final BigDecimal vatEligibleAmount) {
 		this.vatEligibleAmount = vatEligibleAmount;
 	}
 
-	public Invoice withVatEligibleAmount(final float vatEligibleAmount) {
+	public Invoice withVatEligibleAmount(final BigDecimal vatEligibleAmount) {
 		this.vatEligibleAmount = vatEligibleAmount;
 		return this;
 	}
 
-	public float getRounding() {
+	public BigDecimal getRounding() {
 		return rounding;
 	}
 
-	public void setRounding(final float rounding) {
+	public void setRounding(final BigDecimal rounding) {
 		this.rounding = rounding;
 	}
 
-	public Invoice withRounding(final float rounding) {
+	public Invoice withRounding(final BigDecimal rounding) {
 		this.rounding = rounding;
 		return this;
 	}
 
-	public float getVat() {
+	public BigDecimal getVat() {
 		return vat;
 	}
 
-	public void setVat(final float vat) {
+	public void setVat(final BigDecimal vat) {
 		this.vat = vat;
 	}
 
-	public Invoice withVat(final float vat) {
+	public Invoice withVat(final BigDecimal vat) {
 		this.vat = vat;
 		return this;
 	}
@@ -387,8 +388,8 @@ public class Invoice {
 		if (o == null || getClass() != o.getClass())
 			return false;
 		final Invoice invoice = (Invoice) o;
-		return Float.compare(totalAmount, invoice.totalAmount) == 0 && Float.compare(amountVatIncluded, invoice.amountVatIncluded) == 0 && Float.compare(amountVatExcluded, invoice.amountVatExcluded) == 0
-			&& Float.compare(vatEligibleAmount, invoice.vatEligibleAmount) == 0 && Float.compare(rounding, invoice.rounding) == 0 && Float.compare(vat, invoice.vat) == 0 && Objects.equals(dueDate, invoice.dueDate)
+		return Objects.equals(totalAmount, invoice.totalAmount) && Objects.equals(amountVatIncluded, invoice.amountVatIncluded) && Objects.equals(amountVatExcluded, invoice.amountVatExcluded)
+			&& Objects.equals(vatEligibleAmount, invoice.vatEligibleAmount) && Objects.equals(rounding, invoice.rounding) && Objects.equals(vat, invoice.vat) && Objects.equals(dueDate, invoice.dueDate)
 			&& Objects.equals(reversedVat, invoice.reversedVat) && Objects.equals(pdfAvailable, invoice.pdfAvailable) && Objects.equals(currency, invoice.currency) && Objects.equals(invoiceDate, invoice.invoiceDate)
 			&& Objects.equals(fromDate, invoice.fromDate) && Objects.equals(toDate, invoice.toDate) && Objects.equals(invoiceNumber, invoice.invoiceNumber) && invoiceStatus == invoice.invoiceStatus && Objects.equals(
 				ocrNumber, invoice.ocrNumber) && Objects.equals(organizationNumber, invoice.organizationNumber) && Objects.equals(invoiceName, invoice.invoiceName) && invoiceType == invoice.invoiceType && Objects.equals(

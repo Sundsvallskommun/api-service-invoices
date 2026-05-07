@@ -9,8 +9,6 @@
 			"dueDate": "2022-10-30",
 			"amountVatIncluded": 4995,
 			"vat": 999,
-			"vatEligibleAmount": 0,
-			"rounding": 0,
 			"invoiceAddress": {
 				"careOf": "John Doe",
 				"city": "Sundsvall",

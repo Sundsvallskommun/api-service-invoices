@@ -64,12 +64,12 @@ public final class InvoiceMapper {
 
 	private static Invoice toInvoice(final generated.se.sundsvall.datawarehousereader.Invoice dataWarehouseReaderInvoice) {
 		return Invoice.create().withDueDate(dataWarehouseReaderInvoice.getDueDate())
-			.withTotalAmount(ofNullable(dataWarehouseReaderInvoice.getTotalAmount()).orElse(ZERO).floatValue())
-			.withAmountVatIncluded(ofNullable(dataWarehouseReaderInvoice.getAmountVatIncluded()).orElse(ZERO).floatValue())
-			.withAmountVatExcluded(ofNullable(dataWarehouseReaderInvoice.getAmountVatExcluded()).orElse(ZERO).floatValue())
-			.withVatEligibleAmount(ofNullable(dataWarehouseReaderInvoice.getVatEligibleAmount()).orElse(ZERO).floatValue())
-			.withRounding(ofNullable(dataWarehouseReaderInvoice.getRounding()).orElse(ZERO).floatValue())
-			.withVat(ofNullable(dataWarehouseReaderInvoice.getVat()).orElse(ZERO).floatValue())
+			.withTotalAmount(dataWarehouseReaderInvoice.getTotalAmount())
+			.withAmountVatIncluded(dataWarehouseReaderInvoice.getAmountVatIncluded())
+			.withAmountVatExcluded(dataWarehouseReaderInvoice.getAmountVatExcluded())
+			.withVatEligibleAmount(dataWarehouseReaderInvoice.getVatEligibleAmount())
+			.withRounding(dataWarehouseReaderInvoice.getRounding())
+			.withVat(dataWarehouseReaderInvoice.getVat())
 			.withReversedVat(dataWarehouseReaderInvoice.getReversedVat())
 			.withCurrency(dataWarehouseReaderInvoice.getCurrency())
 			.withInvoiceDate(dataWarehouseReaderInvoice.getInvoiceDate())
@@ -88,19 +88,18 @@ public final class InvoiceMapper {
 
 	private static InvoiceDetail toInvoiceDetail(final generated.se.sundsvall.datawarehousereader.InvoiceDetail dataWarehouseReaderInvoiceDetail) {
 		return InvoiceDetail.create()
-			.withAmount(ofNullable(dataWarehouseReaderInvoiceDetail.getAmount()).orElse(ZERO).floatValue())
-			.withAmountVatExcluded(ofNullable(dataWarehouseReaderInvoiceDetail.getAmountVatExcluded()).orElse(ZERO).floatValue())
-			.withVat(ofNullable(dataWarehouseReaderInvoiceDetail.getVat()).orElse(ZERO).floatValue())
-			.withUnitPrice(ofNullable(dataWarehouseReaderInvoiceDetail.getUnitPrice()).orElse(ZERO).floatValue())
-			.withVatRate(ofNullable(dataWarehouseReaderInvoiceDetail.getVatRate()).orElse(0D).floatValue())
+			.withAmount(dataWarehouseReaderInvoiceDetail.getAmount())
+			.withAmountVatExcluded(dataWarehouseReaderInvoiceDetail.getAmountVatExcluded())
+			.withVat(dataWarehouseReaderInvoiceDetail.getVat())
+			.withUnitPrice(dataWarehouseReaderInvoiceDetail.getUnitPrice())
+			.withVatRate(toBigDecimal(dataWarehouseReaderInvoiceDetail.getVatRate()))
 			.withUnit(dataWarehouseReaderInvoiceDetail.getUnit())
-			.withUnitPrice(ofNullable(dataWarehouseReaderInvoiceDetail.getUnitPrice()).orElse(BigDecimal.valueOf(0)).floatValue())
 			.withDescription(dataWarehouseReaderInvoiceDetail.getDescription())
 			.withFromDate(toLocalDate(dataWarehouseReaderInvoiceDetail.getPeriodFrom()))
 			.withToDate(toLocalDate(dataWarehouseReaderInvoiceDetail.getPeriodTo()))
 			.withProductCode(String.valueOf(dataWarehouseReaderInvoiceDetail.getProductCode()))
 			.withProductName(dataWarehouseReaderInvoiceDetail.getProductName())
-			.withQuantity(ofNullable(dataWarehouseReaderInvoiceDetail.getQuantity()).orElse(0D).floatValue())
+			.withQuantity(toBigDecimal(dataWarehouseReaderInvoiceDetail.getQuantity()))
 			.withAdministration(dataWarehouseReaderInvoiceDetail.getAdministration())
 			.withFacilityId(dataWarehouseReaderInvoiceDetail.getFacilityId());
 	}
@@ -216,11 +215,11 @@ public final class InvoiceMapper {
 			.withDueDate(customerInvoice.getDueDate())
 			.withPeriodFrom(customerInvoice.getPeriodFrom())
 			.withPeriodTo(customerInvoice.getPeriodTo())
-			.withTotalAmount(ofNullable(customerInvoice.getTotalAmount()).orElse(ZERO).floatValue())
-			.withAmountVatIncluded(ofNullable(customerInvoice.getAmountVatIncluded()).orElse(ZERO).floatValue())
-			.withAmountVatExcluded(ofNullable(customerInvoice.getAmountVatExcluded()).orElse(ZERO).floatValue())
-			.withVatEligibleAmount(ofNullable(customerInvoice.getVatEligibleAmount()).orElse(ZERO).floatValue())
-			.withRounding(ofNullable(customerInvoice.getRounding()).orElse(ZERO).floatValue())
+			.withTotalAmount(customerInvoice.getTotalAmount())
+			.withAmountVatIncluded(customerInvoice.getAmountVatIncluded())
+			.withAmountVatExcluded(customerInvoice.getAmountVatExcluded())
+			.withVatEligibleAmount(customerInvoice.getVatEligibleAmount())
+			.withRounding(customerInvoice.getRounding())
 			.withOrganizationGroup(customerInvoice.getOrganizationGroup())
 			.withOrganizationNumber(customerInvoice.getOrganizationNumber())
 			.withAdministration(customerInvoice.getAdministration())
@@ -291,10 +290,10 @@ public final class InvoiceMapper {
 		return Invoice.create()
 			.withCurrency("SEK")
 			.withDueDate(invoiceCacheInvoice.getInvoiceDueDate())
-			.withTotalAmount(ofNullable(invoiceCacheInvoice.getTotalAmount()).orElse(ZERO).floatValue())
-			.withAmountVatIncluded(ofNullable(invoiceCacheInvoice.getAmountVatExcluded()).orElse(ZERO).floatValue() + ofNullable(invoiceCacheInvoice.getVat()).orElse(ZERO).floatValue())
-			.withAmountVatExcluded(ofNullable(invoiceCacheInvoice.getAmountVatExcluded()).orElse(ZERO).floatValue())
-			.withVat(ofNullable(invoiceCacheInvoice.getVat()).orElse(ZERO).floatValue())
+			.withTotalAmount(invoiceCacheInvoice.getTotalAmount())
+			.withAmountVatIncluded(nullableAdd(invoiceCacheInvoice.getAmountVatExcluded(), invoiceCacheInvoice.getVat()))
+			.withAmountVatExcluded(invoiceCacheInvoice.getAmountVatExcluded())
+			.withVat(invoiceCacheInvoice.getVat())
 			.withInvoiceDate(invoiceCacheInvoice.getInvoiceDate())
 			.withInvoiceDescriptions(ofNullable(invoiceCacheInvoice.getInvoiceDescription()).map(Set::of).orElse(emptySet()))
 			.withInvoiceNumber(invoiceCacheInvoice.getInvoiceNumber())
@@ -387,5 +386,16 @@ public final class InvoiceMapper {
 		return ofNullable(value)
 			.map(LocalDate::parse)
 			.orElse(null);
+	}
+
+	private static BigDecimal toBigDecimal(final Double value) {
+		return ofNullable(value).map(BigDecimal::valueOf).orElse(null);
+	}
+
+	private static BigDecimal nullableAdd(final BigDecimal a, final BigDecimal b) {
+		if (a == null && b == null) {
+			return null;
+		}
+		return ofNullable(a).orElse(ZERO).add(ofNullable(b).orElse(ZERO));
 	}
 }

@@ -56,7 +56,7 @@ class InvoicesResource {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	@Operation(summary = "Returns invoices matching sent in search parameters")
-	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = InvoicesResponse.class)))
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<InvoicesResponse> getInvoices(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -68,7 +68,7 @@ class InvoicesResource {
 
 	@GetMapping(value = "/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Returns invoice-details of an invoice")
-	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = InvoiceDetailsResponse.class)))
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	ResponseEntity<InvoiceDetailsResponse> getInvoiceDetails(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
@@ -79,7 +79,7 @@ class InvoicesResource {
 
 	@GetMapping(value = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf", produces = APPLICATION_JSON_VALUE)
 	@Operation(summary = "Returns invoice in pdf-format")
-	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = PdfInvoice.class)))
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<PdfInvoice> getPdfInvoice(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
@@ -95,7 +95,7 @@ class InvoicesResource {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	@Operation(summary = "Returns invoices for a customer (commercial source)")
-	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_JSON_VALUE, schema = @Schema(implementation = CustomerInvoicesResponse.class)))
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	ResponseEntity<CustomerInvoicesResponse> getInvoicesForCustomer(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@Parameter(name = "customerNumber", description = "Customer number", example = "216870", required = true) @PathVariable @NotBlank final String customerNumber,

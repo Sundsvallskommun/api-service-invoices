@@ -15,7 +15,7 @@ import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 public class CustomerInvoicesParameters extends AbstractParameterBase {
 
 	@ArraySchema(schema = @Schema(description = "Organization id of invoice issuer, if not provided all will be returned.", examples = "5565027223"))
-	private List<@ValidOrganizationNumber(nullable = true) String> organizationIds;
+	private List<@ValidOrganizationNumber String> organizationIds;
 
 	@DateTimeFormat(iso = ISO.DATE)
 	@Schema(description = "Earliest invoice period start. Format is YYYY-MM-DD.", examples = "2025-01-01")

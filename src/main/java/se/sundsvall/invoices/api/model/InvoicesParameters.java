@@ -57,7 +57,7 @@ public class InvoicesParameters extends AbstractParameterBase {
 
 	@ArraySchema(schema = @Schema(description = "Creditor organization number", examples = "5564786647"))
 	@JsonProperty("organizationNumber")
-	private List<@ValidOrganizationNumber(nullable = true) String> organizationNumbers;
+	private List<@ValidOrganizationNumber String> organizationNumbers;
 
 	@Schema(description = "Organization group", examples = "stadsbacken")
 	private String organizationGroup;

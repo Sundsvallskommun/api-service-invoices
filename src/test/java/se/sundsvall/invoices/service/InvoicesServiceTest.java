@@ -200,8 +200,8 @@ class InvoicesServiceTest {
 		final var organizationNumber = "5523456789";
 		final var invoiceNumber = "111222";
 		final var expectedInvoiceDetail = new InvoiceDetail();
-		expectedInvoiceDetail.setAmount(10.45f);
-		expectedInvoiceDetail.setQuantity(2);
+		expectedInvoiceDetail.setAmount(BigDecimal.valueOf(10.45));
+		expectedInvoiceDetail.setQuantity(BigDecimal.valueOf(2d));
 
 		when(dataWarehouseReaderClientMock.getInvoiceDetails(municipalityId, organizationNumber, Long.parseLong(invoiceNumber))).thenReturn(List.of(createDataWarehouseReaderInvoiceDetail(invoiceNumber)));
 

@@ -1,6 +1,7 @@
 package se.sundsvall.invoices.api.model;
 
 import com.google.code.beanmatchers.BeanMatchers;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
@@ -21,6 +22,7 @@ class CustomerInvoiceTest {
 	@BeforeAll
 	static void setup() {
 		BeanMatchers.registerValueGenerator(() -> LocalDate.now().plusDays(new Random().nextInt()), LocalDate.class);
+		BeanMatchers.registerValueGenerator(() -> BigDecimal.valueOf(new Random().nextDouble()), BigDecimal.class);
 	}
 
 	@Test
@@ -50,11 +52,11 @@ class CustomerInvoiceTest {
 		final var dueDate = LocalDate.now().plusDays(20);
 		final var periodFrom = LocalDate.now().minusMonths(2);
 		final var periodTo = LocalDate.now().minusMonths(1);
-		final var totalAmount = 1234.0f;
-		final var amountVatIncluded = 1233.51f;
-		final var amountVatExcluded = 986.81f;
-		final var vatEligibleAmount = 986.81f;
-		final var rounding = 0.49f;
+		final var totalAmount = BigDecimal.valueOf(1234.0);
+		final var amountVatIncluded = BigDecimal.valueOf(1233.51);
+		final var amountVatExcluded = BigDecimal.valueOf(986.81);
+		final var vatEligibleAmount = BigDecimal.valueOf(986.81);
+		final var rounding = BigDecimal.valueOf(0.49);
 		final var organizationGroup = "stadsbacken";
 		final var organizationNumber = "5565027223";
 		final var administration = "Sundsvall Elnät";
@@ -133,12 +135,6 @@ class CustomerInvoiceTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(CustomerInvoice.create())
-			.hasAllNullFieldsOrPropertiesExcept("totalAmount", "amountVatIncluded", "amountVatExcluded", "vatEligibleAmount", "rounding")
-			.hasFieldOrPropertyWithValue("totalAmount", 0f)
-			.hasFieldOrPropertyWithValue("amountVatIncluded", 0f)
-			.hasFieldOrPropertyWithValue("amountVatExcluded", 0f)
-			.hasFieldOrPropertyWithValue("vatEligibleAmount", 0f)
-			.hasFieldOrPropertyWithValue("rounding", 0f);
+		assertThat(CustomerInvoice.create()).hasAllNullFieldsOrProperties();
 	}
 }

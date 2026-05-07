@@ -35,7 +35,7 @@ class InvoiceMapperTest {
 
 	private static final String DATAWAREHOUSEREADER_ADMINISTRATION = "Sundsvall Elnät";
 	private static final BigDecimal DATAWAREHOUSEREADER_AMOUNT_VAT_EXCLUDED = BigDecimal.valueOf(13.37d);
-	private static final BigDecimal DATAWAREHOUSEREADER_AMOUNT_VAT_INCLUDED = BigDecimal.valueOf(26.779999d);
+	private static final BigDecimal DATAWAREHOUSEREADER_AMOUNT_VAT_INCLUDED = BigDecimal.valueOf(26.78d);
 	private static final String DATAWAREHOUSEREADER_CARE_OF = "careOf";
 	private static final String DATAWAREHOUSEREADER_CITY = "city";
 	private static final String DATAWAREHOUSEREADER_CURRENCY = "SEK";
@@ -75,9 +75,9 @@ class InvoiceMapperTest {
 	private static final String INVOICECACHE_DESCRIPTION = "invoiceDescription";
 	private static final LocalDate INVOICECACHE_DUE_DATE = LocalDate.now().plusDays(30);
 	private static final LocalDate INVOICECACHE_INVOICE_DATE = LocalDate.now();
-	private static final BigDecimal INVOICECACHE_TOTAL_AMOUNT = BigDecimal.valueOf(13.40f);
+	private static final BigDecimal INVOICECACHE_TOTAL_AMOUNT = BigDecimal.valueOf(13.40d);
 	private static final BigDecimal INVOICECACHE_VAT = BigDecimal.valueOf(13.41d);
-	private static final BigDecimal INVOICECACHE_AMOUNT_VAT_EXCLUDED = BigDecimal.valueOf(13.37f);
+	private static final BigDecimal INVOICECACHE_AMOUNT_VAT_EXCLUDED = BigDecimal.valueOf(13.37d);
 	private static final InvoiceTypeEnum INVOICECACHE_INVOICE_TYPE = InvoiceTypeEnum.INVOICE;
 	private static final generated.se.sundsvall.invoicecache.Address INVOICECACHE_ADDRESS = new generated.se.sundsvall.invoicecache.Address()
 		.careOf("careOf")
@@ -86,8 +86,8 @@ class InvoiceMapperTest {
 		.postcode("postalCode");
 
 	private static final String ORGANIZATION_NUMBER = "1234567890";
-	private static final float AMOUNT_VAT_EXCLUDED = 13.37f;
-	private static final float AMOUNT_VAT_INCLUDED = 26.779999f;
+	private static final BigDecimal AMOUNT_VAT_EXCLUDED = DATAWAREHOUSEREADER_AMOUNT_VAT_EXCLUDED;
+	private static final BigDecimal AMOUNT_VAT_INCLUDED = DATAWAREHOUSEREADER_AMOUNT_VAT_INCLUDED;
 	private static final String CURRENCY = "SEK";
 	private static final LocalDate DUE_DATE = LocalDate.now().plusDays(30);
 	private static final LocalDate DUE_DATE_FROM = LocalDate.of(2022, 4, 1);
@@ -103,19 +103,19 @@ class InvoiceMapperTest {
 	private static final InvoiceType INVOICE_TYPE = InvoiceType.INVOICE;
 	private static final String OCR_NUMBER = "1234";
 	private static final boolean REVERSED_VAT = false;
-	private static final float ROUNDING = 13.39f;
-	private static final float TOTAL_AMOUNT = 13.40f;
-	private static final float VAT = 13.41f;
-	private static final float VAT_ELIGIBLE_AMOUNT = 13.42f;
-	private static final float AMOUNT = 13.43f;
+	private static final BigDecimal ROUNDING = DATAWAREHOUSEREADER_ROUNDING;
+	private static final BigDecimal TOTAL_AMOUNT = DATAWAREHOUSEREADER_TOTAL_AMOUNT;
+	private static final BigDecimal VAT = DATAWAREHOUSEREADER_VAT;
+	private static final BigDecimal VAT_ELIGIBLE_AMOUNT = DATAWAREHOUSEREADER_VAT_ELIGIBLE_AMOUNT;
+	private static final BigDecimal AMOUNT = DATAWAREHOUSEREADER_AMOUNT;
 	private static final LocalDate FROM_DATE = LocalDate.of(2022, 1, 1);
 	private static final LocalDate TO_DATE = LocalDate.of(2022, 1, 31);
 	private static final String PRODUCT_CODE = "7371";
 	private static final String PRODUCT_NAME = "productName";
-	private static final float QUANTITY = 13.44f;
+	private static final BigDecimal QUANTITY = BigDecimal.valueOf(DATAWAREHOUSEREADER_QUANTITY);
 	private static final String UNIT = "unit";
-	private static final float UNIT_PRICE = 13.45f;
-	private static final float VAT_RATE = 13.46f;
+	private static final BigDecimal UNIT_PRICE = DATAWAREHOUSEREADER_UNIT_PRICE;
+	private static final BigDecimal VAT_RATE = BigDecimal.valueOf(DATAWAREHOUSEREADER_VAT_RATE);
 	private static final Address ADDRESS = Address.create().withCareOf("careOf")
 		.withStreet("street")
 		.withCity("city")
@@ -388,10 +388,10 @@ class InvoiceMapperTest {
 				INVOICE_TYPE,
 				OCR_NUMBER,
 				null,
-				0.0f,
+				null,
 				TOTAL_AMOUNT,
 				VAT,
-				0.0f,
+				null,
 				ADDRESS,
 				null,
 				null));
@@ -691,11 +691,11 @@ class InvoiceMapperTest {
 		assertThat(mapped.getDueDate()).isEqualTo(dueDate);
 		assertThat(mapped.getPeriodFrom()).isEqualTo(periodFrom);
 		assertThat(mapped.getPeriodTo()).isEqualTo(periodTo);
-		assertThat(mapped.getTotalAmount()).isEqualTo(totalAmount.floatValue());
-		assertThat(mapped.getAmountVatIncluded()).isEqualTo(amountVatIncluded.floatValue());
-		assertThat(mapped.getAmountVatExcluded()).isEqualTo(amountVatExcluded.floatValue());
-		assertThat(mapped.getVatEligibleAmount()).isEqualTo(vatEligibleAmount.floatValue());
-		assertThat(mapped.getRounding()).isEqualTo(rounding.floatValue());
+		assertThat(mapped.getTotalAmount()).isEqualTo(totalAmount);
+		assertThat(mapped.getAmountVatIncluded()).isEqualTo(amountVatIncluded);
+		assertThat(mapped.getAmountVatExcluded()).isEqualTo(amountVatExcluded);
+		assertThat(mapped.getVatEligibleAmount()).isEqualTo(vatEligibleAmount);
+		assertThat(mapped.getRounding()).isEqualTo(rounding);
 		assertThat(mapped.getOrganizationGroup()).isEqualTo(organizationGroup);
 		assertThat(mapped.getOrganizationNumber()).isEqualTo(organizationNumber);
 		assertThat(mapped.getAdministration()).isEqualTo(administration);
@@ -724,10 +724,10 @@ class InvoiceMapperTest {
 
 		assertThat(response.getInvoices()).hasSize(1);
 		final CustomerInvoice mapped = response.getInvoices().getFirst();
-		assertThat(mapped.getTotalAmount()).isZero();
-		assertThat(mapped.getAmountVatIncluded()).isZero();
-		assertThat(mapped.getAmountVatExcluded()).isZero();
-		assertThat(mapped.getVatEligibleAmount()).isZero();
-		assertThat(mapped.getRounding()).isZero();
+		assertThat(mapped.getTotalAmount()).isNull();
+		assertThat(mapped.getAmountVatIncluded()).isNull();
+		assertThat(mapped.getAmountVatExcluded()).isNull();
+		assertThat(mapped.getVatEligibleAmount()).isNull();
+		assertThat(mapped.getRounding()).isNull();
 	}
 }
