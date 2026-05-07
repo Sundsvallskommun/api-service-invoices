@@ -15,7 +15,7 @@ import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 public class CustomerInvoicesParameters extends AbstractParameterBase {
 
 	@ArraySchema(schema = @Schema(description = "Organization id of invoice issuer, if not provided all will be returned.", examples = "5565027223"))
-	private List<@ValidOrganizationNumber String> organizationIds;
+	private List<@ValidOrganizationNumber String> organizationNumbers;
 
 	@DateTimeFormat(iso = ISO.DATE)
 	@Schema(description = "Earliest invoice period start. Format is YYYY-MM-DD.", examples = "2025-01-01")
@@ -35,16 +35,16 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		return new CustomerInvoicesParameters();
 	}
 
-	public List<String> getOrganizationIds() {
-		return organizationIds;
+	public List<String> getOrganizationNumbers() {
+		return organizationNumbers;
 	}
 
-	public void setOrganizationIds(final List<String> organizationIds) {
-		this.organizationIds = organizationIds;
+	public void setOrganizationNumbers(final List<String> organizationNumbers) {
+		this.organizationNumbers = organizationNumbers;
 	}
 
-	public CustomerInvoicesParameters withOrganizationIds(final List<String> organizationIds) {
-		this.organizationIds = organizationIds;
+	public CustomerInvoicesParameters withOrganizationNumbers(final List<String> organizationNumbers) {
+		this.organizationNumbers = organizationNumbers;
 		return this;
 	}
 
@@ -104,18 +104,18 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		if (!super.equals(o))
 			return false;
 		final CustomerInvoicesParameters that = (CustomerInvoicesParameters) o;
-		return Objects.equals(organizationIds, that.organizationIds) && Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo) && Objects.equals(sortBy, that.sortBy);
+		return Objects.equals(organizationNumbers, that.organizationNumbers) && Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo) && Objects.equals(sortBy, that.sortBy);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), organizationIds, periodFrom, periodTo, sortBy);
+		return Objects.hash(super.hashCode(), organizationNumbers, periodFrom, periodTo, sortBy);
 	}
 
 	@Override
 	public String toString() {
 		return "CustomerInvoicesParameters{" +
-			"organizationIds=" + organizationIds +
+			"organizationNumbers=" + organizationNumbers +
 			", periodFrom=" + periodFrom +
 			", periodTo=" + periodTo +
 			", sortBy='" + sortBy + '\'' +

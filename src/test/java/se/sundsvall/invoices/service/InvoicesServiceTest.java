@@ -273,7 +273,7 @@ class InvoicesServiceTest {
 	void getInvoicesForCustomerSuccess() {
 		final var municipalityId = "municipalityId";
 		final var customerNumber = "216870";
-		final var organizationIds = List.of("5565027223");
+		final var organizationNumbers = List.of("5565027223");
 		final var periodFrom = java.time.LocalDate.of(2025, 1, 1);
 		final var periodTo = java.time.LocalDate.of(2025, 12, 31);
 		final var sortBy = "periodFrom";
@@ -281,7 +281,7 @@ class InvoicesServiceTest {
 		final var limit = 100;
 
 		final var parameters = CustomerInvoicesParameters.create()
-			.withOrganizationIds(organizationIds)
+			.withOrganizationNumbers(organizationNumbers)
 			.withPeriodFrom(periodFrom)
 			.withPeriodTo(periodTo)
 			.withSortBy(sortBy)
@@ -292,7 +292,7 @@ class InvoicesServiceTest {
 			.invoices(List.of(new CustomerInvoice().customerNumber(customerNumber).invoiceType("Faktura").invoiceStatus("Betalad")))
 			.meta(createPagingAndSortingMetaData());
 
-		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumber, organizationIds, periodFrom, periodTo, sortBy, page, limit)).thenReturn(upstreamResponse);
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumber, organizationNumbers, periodFrom, periodTo, sortBy, page, limit)).thenReturn(upstreamResponse);
 
 		final var response = invoicesService.getInvoicesForCustomer(municipalityId, customerNumber, parameters);
 
@@ -300,7 +300,7 @@ class InvoicesServiceTest {
 		assertThat(response.getInvoices()).hasSize(1);
 		assertThat(response.getInvoices().getFirst().getCustomerNumber()).isEqualTo(customerNumber);
 		assertThat(response.getInvoices().getFirst().getInvoiceType()).isEqualTo(INVOICE);
-		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumber, organizationIds, periodFrom, periodTo, sortBy, page, limit);
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumber, organizationNumbers, periodFrom, periodTo, sortBy, page, limit);
 		verifyNoInteractions(invoiceCacheClientMock, idataIntegrationMock);
 	}
 

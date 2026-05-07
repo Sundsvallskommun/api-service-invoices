@@ -433,7 +433,7 @@ class InvoicesResourceFailureTest {
 	void getInvoicesForCustomerInvalidOrganizationId() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.queryParam("organizationIds", "190010301234")
+				.queryParam("organizationNumbers", "190010301234")
 				.build(MUNICIPALITY_ID, "216870"))
 			.exchange()
 			.expectStatus().isBadRequest()
@@ -446,7 +446,7 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("organizationIds[0]", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
+			.containsExactly(tuple("organizationNumbers[0]", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
 
 		verifyNoInteractions(invoicesServiceMock);
 	}

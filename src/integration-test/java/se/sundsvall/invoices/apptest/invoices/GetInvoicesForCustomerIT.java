@@ -30,7 +30,7 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 	void test02_getInvoicesForCustomerAllParameters() {
 		setupCall()
 			.withServicePath("/2281/COMMERCIAL/customers/600606/invoices" +
-				"?organizationIds=5565027223" +
+				"?organizationNumbers=5565027223" +
 				"&periodFrom=2025-01-01" +
 				"&periodTo=2025-12-31" +
 				"&sortBy=periodFrom" +

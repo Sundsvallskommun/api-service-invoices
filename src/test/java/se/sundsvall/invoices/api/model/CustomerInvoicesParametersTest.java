@@ -36,7 +36,7 @@ class CustomerInvoicesParametersTest {
 
 	@Test
 	void testBuilderMethods() {
-		final var organizationIds = List.of("5565027223", "5564786647");
+		final var organizationNumbers = List.of("5565027223", "5564786647");
 		final var periodFrom = LocalDate.now().minusMonths(6);
 		final var periodTo = LocalDate.now();
 		final var sortBy = "periodFrom";
@@ -44,7 +44,7 @@ class CustomerInvoicesParametersTest {
 		final var limit = 50;
 
 		final var parameters = CustomerInvoicesParameters.create()
-			.withOrganizationIds(organizationIds)
+			.withOrganizationNumbers(organizationNumbers)
 			.withPeriodFrom(periodFrom)
 			.withPeriodTo(periodTo)
 			.withSortBy(sortBy)
@@ -52,7 +52,7 @@ class CustomerInvoicesParametersTest {
 			.withLimit(limit);
 
 		assertThat(parameters).isNotNull().hasNoNullFieldsOrProperties();
-		assertThat(parameters.getOrganizationIds()).isEqualTo(organizationIds);
+		assertThat(parameters.getOrganizationNumbers()).isEqualTo(organizationNumbers);
 		assertThat(parameters.getPeriodFrom()).isEqualTo(periodFrom);
 		assertThat(parameters.getPeriodTo()).isEqualTo(periodTo);
 		assertThat(parameters.getSortBy()).isEqualTo(sortBy);

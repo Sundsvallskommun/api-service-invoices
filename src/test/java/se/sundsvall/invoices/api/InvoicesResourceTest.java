@@ -225,7 +225,7 @@ class InvoicesResourceTest {
 	@Test
 	void getInvoicesForCustomerAllParameters() {
 		final var customerNumber = "216870";
-		final var organizationIds = List.of("5565027223", "5564786647");
+		final var organizationNumbers = List.of("5565027223", "5564786647");
 		final var periodFrom = LocalDate.of(2025, 1, 1);
 		final var periodTo = LocalDate.of(2025, 12, 31);
 		final var sortBy = "periodFrom";
@@ -234,7 +234,7 @@ class InvoicesResourceTest {
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.queryParams(createCustomerParameterMap(PAGE, LIMIT, organizationIds, periodFrom, periodTo, sortBy))
+				.queryParams(createCustomerParameterMap(PAGE, LIMIT, organizationNumbers, periodFrom, periodTo, sortBy))
 				.build(MUNICIPALITY_ID, customerNumber))
 			.exchange()
 			.expectStatus().isOk()
@@ -245,7 +245,7 @@ class InvoicesResourceTest {
 
 		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), eq(customerNumber), customerParametersCaptor.capture());
 		final CustomerInvoicesParameters parameters = customerParametersCaptor.getValue();
-		assertThat(parameters.getOrganizationIds()).isEqualTo(organizationIds);
+		assertThat(parameters.getOrganizationNumbers()).isEqualTo(organizationNumbers);
 		assertThat(parameters.getPeriodFrom()).isEqualTo(periodFrom);
 		assertThat(parameters.getPeriodTo()).isEqualTo(periodTo);
 		assertThat(parameters.getSortBy()).isEqualTo(sortBy);
@@ -279,13 +279,13 @@ class InvoicesResourceTest {
 		assertThat(response).isNotNull().isEqualTo(CustomerInvoicesResponse.create());
 	}
 
-	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> organizationIds,
+	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> organizationNumbers,
 		final LocalDate periodFrom, final LocalDate periodTo, final String sortBy) {
 
 		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		ofNullable(page).ifPresent(p -> parameters.add("page", valueOf(p)));
 		ofNullable(limit).ifPresent(p -> parameters.add("limit", valueOf(p)));
-		ofNullable(organizationIds).ifPresent(p -> parameters.addAll("organizationIds", p));
+		ofNullable(organizationNumbers).ifPresent(p -> parameters.addAll("organizationNumbers", p));
 		ofNullable(periodFrom).ifPresent(p -> parameters.add("periodFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(periodTo).ifPresent(p -> parameters.add("periodTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(sortBy).ifPresent(p -> parameters.add("sortBy", p));

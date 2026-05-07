@@ -103,7 +103,7 @@ public class InvoicesService {
 		return toCustomerInvoicesResponse(dataWarehouseReaderClient.getInvoicesForCustomer(
 			municipalityId,
 			customerNumber,
-			parameters.getOrganizationIds(),
+			parameters.getOrganizationNumbers(),
 			parameters.getPeriodFrom(),
 			parameters.getPeriodTo(),
 			parameters.getSortBy(),
