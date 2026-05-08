@@ -1,0 +1,80 @@
+{
+	"invoices": [
+		{
+			"customerNumber": "600606",
+			"customerType": "Enterprise",
+			"facilityId": "735999109425048010",
+			"invoiceNumber": 137968392,
+			"invoiceId": 1062916396,
+			"jointInvoiceId": 12345,
+			"invoiceDate": "2025-10-08",
+			"invoiceName": "137968392.pdf",
+			"invoiceType": "Faktura",
+			"invoiceDescription": "El",
+			"invoiceStatus": "Betalad",
+			"ocrNumber": 295334999,
+			"dueDate": "2025-10-28",
+			"periodFrom": "2025-09-01",
+			"periodTo": "2025-09-30",
+			"totalAmount": 12060.00,
+			"amountVatIncluded": 12059.99,
+			"amountVatExcluded": 9647.99,
+			"vatEligibleAmount": 9647.99,
+			"rounding": 0.01,
+			"organizationGroup": "stadsbacken",
+			"organizationNumber": "5565027223",
+			"administration": "Sundsvall Elnät",
+			"street": "Ankeborgsvägen 11",
+			"postCode": "87654",
+			"city": "Sundsvall",
+			"careOf": "Anka Kalle",
+			"invoiceReference": "ref-1",
+			"pdfAvailable": true,
+			"details": [
+				{
+					"invoiceNumber": 137968392,
+					"amount": 128.78,
+					"amountVatExcluded": 103.02,
+					"vat": 25.76,
+					"vatRate": 25,
+					"quantity": 3679.2,
+					"unit": "kWh",
+					"unitPrice": 0.028,
+					"periodFrom": "2025-09-01",
+					"periodTo": "2025-09-30",
+					"description": "Förbrukning el",
+					"productCode": 1404,
+					"productName": "Elöverföring",
+					"organizationNumber": "5565027223",
+					"administration": "Sundsvall Elnät",
+					"facilityId": "735999109425048010"
+				},
+				{
+					"invoiceNumber": 137968392,
+					"amount": 1595.85,
+					"amountVatExcluded": 1276.68,
+					"vat": 319.17,
+					"vatRate": 25,
+					"quantity": 3679.2,
+					"unit": "kWh",
+					"unitPrice": 0.347,
+					"periodFrom": "2025-09-01",
+					"periodTo": "2025-09-30",
+					"description": "Energiskatt",
+					"productCode": 1413,
+					"productName": "Energiskatt",
+					"organizationNumber": "5565027223",
+					"administration": "Sundsvall Elnät",
+					"facilityId": "735999109425048010"
+				}
+			]
+		}
+	],
+	"_meta": {
+		"totalRecords": 1,
+		"limit": 100,
+		"count": 1,
+		"totalPages": 1,
+		"page": 1
+	}
+}

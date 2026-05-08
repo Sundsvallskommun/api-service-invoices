@@ -1,0 +1,19 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/api-datawarehousereader/2281/invoices/customers/600606"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/json"
+		},
+		"bodyFileName": "test01_getInvoicesForCustomerOnlyRequired/responses/datawarehousereader-get-invoices-for-customer-response.json",
+		"status": 200
+	},
+	"name": "datawarehousereader-get-invoices-for-customer"
+}

@@ -1,0 +1,5 @@
+{
+	"detail": "datawarehousereader error: {detail=No invoices found for customer '777777', status=404 Not Found, title=Not Found}",
+	"title": "Not Found",
+	"status": 404
+}

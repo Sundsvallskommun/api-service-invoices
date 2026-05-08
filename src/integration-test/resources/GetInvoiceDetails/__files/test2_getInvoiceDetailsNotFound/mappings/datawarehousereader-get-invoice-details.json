@@ -10,14 +10,10 @@
 	},
 	"response": {
 		"headers": {
-			"Content-Type": "application/problem+json"
+			"Content-Type": "application/json"
 		},
-		"jsonBody": {
-			"detail": "No invoicedetails found for invoicenumber '666'",
-			"title": "Not Found",
-			"status": 404
-		},
-		"status": 404
+		"jsonBody": [],
+		"status": 200
 	},
 	"name": "datawarehousereader-get-invoice-details"
 }

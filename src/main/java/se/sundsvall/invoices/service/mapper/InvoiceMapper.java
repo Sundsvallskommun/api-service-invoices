@@ -1,7 +1,6 @@
 package se.sundsvall.invoices.service.mapper;
 
-import generated.se.sundsvall.datawarehousereader.Direction;
-import generated.se.sundsvall.datawarehousereader.InvoiceParameters;
+import generated.se.sundsvall.datawarehousereader.CustomerInvoiceResponse;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceStatusEnum;
 import generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum;
@@ -16,6 +15,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import se.sundsvall.invoices.api.model.Address;
+import se.sundsvall.invoices.api.model.CustomerInvoice;
+import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
+import se.sundsvall.invoices.api.model.CustomerType;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceStatus;
@@ -48,27 +50,6 @@ public final class InvoiceMapper {
 			.withInvoices(toInvoicesFromDataWarehouseReader(dataWarehouseReaderInvoiceResponse.getInvoices()));
 	}
 
-	public static InvoiceParameters toDataWarehouseReaderInvoiceParameters(final List<String> customerNumbers, final InvoicesParameters invoiceParameters) {
-		return new InvoiceParameters()
-			.customerNumber(customerNumbers)
-			.facilityIds(invoiceParameters.getFacilityIds())
-			.invoiceName(invoiceParameters.getInvoiceName())
-			.invoiceNumber(toLong(invoiceParameters.getInvoiceNumber()))
-			.organizationGroup(invoiceParameters.getOrganizationGroup())
-			.organizationNumber(invoiceParameters.getOrganizationNumbers())
-			.invoiceDateFrom(invoiceParameters.getInvoiceDateFrom())
-			.invoiceDateTo(invoiceParameters.getInvoiceDateTo())
-			.dueDateFrom(invoiceParameters.getDueDateFrom())
-			.dueDateTo(invoiceParameters.getDueDateTo())
-			.invoiceType(toDataWarehouseReaderInvoiceType(invoiceParameters.getInvoiceType()))
-			.invoiceStatus(toDataWarehouseReaderInvoiceStatus(invoiceParameters.getInvoiceStatus()))
-			.ocrNumber(toLong(invoiceParameters.getOcrNumber()))
-			.page(invoiceParameters.getPage())
-			.limit(invoiceParameters.getLimit())
-			.sortBy(List.of("invoiceDate"))
-			.sortDirection(Direction.DESC);
-	}
-
 	public static List<InvoiceDetail> toInvoiceDetails(final List<generated.se.sundsvall.datawarehousereader.InvoiceDetail> dataWarehouseReaderInvoiceDetails) {
 		return ofNullable(dataWarehouseReaderInvoiceDetails).orElse(emptyList()).stream()
 			.map(InvoiceMapper::toInvoiceDetail)
@@ -83,12 +64,12 @@ public final class InvoiceMapper {
 
 	private static Invoice toInvoice(final generated.se.sundsvall.datawarehousereader.Invoice dataWarehouseReaderInvoice) {
 		return Invoice.create().withDueDate(dataWarehouseReaderInvoice.getDueDate())
-			.withTotalAmount(ofNullable(dataWarehouseReaderInvoice.getTotalAmount()).orElse(ZERO).floatValue())
-			.withAmountVatIncluded(ofNullable(dataWarehouseReaderInvoice.getAmountVatIncluded()).orElse(ZERO).floatValue())
-			.withAmountVatExcluded(ofNullable(dataWarehouseReaderInvoice.getAmountVatExcluded()).orElse(ZERO).floatValue())
-			.withVatEligibleAmount(ofNullable(dataWarehouseReaderInvoice.getVatEligibleAmount()).orElse(ZERO).floatValue())
-			.withRounding(ofNullable(dataWarehouseReaderInvoice.getRounding()).orElse(ZERO).floatValue())
-			.withVat(ofNullable(dataWarehouseReaderInvoice.getVat()).orElse(ZERO).floatValue())
+			.withTotalAmount(dataWarehouseReaderInvoice.getTotalAmount())
+			.withAmountVatIncluded(dataWarehouseReaderInvoice.getAmountVatIncluded())
+			.withAmountVatExcluded(dataWarehouseReaderInvoice.getAmountVatExcluded())
+			.withVatEligibleAmount(dataWarehouseReaderInvoice.getVatEligibleAmount())
+			.withRounding(dataWarehouseReaderInvoice.getRounding())
+			.withVat(dataWarehouseReaderInvoice.getVat())
 			.withReversedVat(dataWarehouseReaderInvoice.getReversedVat())
 			.withCurrency(dataWarehouseReaderInvoice.getCurrency())
 			.withInvoiceDate(dataWarehouseReaderInvoice.getInvoiceDate())
@@ -107,19 +88,18 @@ public final class InvoiceMapper {
 
 	private static InvoiceDetail toInvoiceDetail(final generated.se.sundsvall.datawarehousereader.InvoiceDetail dataWarehouseReaderInvoiceDetail) {
 		return InvoiceDetail.create()
-			.withAmount(ofNullable(dataWarehouseReaderInvoiceDetail.getAmount()).orElse(ZERO).floatValue())
-			.withAmountVatExcluded(ofNullable(dataWarehouseReaderInvoiceDetail.getAmountVatExcluded()).orElse(ZERO).floatValue())
-			.withVat(ofNullable(dataWarehouseReaderInvoiceDetail.getVat()).orElse(ZERO).floatValue())
-			.withUnitPrice(ofNullable(dataWarehouseReaderInvoiceDetail.getUnitPrice()).orElse(ZERO).floatValue())
-			.withVatRate(ofNullable(dataWarehouseReaderInvoiceDetail.getVatRate()).orElse(0D).floatValue())
+			.withAmount(dataWarehouseReaderInvoiceDetail.getAmount())
+			.withAmountVatExcluded(dataWarehouseReaderInvoiceDetail.getAmountVatExcluded())
+			.withVat(dataWarehouseReaderInvoiceDetail.getVat())
+			.withUnitPrice(dataWarehouseReaderInvoiceDetail.getUnitPrice())
+			.withVatRate(toBigDecimal(dataWarehouseReaderInvoiceDetail.getVatRate()))
 			.withUnit(dataWarehouseReaderInvoiceDetail.getUnit())
-			.withUnitPrice(ofNullable(dataWarehouseReaderInvoiceDetail.getUnitPrice()).orElse(BigDecimal.valueOf(0)).floatValue())
 			.withDescription(dataWarehouseReaderInvoiceDetail.getDescription())
 			.withFromDate(toLocalDate(dataWarehouseReaderInvoiceDetail.getPeriodFrom()))
 			.withToDate(toLocalDate(dataWarehouseReaderInvoiceDetail.getPeriodTo()))
 			.withProductCode(String.valueOf(dataWarehouseReaderInvoiceDetail.getProductCode()))
 			.withProductName(dataWarehouseReaderInvoiceDetail.getProductName())
-			.withQuantity(ofNullable(dataWarehouseReaderInvoiceDetail.getQuantity()).orElse(0D).floatValue())
+			.withQuantity(toBigDecimal(dataWarehouseReaderInvoiceDetail.getQuantity()))
 			.withAdministration(dataWarehouseReaderInvoiceDetail.getAdministration())
 			.withFacilityId(dataWarehouseReaderInvoiceDetail.getFacilityId());
 	}
@@ -172,7 +152,7 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	static String toDataWarehouseReaderInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public static String toDataWarehouseReaderInvoiceStatus(final InvoiceStatus invoiceStatus) {
 		return ofNullable(invoiceStatus)
 			.map(status -> switch (status)
 			{
@@ -188,7 +168,7 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	static String toDataWarehouseReaderInvoiceType(final InvoiceType invoiceType) {
+	public static String toDataWarehouseReaderInvoiceType(final InvoiceType invoiceType) {
 		return ofNullable(invoiceType)
 			.map(type -> switch (type)
 			{
@@ -200,6 +180,64 @@ public final class InvoiceMapper {
 				case INTERNAL_INVOICE -> "Internfaktura";
 				case CONSOLIDATED_INVOICE -> "Samlingsfaktura";
 				default -> null;
+			})
+			.orElse(null);
+	}
+
+	public static CustomerInvoicesResponse toCustomerInvoicesResponse(final CustomerInvoiceResponse customerInvoiceResponse) {
+		return ofNullable(customerInvoiceResponse)
+			.map(response -> CustomerInvoicesResponse.create()
+				.withMetaData(ofNullable(response.getMeta()).map(InvoiceMapper::toMetaData).orElse(null))
+				.withInvoices(toCustomerInvoices(response.getInvoices())))
+			.orElse(null);
+	}
+
+	private static List<CustomerInvoice> toCustomerInvoices(final List<generated.se.sundsvall.datawarehousereader.CustomerInvoice> customerInvoices) {
+		return ofNullable(customerInvoices).orElse(emptyList()).stream()
+			.map(InvoiceMapper::toCustomerInvoice)
+			.toList();
+	}
+
+	private static CustomerInvoice toCustomerInvoice(final generated.se.sundsvall.datawarehousereader.CustomerInvoice customerInvoice) {
+		return CustomerInvoice.create()
+			.withCustomerNumber(customerInvoice.getCustomerNumber())
+			.withCustomerType(toCustomerType(customerInvoice.getCustomerType()))
+			.withFacilityId(customerInvoice.getFacilityId())
+			.withInvoiceNumber(toString(customerInvoice.getInvoiceNumber()))
+			.withInvoiceId(customerInvoice.getInvoiceId())
+			.withJointInvoiceId(customerInvoice.getJointInvoiceId())
+			.withInvoiceDate(customerInvoice.getInvoiceDate())
+			.withInvoiceName(customerInvoice.getInvoiceName())
+			.withInvoiceType(toInvoiceType(customerInvoice.getInvoiceType()))
+			.withInvoiceDescription(customerInvoice.getInvoiceDescription())
+			.withInvoiceStatus(toInvoiceStatus(customerInvoice.getInvoiceStatus()))
+			.withOcrNumber(toString(customerInvoice.getOcrNumber()))
+			.withDueDate(customerInvoice.getDueDate())
+			.withPeriodFrom(customerInvoice.getPeriodFrom())
+			.withPeriodTo(customerInvoice.getPeriodTo())
+			.withTotalAmount(customerInvoice.getTotalAmount())
+			.withAmountVatIncluded(customerInvoice.getAmountVatIncluded())
+			.withAmountVatExcluded(customerInvoice.getAmountVatExcluded())
+			.withVatEligibleAmount(customerInvoice.getVatEligibleAmount())
+			.withRounding(customerInvoice.getRounding())
+			.withOrganizationGroup(customerInvoice.getOrganizationGroup())
+			.withOrganizationNumber(customerInvoice.getOrganizationNumber())
+			.withAdministration(customerInvoice.getAdministration())
+			.withStreet(customerInvoice.getStreet())
+			.withPostCode(customerInvoice.getPostCode())
+			.withCity(customerInvoice.getCity())
+			.withCareOf(customerInvoice.getCareOf())
+			.withInvoiceReference(customerInvoice.getInvoiceReference())
+			.withPdfAvailable(customerInvoice.getPdfAvailable())
+			.withDetails(toInvoiceDetails(customerInvoice.getDetails()));
+	}
+
+	static CustomerType toCustomerType(final generated.se.sundsvall.datawarehousereader.CustomerType customerType) {
+		return ofNullable(customerType)
+			.map(type -> switch (type)
+			{
+				case ENTERPRISE -> CustomerType.ENTERPRISE;
+				case PRIVATE -> CustomerType.PRIVATE;
 			})
 			.orElse(null);
 	}
@@ -252,10 +290,10 @@ public final class InvoiceMapper {
 		return Invoice.create()
 			.withCurrency("SEK")
 			.withDueDate(invoiceCacheInvoice.getInvoiceDueDate())
-			.withTotalAmount(ofNullable(invoiceCacheInvoice.getTotalAmount()).orElse(ZERO).floatValue())
-			.withAmountVatIncluded(ofNullable(invoiceCacheInvoice.getAmountVatExcluded()).orElse(ZERO).floatValue() + ofNullable(invoiceCacheInvoice.getVat()).orElse(ZERO).floatValue())
-			.withAmountVatExcluded(ofNullable(invoiceCacheInvoice.getAmountVatExcluded()).orElse(ZERO).floatValue())
-			.withVat(ofNullable(invoiceCacheInvoice.getVat()).orElse(ZERO).floatValue())
+			.withTotalAmount(invoiceCacheInvoice.getTotalAmount())
+			.withAmountVatIncluded(nullableAdd(invoiceCacheInvoice.getAmountVatExcluded(), invoiceCacheInvoice.getVat()))
+			.withAmountVatExcluded(invoiceCacheInvoice.getAmountVatExcluded())
+			.withVat(invoiceCacheInvoice.getVat())
 			.withInvoiceDate(invoiceCacheInvoice.getInvoiceDate())
 			.withInvoiceDescriptions(ofNullable(invoiceCacheInvoice.getInvoiceDescription()).map(Set::of).orElse(emptySet()))
 			.withInvoiceNumber(invoiceCacheInvoice.getInvoiceNumber())
@@ -344,15 +382,20 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	private static Long toLong(final String value) {
-		return ofNullable(value)
-			.map(Long::parseLong)
-			.orElse(null);
-	}
-
 	private static LocalDate toLocalDate(final String value) {
 		return ofNullable(value)
 			.map(LocalDate::parse)
 			.orElse(null);
+	}
+
+	private static BigDecimal toBigDecimal(final Double value) {
+		return ofNullable(value).map(BigDecimal::valueOf).orElse(null);
+	}
+
+	private static BigDecimal nullableAdd(final BigDecimal a, final BigDecimal b) {
+		if (a == null && b == null) {
+			return null;
+		}
+		return ofNullable(a).orElse(ZERO).add(ofNullable(b).orElse(ZERO));
 	}
 }

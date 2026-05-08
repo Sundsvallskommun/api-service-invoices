@@ -1,0 +1,46 @@
+{
+	"invoices": [
+		{
+			"customerNumber": "600606",
+			"customerType": "Private",
+			"invoiceNumber": 137968392,
+			"invoiceDate": "2025-10-08",
+			"invoiceType": "Faktura",
+			"invoiceStatus": "Skickad",
+			"periodFrom": "2025-09-01",
+			"periodTo": "2025-09-30",
+			"totalAmount": 1234.00,
+			"amountVatIncluded": 1233.51,
+			"amountVatExcluded": 986.81,
+			"vatEligibleAmount": 986.81,
+			"rounding": 0.49,
+			"organizationNumber": "5565027223",
+			"pdfAvailable": false,
+			"details": [
+				{
+					"invoiceNumber": 137968392,
+					"amount": 1234.00,
+					"amountVatExcluded": 986.81,
+					"vat": 246.70,
+					"vatRate": 25,
+					"quantity": 30,
+					"unit": "Dagar",
+					"unitPrice": 30.9699,
+					"periodFrom": "2025-09-01",
+					"periodTo": "2025-09-30",
+					"description": "Fast avgift",
+					"productCode": 1407,
+					"productName": "Abonnemangsavgift",
+					"organizationNumber": "5565027223"
+				}
+			]
+		}
+	],
+	"_meta": {
+		"totalRecords": 1,
+		"limit": 100,
+		"count": 1,
+		"totalPages": 1,
+		"page": 1
+	}
+}

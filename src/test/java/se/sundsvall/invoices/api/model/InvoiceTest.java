@@ -1,6 +1,7 @@
 package se.sundsvall.invoices.api.model;
 
 import com.google.code.beanmatchers.BeanMatchers;
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Random;
 import java.util.Set;
@@ -21,6 +22,7 @@ class InvoiceTest {
 	@BeforeAll
 	static void setup() {
 		BeanMatchers.registerValueGenerator(() -> LocalDate.now().plusDays(new Random().nextInt()), LocalDate.class);
+		BeanMatchers.registerValueGenerator(() -> BigDecimal.valueOf(new Random().nextDouble()), BigDecimal.class);
 	}
 
 	@Test
@@ -36,12 +38,12 @@ class InvoiceTest {
 	@Test
 	void testBuilderMethods() {
 		final var dueDate = LocalDate.now();
-		final var totalAmount = 100;
-		final var amountVatExcluded = 80;
-		final var amountVatIncluded = 100;
-		final var vatEligibleAmount = 10;
-		final var rounding = 0.5f;
-		final var vat = 20;
+		final var totalAmount = BigDecimal.valueOf(100);
+		final var amountVatExcluded = BigDecimal.valueOf(80);
+		final var amountVatIncluded = BigDecimal.valueOf(100);
+		final var vatEligibleAmount = BigDecimal.valueOf(10);
+		final var rounding = BigDecimal.valueOf(0.5);
+		final var vat = BigDecimal.valueOf(20);
 		final var reverseVat = true;
 		final var pdfAvailable = true;
 		final var currency = "currency";
@@ -112,10 +114,6 @@ class InvoiceTest {
 
 	@Test
 	void testNoDirtOnCreatedBean() {
-		assertThat(Invoice.create())
-			.hasAllNullFieldsOrPropertiesExcept("totalAmount", "amountVatIncluded", "amountVatExcluded", "vatEligibleAmount", "rounding", "reversedVat", "pdfAvailable", "vat")
-			.hasFieldOrPropertyWithValue("totalAmount", 0f).hasFieldOrPropertyWithValue("amountVatIncluded", 0f)
-			.hasFieldOrPropertyWithValue("amountVatExcluded", 0f)
-			.hasFieldOrPropertyWithValue("vatEligibleAmount", 0f).hasFieldOrPropertyWithValue("vat", 0f);
+		assertThat(Invoice.create()).hasAllNullFieldsOrProperties();
 	}
 }
