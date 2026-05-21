@@ -1,9 +1,14 @@
 package se.sundsvall.invoices.apptest.pdf;
 
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
 import static org.springframework.http.HttpMethod.GET;
 import static org.springframework.http.HttpStatus.BAD_GATEWAY;
 import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 
+import java.io.IOException;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
@@ -55,16 +60,30 @@ class GetInvoicePdfIT extends AbstractAppTest {
 	}
 
 	@Test
-	void test04_getIdataInvoicePdf() {
-		final var organizationNumber = "5565027223";
+	void test04_downloadInvoicePdf() throws IOException {
+		final var organizationNumber = "5565257545";
 		final var invoiceNumber = "111222";
 
 		setupCall()
-			.withServicePath(PATH_PREFIX + organizationNumber + "/" + invoiceNumber + PATH_SUFFIX + "?invoiceType=INVOICE")
+			.withServicePath(PATH_PREFIX + organizationNumber + "/" + invoiceNumber + PATH_SUFFIX + "/download")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of(APPLICATION_PDF_VALUE))
+			.withExpectedResponseHeader(CONTENT_DISPOSITION, List.of("attachment;.*Invoice_111222\\.pdf.*"))
+			.withExpectedBinaryResponse("expected.pdf")
+			.sendRequestAndVerifyResponse();
+	}
+
+	@Test
+	void test05_downloadInvoicePdfNotFound() {
+		final var organizationNumber = "5565257545";
+		final var invoiceNumber = "666";
+
+		setupCall()
+			.withServicePath(PATH_PREFIX + organizationNumber + "/" + invoiceNumber + PATH_SUFFIX + "/download")
+			.withHttpMethod(GET)
+			.withExpectedResponseStatus(BAD_GATEWAY)
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
-
 	}
 }

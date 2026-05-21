@@ -27,7 +27,6 @@ import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.integration.datawarehousereader.DataWarehouseReaderClient;
 import se.sundsvall.invoices.integration.datawarehousereader.InvoicesQueryParameters;
-import se.sundsvall.invoices.integration.idata.IdataIntegration;
 import se.sundsvall.invoices.integration.invoicecache.InvoiceCacheClient;
 
 import static java.util.Collections.emptyList;
@@ -60,9 +59,6 @@ class InvoicesServiceTest {
 
 	@Mock
 	private CustomerEngagement customerEngagementMock;
-
-	@Mock
-	private IdataIntegration idataIntegrationMock;
 
 	@InjectMocks
 	private InvoicesService invoicesService;
@@ -249,27 +245,6 @@ class InvoicesServiceTest {
 	}
 
 	@Test
-	void getPdfInvoiceIdata() {
-		final var organizationNumber = "5565027223";
-		final var invoiceNumber = "111222";
-		final var municipalityId = "municipalityId";
-		final var bytes = new byte[] {
-			1, 2, 3
-		};
-
-		when(idataIntegrationMock.getInvoice(invoiceNumber)).thenReturn(bytes);
-
-		final var pdfInvoice = invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, INVOICE, municipalityId);
-
-		assertThat(pdfInvoice).isNotNull().satisfies(invoice -> {
-			assertThat(invoice.getFileName()).isEqualTo(invoiceNumber + ".pdf");
-			assertThat(invoice.getFile()).isEqualTo(bytes);
-		});
-
-		verify(idataIntegrationMock).getInvoice(invoiceNumber);
-	}
-
-	@Test
 	void getInvoicesForCustomerSuccess() {
 		final var municipalityId = "municipalityId";
 		final var customerNumber = "216870";
@@ -301,7 +276,7 @@ class InvoicesServiceTest {
 		assertThat(response.getInvoices().getFirst().getCustomerNumber()).isEqualTo(customerNumber);
 		assertThat(response.getInvoices().getFirst().getInvoiceType()).isEqualTo(INVOICE);
 		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumber, organizationNumbers, periodFrom, periodTo, sortBy, page, limit);
-		verifyNoInteractions(invoiceCacheClientMock, idataIntegrationMock);
+		verifyNoInteractions(invoiceCacheClientMock);
 	}
 
 	@Test
@@ -318,7 +293,7 @@ class InvoicesServiceTest {
 		assertThat(response).isNotNull();
 		assertThat(response.getInvoices()).isEmpty();
 		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumber, null, null, null, null, 1, 100);
-		verifyNoInteractions(invoiceCacheClientMock, idataIntegrationMock);
+		verifyNoInteractions(invoiceCacheClientMock);
 	}
 
 	private InvoiceResponse createDataWarehouseReaderInvoiceResponse() {

@@ -530,11 +530,6 @@ class InvoiceMapperTest {
 	}
 
 	@Test
-	void toPdfInvoiceFromNullByteArray() {
-		assertThat(InvoiceMapper.toPdfInvoice(null, "invoiceNumber")).isNull();
-	}
-
-	@Test
 	void toPdfInvoiceFromNullInvoicePdf() {
 		assertThat(InvoiceMapper.toPdfInvoice(null)).isNull();
 	}
