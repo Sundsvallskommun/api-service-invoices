@@ -27,7 +27,7 @@ import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.MetaData;
 import se.sundsvall.invoices.api.model.PdfInvoice;
-import se.sundsvall.invoices.service.PdfFile;
+import se.sundsvall.invoices.service.InvoiceFile;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.emptyList;
@@ -367,13 +367,13 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	public static PdfFile toPdfFile(final ResponseEntity<byte[]> response, final String invoiceNumber) {
+	public static InvoiceFile toInvoiceFile(final ResponseEntity<byte[]> response, final String invoiceNumber) {
 		final var contentType = ofNullable(response.getHeaders().getContentType()).orElse(APPLICATION_OCTET_STREAM);
 		final var extension = "zip".equals(contentType.getSubtype()) ? ".zip" : ".pdf";
 		final var fileName = ofNullable(response.getHeaders().getContentDisposition().getFilename())
 			.filter(name -> !name.isBlank())
 			.orElse(invoiceNumber + extension);
-		return new PdfFile(response.getBody(), contentType, fileName);
+		return new InvoiceFile(response.getBody(), contentType, fileName);
 	}
 
 	/*********************************

@@ -541,54 +541,54 @@ class InvoiceMapperTest {
 	}
 
 	@Test
-	void toPdfFile() {
+	void toInvoiceFile() {
 		final var invoiceNumber = "111222";
 		final var content = "pdf-content".getBytes(StandardCharsets.UTF_8);
 		final var response = ResponseEntity.ok().contentType(APPLICATION_PDF).body(content);
 
-		final var pdfFile = InvoiceMapper.toPdfFile(response, invoiceNumber);
+		final var invoiceFile = InvoiceMapper.toInvoiceFile(response, invoiceNumber);
 
-		assertThat(pdfFile.content()).isEqualTo(content);
-		assertThat(pdfFile.contentType()).isEqualTo(APPLICATION_PDF);
-		assertThat(pdfFile.fileName()).isEqualTo("111222.pdf");
+		assertThat(invoiceFile.content()).isEqualTo(content);
+		assertThat(invoiceFile.contentType()).isEqualTo(APPLICATION_PDF);
+		assertThat(invoiceFile.fileName()).isEqualTo("111222.pdf");
 	}
 
 	@Test
-	void toPdfFileAsZip() {
+	void toInvoiceFileAsZip() {
 		final var invoiceNumber = "111222";
 		final var content = "zip-content".getBytes(StandardCharsets.UTF_8);
 		final var zipContentType = parseMediaType("application/zip");
 		final var response = ResponseEntity.ok().contentType(zipContentType).body(content);
 
-		final var pdfFile = InvoiceMapper.toPdfFile(response, invoiceNumber);
+		final var invoiceFile = InvoiceMapper.toInvoiceFile(response, invoiceNumber);
 
-		assertThat(pdfFile.content()).isEqualTo(content);
-		assertThat(pdfFile.contentType()).isEqualTo(zipContentType);
-		assertThat(pdfFile.fileName()).isEqualTo("111222.zip");
+		assertThat(invoiceFile.content()).isEqualTo(content);
+		assertThat(invoiceFile.contentType()).isEqualTo(zipContentType);
+		assertThat(invoiceFile.fileName()).isEqualTo("111222.zip");
 	}
 
 	@Test
-	void toPdfFileUsesUpstreamFilename() {
+	void toInvoiceFileUsesUpstreamFilename() {
 		final var content = "pdf-content".getBytes(StandardCharsets.UTF_8);
 		final var response = ResponseEntity.ok()
 			.contentType(APPLICATION_PDF)
 			.header(CONTENT_DISPOSITION, ContentDisposition.attachment().filename("upstream-name.pdf").build().toString())
 			.body(content);
 
-		final var pdfFile = InvoiceMapper.toPdfFile(response, "111222");
+		final var invoiceFile = InvoiceMapper.toInvoiceFile(response, "111222");
 
-		assertThat(pdfFile.fileName()).isEqualTo("upstream-name.pdf");
+		assertThat(invoiceFile.fileName()).isEqualTo("upstream-name.pdf");
 	}
 
 	@Test
-	void toPdfFileWithoutContentType() {
+	void toInvoiceFileWithoutContentType() {
 		final var content = "pdf-content".getBytes(StandardCharsets.UTF_8);
 		final var response = ResponseEntity.ok().body(content);
 
-		final var pdfFile = InvoiceMapper.toPdfFile(response, "111222");
+		final var invoiceFile = InvoiceMapper.toInvoiceFile(response, "111222");
 
-		assertThat(pdfFile.contentType()).isEqualTo(APPLICATION_OCTET_STREAM);
-		assertThat(pdfFile.fileName()).isEqualTo("111222.pdf");
+		assertThat(invoiceFile.contentType()).isEqualTo(APPLICATION_OCTET_STREAM);
+		assertThat(invoiceFile.fileName()).isEqualTo("111222.pdf");
 	}
 
 	@ParameterizedTest

@@ -257,12 +257,12 @@ class InvoicesServiceTest {
 
 		when(invoiceCacheClientMock.downloadInvoicePdfs(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType))).thenReturn(response);
 
-		final var pdfFile = invoicesService.downloadInvoicePdf(organizationNumber, invoiceNumber, invoiceType, municipalityId);
+		final var invoiceFile = invoicesService.downloadInvoicePdf(organizationNumber, invoiceNumber, invoiceType, municipalityId);
 
-		assertThat(pdfFile).isNotNull();
-		assertThat(pdfFile.content()).isEqualTo(content);
-		assertThat(pdfFile.contentType()).isEqualTo(APPLICATION_PDF);
-		assertThat(pdfFile.fileName()).isEqualTo(invoiceNumber + ".pdf");
+		assertThat(invoiceFile).isNotNull();
+		assertThat(invoiceFile.content()).isEqualTo(content);
+		assertThat(invoiceFile.contentType()).isEqualTo(APPLICATION_PDF);
+		assertThat(invoiceFile.fileName()).isEqualTo(invoiceNumber + ".pdf");
 		verify(invoiceCacheClientMock).downloadInvoicePdfs(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType));
 	}
 

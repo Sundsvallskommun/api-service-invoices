@@ -9,5 +9,5 @@ import org.springframework.http.MediaType;
  * @param contentType the file media type (application/pdf or application/zip)
  * @param fileName    the file name to expose to the caller
  */
-public record PdfFile(byte[] content, MediaType contentType, String fileName) {
+public record InvoiceFile(byte[] content, MediaType contentType, String fileName) {
 }

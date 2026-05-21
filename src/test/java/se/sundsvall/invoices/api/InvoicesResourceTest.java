@@ -31,8 +31,8 @@ import se.sundsvall.invoices.api.model.InvoiceType;
 import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.PdfInvoice;
+import se.sundsvall.invoices.service.InvoiceFile;
 import se.sundsvall.invoices.service.InvoicesService;
-import se.sundsvall.invoices.service.PdfFile;
 
 import static java.lang.String.valueOf;
 import static java.util.Optional.ofNullable;
@@ -236,7 +236,7 @@ class InvoicesResourceTest {
 		final var fileName = "Invoice_333.pdf";
 		final var fileContent = "pdf-content".getBytes(StandardCharsets.UTF_8);
 		when(invoicesServiceMock.downloadInvoicePdf(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID))
-			.thenReturn(new PdfFile(fileContent, APPLICATION_PDF, fileName));
+			.thenReturn(new InvoiceFile(fileContent, APPLICATION_PDF, fileName));
 
 		// Act
 		final var response = webTestClient.get()
@@ -263,7 +263,7 @@ class InvoicesResourceTest {
 		final var zipContentType = parseMediaType("application/zip");
 		final var fileContent = "zip-content".getBytes(StandardCharsets.UTF_8);
 		when(invoicesServiceMock.downloadInvoicePdf(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID))
-			.thenReturn(new PdfFile(fileContent, zipContentType, fileName));
+			.thenReturn(new InvoiceFile(fileContent, zipContentType, fileName));
 
 		// Act
 		final var response = webTestClient.get()

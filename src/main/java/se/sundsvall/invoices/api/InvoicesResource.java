@@ -112,14 +112,14 @@ class InvoicesResource {
 		@PathVariable(name = "invoiceOrigin") final InvoiceOrigin invoiceOrigin,
 		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter") @RequestParam(value = "invoiceType", required = false) final InvoiceType invoiceType) {
 
-		final var pdfFile = invoicesService.downloadInvoicePdf(organizationNumber, invoiceNumber, invoiceType, municipalityId);
+		final var invoiceFile = invoicesService.downloadInvoicePdf(organizationNumber, invoiceNumber, invoiceType, municipalityId);
 
 		return ok()
 			.headers(headers -> headers.setContentDisposition(ContentDisposition.attachment()
-				.filename(pdfFile.fileName(), StandardCharsets.UTF_8)
+				.filename(invoiceFile.fileName(), StandardCharsets.UTF_8)
 				.build()))
-			.contentType(pdfFile.contentType())
-			.body(outputStream -> outputStream.write(ofNullable(pdfFile.content()).orElse(new byte[0])));
+			.contentType(invoiceFile.contentType())
+			.body(outputStream -> outputStream.write(ofNullable(invoiceFile.content()).orElse(new byte[0])));
 	}
 
 	@GetMapping(value = "/COMMERCIAL/customers/{customerNumber}/invoices", produces = {
