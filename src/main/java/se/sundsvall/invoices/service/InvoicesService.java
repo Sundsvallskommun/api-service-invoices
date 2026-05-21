@@ -32,6 +32,7 @@ import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toCustomerInvoi
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceStatus;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceType;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceFile;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoicesResponse;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
 
@@ -90,6 +91,10 @@ public class InvoicesService {
 
 	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {
 		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
+	}
+
+	public InvoiceFile downloadInvoicePdf(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {
+		return toInvoiceFile(invoiceCacheClient.downloadInvoicePdfs(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)), invoiceNumber);
 	}
 
 	public CustomerInvoicesResponse getInvoicesForCustomer(final String municipalityId, final String customerNumber, final CustomerInvoicesParameters parameters) {

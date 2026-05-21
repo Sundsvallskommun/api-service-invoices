@@ -6,7 +6,7 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/api-invoicecache/2281/invoices/5565257545/666/pdf"
+		"urlPath": "/api-invoicecache/2281/invoices/5565257545/666/pdfs"
 	},
 	"response": {
 		"headers": {
@@ -15,5 +15,5 @@
 		"bodyFileName": "test05_downloadInvoicePdfNotFound/responses/invoicecache-get-pdf-response.json",
 		"status": 404
 	},
-	"name": "invoicecache-get-pdf"
+	"name": "invoicecache-download-pdfs"
 }

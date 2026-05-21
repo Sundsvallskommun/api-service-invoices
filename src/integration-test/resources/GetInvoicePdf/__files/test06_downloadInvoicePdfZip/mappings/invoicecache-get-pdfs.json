@@ -1,0 +1,20 @@
+{
+	"request": {
+		"headers": {
+			"Authorization": {
+				"equalTo": "Bearer MTQ0NjJkZmQ5OTM2NDE1ZTZjNGZmZjI3"
+			}
+		},
+		"method": "GET",
+		"urlPath": "/api-invoicecache/2281/invoices/5565257545/111222/pdfs"
+	},
+	"response": {
+		"headers": {
+			"Content-Type": "application/zip",
+			"Content-Disposition": "attachment; filename=\"Invoice_111222.zip\""
+		},
+		"bodyFileName": "test06_downloadInvoicePdfZip/expected.zip",
+		"status": 200
+	},
+	"name": "invoicecache-download-pdfs"
+}

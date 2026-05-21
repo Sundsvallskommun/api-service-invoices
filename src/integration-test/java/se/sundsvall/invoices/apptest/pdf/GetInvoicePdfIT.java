@@ -86,4 +86,19 @@ class GetInvoicePdfIT extends AbstractAppTest {
 			.withExpectedResponse(RESPONSE_FILE)
 			.sendRequestAndVerifyResponse();
 	}
+
+	@Test
+	void test06_downloadInvoicePdfZip() throws IOException {
+		final var organizationNumber = "5565257545";
+		final var invoiceNumber = "111222";
+
+		setupCall()
+			.withServicePath(PATH_PREFIX + organizationNumber + "/" + invoiceNumber + PATH_SUFFIX + "/download")
+			.withHttpMethod(GET)
+			.withExpectedResponseStatus(OK)
+			.withExpectedResponseHeader(CONTENT_TYPE, List.of("application/zip"))
+			.withExpectedResponseHeader(CONTENT_DISPOSITION, List.of("attachment;.*Invoice_111222\\.zip.*"))
+			.withExpectedBinaryResponse("expected.zip")
+			.sendRequestAndVerifyResponse();
+	}
 }

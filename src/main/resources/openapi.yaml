@@ -292,7 +292,8 @@ paths:
     get:
       tags:
         - Invoices
-      summary: Downloads invoice as a pdf-file
+      summary: Downloads an invoice as a pdf-file, or as a zip-archive when the invoice
+        has several pdf-files
       operationId: downloadInvoicePdf
       parameters:
         - name: municipalityId
@@ -333,6 +334,10 @@ paths:
           description: Successful operation
           content:
             application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/zip:
               schema:
                 type: string
                 format: binary

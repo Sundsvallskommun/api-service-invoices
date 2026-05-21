@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.ResponseEntity;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.CustomerInvoice;
 import se.sundsvall.invoices.api.model.CustomerType;
@@ -30,6 +32,10 @@ import se.sundsvall.invoices.api.model.MetaData;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
+import static org.springframework.http.MediaType.APPLICATION_PDF;
+import static org.springframework.http.MediaType.parseMediaType;
 
 class InvoiceMapperTest {
 
@@ -532,6 +538,57 @@ class InvoiceMapperTest {
 	@Test
 	void toPdfInvoiceFromNullInvoicePdf() {
 		assertThat(InvoiceMapper.toPdfInvoice(null)).isNull();
+	}
+
+	@Test
+	void toInvoiceFile() {
+		final var invoiceNumber = "111222";
+		final var content = "pdf-content".getBytes(StandardCharsets.UTF_8);
+		final var response = ResponseEntity.ok().contentType(APPLICATION_PDF).body(content);
+
+		final var invoiceFile = InvoiceMapper.toInvoiceFile(response, invoiceNumber);
+
+		assertThat(invoiceFile.content()).isEqualTo(content);
+		assertThat(invoiceFile.contentType()).isEqualTo(APPLICATION_PDF);
+		assertThat(invoiceFile.fileName()).isEqualTo("111222.pdf");
+	}
+
+	@Test
+	void toInvoiceFileAsZip() {
+		final var invoiceNumber = "111222";
+		final var content = "zip-content".getBytes(StandardCharsets.UTF_8);
+		final var zipContentType = parseMediaType("application/zip");
+		final var response = ResponseEntity.ok().contentType(zipContentType).body(content);
+
+		final var invoiceFile = InvoiceMapper.toInvoiceFile(response, invoiceNumber);
+
+		assertThat(invoiceFile.content()).isEqualTo(content);
+		assertThat(invoiceFile.contentType()).isEqualTo(zipContentType);
+		assertThat(invoiceFile.fileName()).isEqualTo("111222.zip");
+	}
+
+	@Test
+	void toInvoiceFileUsesUpstreamFilename() {
+		final var content = "pdf-content".getBytes(StandardCharsets.UTF_8);
+		final var response = ResponseEntity.ok()
+			.contentType(APPLICATION_PDF)
+			.header(CONTENT_DISPOSITION, ContentDisposition.attachment().filename("upstream-name.pdf").build().toString())
+			.body(content);
+
+		final var invoiceFile = InvoiceMapper.toInvoiceFile(response, "111222");
+
+		assertThat(invoiceFile.fileName()).isEqualTo("upstream-name.pdf");
+	}
+
+	@Test
+	void toInvoiceFileWithoutContentType() {
+		final var content = "pdf-content".getBytes(StandardCharsets.UTF_8);
+		final var response = ResponseEntity.ok().body(content);
+
+		final var invoiceFile = InvoiceMapper.toInvoiceFile(response, "111222");
+
+		assertThat(invoiceFile.contentType()).isEqualTo(APPLICATION_OCTET_STREAM);
+		assertThat(invoiceFile.fileName()).isEqualTo("111222.pdf");
 	}
 
 	@ParameterizedTest
