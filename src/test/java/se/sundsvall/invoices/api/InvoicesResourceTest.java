@@ -32,6 +32,7 @@ import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.PdfInvoice;
 import se.sundsvall.invoices.service.InvoicesService;
+import se.sundsvall.invoices.service.PdfFile;
 
 import static java.lang.String.valueOf;
 import static java.util.Optional.ofNullable;
@@ -45,6 +46,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_PDF;
+import static org.springframework.http.MediaType.parseMediaType;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 
 @AutoConfigureWebTestClient
@@ -233,8 +235,8 @@ class InvoicesResourceTest {
 		// Arrange
 		final var fileName = "Invoice_333.pdf";
 		final var fileContent = "pdf-content".getBytes(StandardCharsets.UTF_8);
-		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID))
-			.thenReturn(PdfInvoice.create().withFileName(fileName).withFile(fileContent));
+		when(invoicesServiceMock.downloadInvoicePdf(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID))
+			.thenReturn(new PdfFile(fileContent, APPLICATION_PDF, fileName));
 
 		// Act
 		final var response = webTestClient.get()
@@ -250,7 +252,34 @@ class InvoicesResourceTest {
 
 		// Assert
 		assertThat(response).isEqualTo(fileContent);
-		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID);
+		verify(invoicesServiceMock).downloadInvoicePdf(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID);
+	}
+
+	@Test
+	void downloadInvoicePdfAsZip() {
+
+		// Arrange
+		final var fileName = "Invoice_333.zip";
+		final var zipContentType = parseMediaType("application/zip");
+		final var fileContent = "zip-content".getBytes(StandardCharsets.UTF_8);
+		when(invoicesServiceMock.downloadInvoicePdf(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID))
+			.thenReturn(new PdfFile(fileContent, zipContentType, fileName));
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(DOWNLOAD_PDF_PATH).queryParam("invoiceType", INVOICE_TYPE)
+				.build(MUNICIPALITY_ID, COMMERCIAL, ORGANIZATION_NUMBER, INVOICE_NUMBER))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(zipContentType)
+			.expectHeader().contentDisposition(ContentDisposition.attachment().filename(fileName, StandardCharsets.UTF_8).build())
+			.expectBody(byte[].class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response).isEqualTo(fileContent);
+		verify(invoicesServiceMock).downloadInvoicePdf(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID);
 	}
 
 	@Test

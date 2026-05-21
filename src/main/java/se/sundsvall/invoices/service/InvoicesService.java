@@ -33,6 +33,7 @@ import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouse
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceType;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoicesResponse;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfFile;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
 
 @Service
@@ -90,6 +91,10 @@ public class InvoicesService {
 
 	public PdfInvoice getPdfInvoice(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {
 		return toPdfInvoice(invoiceCacheClient.getInvoicePdf(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)));
+	}
+
+	public PdfFile downloadInvoicePdf(final String organizationNumber, final String invoiceNumber, final InvoiceType invoiceType, final String municipalityId) {
+		return toPdfFile(invoiceCacheClient.downloadInvoicePdfs(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)), invoiceNumber);
 	}
 
 	public CustomerInvoicesResponse getInvoicesForCustomer(final String municipalityId, final String customerNumber, final CustomerInvoicesParameters parameters) {

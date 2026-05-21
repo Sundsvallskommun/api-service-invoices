@@ -21,6 +21,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.ResponseEntity;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
@@ -39,6 +40,7 @@ import static org.mockito.Mockito.verifyNoInteractions;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
+import static org.springframework.http.MediaType.APPLICATION_PDF;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
 import static se.sundsvall.invoices.api.model.InvoiceType.CREDIT_INVOICE;
@@ -242,6 +244,26 @@ class InvoicesServiceTest {
 		assertThat(pdfInvoice.getFileName()).isEqualTo(invoiceName);
 		assertThat(pdfInvoice.getFile()).isEqualTo(content);
 		verify(invoiceCacheClientMock).getInvoicePdf(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType));
+	}
+
+	@Test
+	void downloadInvoicePdf() {
+		final var organizationNumber = "5523456789";
+		final var invoiceNumber = "111222";
+		final var invoiceType = CREDIT_INVOICE;
+		final var municipalityId = "municipalityId";
+		final var content = "pdf-content".getBytes(StandardCharsets.UTF_8);
+		final var response = ResponseEntity.ok().contentType(APPLICATION_PDF).body(content);
+
+		when(invoiceCacheClientMock.downloadInvoicePdfs(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType))).thenReturn(response);
+
+		final var pdfFile = invoicesService.downloadInvoicePdf(organizationNumber, invoiceNumber, invoiceType, municipalityId);
+
+		assertThat(pdfFile).isNotNull();
+		assertThat(pdfFile.content()).isEqualTo(content);
+		assertThat(pdfFile.contentType()).isEqualTo(APPLICATION_PDF);
+		assertThat(pdfFile.fileName()).isEqualTo(invoiceNumber + ".pdf");
+		verify(invoiceCacheClientMock).downloadInvoicePdfs(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType));
 	}
 
 	@Test

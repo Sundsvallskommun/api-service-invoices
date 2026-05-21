@@ -7,11 +7,13 @@ import generated.se.sundsvall.invoicecache.InvoicesResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.cloud.openfeign.SpringQueryMap;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import se.sundsvall.invoices.integration.invoicecache.configuration.InvoiceCacheConfiguration;
 
+import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static se.sundsvall.invoices.integration.invoicecache.configuration.InvoiceCacheConfiguration.CLIENT_ID;
@@ -46,6 +48,21 @@ public interface InvoiceCacheClient {
 		@PathVariable String municipalityId,
 		@PathVariable(name = "issuerlegalid") String issuerLegalId,
 		@PathVariable(name = "invoicenumber") String invoiceNumber,
+		@RequestParam("invoiceType") InvoiceTypeEnum invoiceType);
+
+	/**
+	 * Download invoice PDFs as a binary stream - a single PDF, or a ZIP archive when several PDFs exist.
+	 *
+	 * @param  issuerLegalId legal id for the issuer of the invoice.
+	 * @param  invoiceNumber invoice number for the invoice.
+	 * @param  invoiceType   optional parameter for filtering invoices by invoiceType.
+	 * @return               the invoice PDF (or a ZIP archive) as raw bytes, including the upstream response headers
+	 */
+	@GetMapping(path = "/{municipalityId}/invoices/{issuerLegalId}/{invoiceNumber}/pdfs", produces = ALL_VALUE)
+	ResponseEntity<byte[]> downloadInvoicePdfs(
+		@PathVariable String municipalityId,
+		@PathVariable String issuerLegalId,
+		@PathVariable String invoiceNumber,
 		@RequestParam("invoiceType") InvoiceTypeEnum invoiceType);
 
 }

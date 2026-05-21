@@ -14,6 +14,7 @@ import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.springframework.http.ResponseEntity;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.CustomerInvoice;
 import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
@@ -26,11 +27,13 @@ import se.sundsvall.invoices.api.model.InvoicesParameters;
 import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.MetaData;
 import se.sundsvall.invoices.api.model.PdfInvoice;
+import se.sundsvall.invoices.service.PdfFile;
 
 import static java.math.BigDecimal.ZERO;
 import static java.util.Collections.emptyList;
 import static java.util.Collections.emptySet;
 import static java.util.Optional.ofNullable;
+import static org.springframework.http.MediaType.APPLICATION_OCTET_STREAM;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
 
@@ -362,6 +365,15 @@ public final class InvoiceMapper {
 					.map(c -> DECODER.decode(c.getBytes(StandardCharsets.UTF_8)))
 					.orElse(null)))
 			.orElse(null);
+	}
+
+	public static PdfFile toPdfFile(final ResponseEntity<byte[]> response, final String invoiceNumber) {
+		final var contentType = ofNullable(response.getHeaders().getContentType()).orElse(APPLICATION_OCTET_STREAM);
+		final var extension = "zip".equals(contentType.getSubtype()) ? ".zip" : ".pdf";
+		final var fileName = ofNullable(response.getHeaders().getContentDisposition().getFilename())
+			.filter(name -> !name.isBlank())
+			.orElse(invoiceNumber + extension);
+		return new PdfFile(response.getBody(), contentType, fileName);
 	}
 
 	/*********************************
