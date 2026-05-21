@@ -7,7 +7,7 @@ info:
     url: https://opensource.org/licenses/MIT
   version: "9.3"
 servers:
-  - url: http://localhost:62680
+  - url: http://localhost:58069
     description: Generated server url
 tags:
   - name: Invoices
@@ -218,9 +218,9 @@ paths:
       tags:
         - Invoices
       summary: Returns invoice in pdf-format
-      description: Deprecated. Use the pdf/download endpoint, which returns the raw PDF file instead of a base64-encoded JSON body.
+      description: "Deprecated. Use the pdf/download endpoint, which returns the raw\
+        \ PDF file instead of a base64-encoded JSON body."
       operationId: getPdfInvoice
-      deprecated: true
       parameters:
         - name: municipalityId
           in: path
@@ -288,12 +288,13 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+      deprecated: true
   /{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf/download:
     get:
       tags:
         - Invoices
-      summary: Downloads an invoice as a pdf-file, or as a zip-archive when the invoice
-        has several pdf-files
+      summary: "Downloads an invoice as a pdf-file, or as a zip-archive when the invoice\
+        \ has several pdf-files"
       operationId: downloadInvoicePdf
       parameters:
         - name: municipalityId
@@ -333,10 +334,7 @@ paths:
         "200":
           description: Successful operation
           content:
-            '*/*':
-              schema:
-                type: string
-                format: binary
+            '*/*': {}
         "404":
           description: Not found
           content:
@@ -603,16 +601,16 @@ components:
     Problem:
       type: object
       properties:
-        title:
-          type: string
-        detail:
-          type: string
         instance:
           type: string
           format: uri
         type:
           type: string
           format: uri
+        title:
+          type: string
+        detail:
+          type: string
         status:
           type: integer
           format: int32
@@ -631,13 +629,13 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
+        instance:
+          type: string
+          format: uri
         detail:
           type: string
         causeAsProblem:
           $ref: "#/components/schemas/ThrowableProblem"
-        instance:
-          type: string
-          format: uri
     ThrowableProblem:
       type: object
       properties:
