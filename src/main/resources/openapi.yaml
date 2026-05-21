@@ -333,11 +333,7 @@ paths:
         "200":
           description: Successful operation
           content:
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-            application/zip:
+            '*/*':
               schema:
                 type: string
                 format: binary

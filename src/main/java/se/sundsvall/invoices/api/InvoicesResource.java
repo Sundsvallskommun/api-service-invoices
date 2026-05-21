@@ -35,7 +35,6 @@ import se.sundsvall.invoices.service.InvoicesService;
 import static java.util.Optional.ofNullable;
 import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -100,10 +99,7 @@ class InvoicesResource {
 
 	@GetMapping(value = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf/download", produces = ALL_VALUE)
 	@Operation(summary = "Downloads an invoice as a pdf-file, or as a zip-archive when the invoice has several pdf-files")
-	@ApiResponse(responseCode = "200", description = "Successful operation", content = {
-		@Content(mediaType = APPLICATION_PDF_VALUE, schema = @Schema(type = "string", format = "binary")),
-		@Content(mediaType = "application/zip", schema = @Schema(type = "string", format = "binary"))
-	})
+	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = ALL_VALUE, schema = @Schema(type = "string", format = "binary")))
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<StreamingResponseBody> downloadInvoicePdf(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
