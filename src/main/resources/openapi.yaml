@@ -218,7 +218,9 @@ paths:
       tags:
         - Invoices
       summary: Returns invoice in pdf-format
+      description: Deprecated. Use the pdf/download endpoint, which returns the raw PDF file instead of a base64-encoded JSON body.
       operationId: getPdfInvoice
+      deprecated: true
       parameters:
         - name: municipalityId
           in: path
@@ -260,6 +262,80 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/PdfInvoice"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                  - $ref: "#/components/schemas/Problem"
+                  - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+  /{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf/download:
+    get:
+      tags:
+        - Invoices
+      summary: Downloads invoice as a pdf-file
+      operationId: downloadInvoicePdf
+      parameters:
+        - name: municipalityId
+          in: path
+          description: Municipality ID
+          required: true
+          schema:
+            type: string
+          example: 2281
+        - name: organizationNumber
+          in: path
+          description: Organization number of invoice issuer
+          required: true
+          schema:
+            type: string
+          example: 5565272223
+        - name: invoiceNumber
+          in: path
+          description: Id of invoice
+          required: true
+          schema:
+            type: string
+            minLength: 1
+          example: 333444
+        - name: invoiceOrigin
+          in: path
+          required: true
+          schema:
+            $ref: "#/components/schemas/InvoiceOrigin"
+        - name: invoiceType
+          in: query
+          description: InvoiceType filter parameter
+          required: false
+          schema:
+            $ref: "#/components/schemas/InvoiceType"
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
         "404":
           description: Not found
           content:

@@ -5,9 +5,6 @@ integration:
   invoicecache:
     connectTimeout: 10
     readTimeout: 20
-  idata:
-    connectTimeout: 10
-    readTimeout: 20
 logbook:
   body-filters:
     json-path:

@@ -8,6 +8,8 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import java.nio.charset.StandardCharsets;
+import org.springframework.http.ContentDisposition;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 import se.sundsvall.dept44.common.validators.annotation.ValidMunicipalityId;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 import se.sundsvall.dept44.problem.Problem;
@@ -29,7 +32,11 @@ import se.sundsvall.invoices.api.model.InvoicesResponse;
 import se.sundsvall.invoices.api.model.PdfInvoice;
 import se.sundsvall.invoices.service.InvoicesService;
 
+import static java.util.Optional.ofNullable;
+import static org.springframework.http.MediaType.ALL_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static org.springframework.http.MediaType.APPLICATION_PDF;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
 
@@ -77,8 +84,9 @@ class InvoicesResource {
 		return ok(InvoiceDetailsResponse.create().withDetails(invoicesService.getInvoiceDetails(municipalityId, organizationNumber, invoiceNumber)));
 	}
 
+	@Deprecated(forRemoval = true, since = "2026-05-21")
 	@GetMapping(value = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf", produces = APPLICATION_JSON_VALUE)
-	@Operation(summary = "Returns invoice in pdf-format")
+	@Operation(summary = "Returns invoice in pdf-format", description = "Deprecated. Use the pdf/download endpoint, which returns the raw PDF file instead of a base64-encoded JSON body.", deprecated = true)
 	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<PdfInvoice> getPdfInvoice(
@@ -89,6 +97,27 @@ class InvoicesResource {
 		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter") @RequestParam(value = "invoiceType", required = false) final InvoiceType invoiceType) {
 
 		return ok(invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType, municipalityId));
+	}
+
+	@GetMapping(value = "/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf/download", produces = ALL_VALUE)
+	@Operation(summary = "Downloads invoice as a pdf-file")
+	@ApiResponse(responseCode = "200", description = "Successful operation", content = @Content(mediaType = APPLICATION_PDF_VALUE, schema = @Schema(type = "string", format = "binary")))
+	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	ResponseEntity<StreamingResponseBody> downloadInvoicePdf(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
+		@PathVariable @Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank final String invoiceNumber,
+		@PathVariable(name = "invoiceOrigin") final InvoiceOrigin invoiceOrigin,
+		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter") @RequestParam(value = "invoiceType", required = false) final InvoiceType invoiceType) {
+
+		final var pdfInvoice = invoicesService.getPdfInvoice(organizationNumber, invoiceNumber, invoiceType, municipalityId);
+
+		return ok()
+			.headers(headers -> headers.setContentDisposition(ContentDisposition.attachment()
+				.filename(pdfInvoice.getFileName(), StandardCharsets.UTF_8)
+				.build()))
+			.contentType(APPLICATION_PDF)
+			.body(outputStream -> outputStream.write(ofNullable(pdfInvoice.getFile()).orElse(new byte[0])));
 	}
 
 	@GetMapping(value = "/COMMERCIAL/customers/{customerNumber}/invoices", produces = {

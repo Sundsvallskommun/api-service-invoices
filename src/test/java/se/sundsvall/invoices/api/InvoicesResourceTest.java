@@ -1,5 +1,6 @@
 package se.sundsvall.invoices.api;
 
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -13,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
+import org.springframework.http.ContentDisposition;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
@@ -42,6 +44,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.springframework.boot.test.context.SpringBootTest.WebEnvironment.RANDOM_PORT;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.http.MediaType.APPLICATION_PDF;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 
 @AutoConfigureWebTestClient
@@ -53,6 +56,7 @@ class InvoicesResourceTest {
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
+	private static final String DOWNLOAD_PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf/download";
 	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices";
 
 	private static final int DEFAULT_PAGE = 1;
@@ -220,6 +224,33 @@ class InvoicesResourceTest {
 		// Assert
 		assertThat(response).isNotNull().isEqualTo(PdfInvoice.create());
 		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, null, MUNICIPALITY_ID);
+	}
+
+	@ParameterizedTest
+	@EnumSource(value = InvoiceOrigin.class)
+	void downloadInvoicePdf(final InvoiceOrigin origin) {
+
+		// Arrange
+		final var fileName = "Invoice_333.pdf";
+		final var fileContent = "pdf-content".getBytes(StandardCharsets.UTF_8);
+		when(invoicesServiceMock.getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID))
+			.thenReturn(PdfInvoice.create().withFileName(fileName).withFile(fileContent));
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(DOWNLOAD_PDF_PATH).queryParam("invoiceType", INVOICE_TYPE)
+				.build(MUNICIPALITY_ID, origin, ORGANIZATION_NUMBER, INVOICE_NUMBER))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_PDF)
+			.expectHeader().contentDisposition(ContentDisposition.attachment().filename(fileName, StandardCharsets.UTF_8).build())
+			.expectBody(byte[].class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response).isEqualTo(fileContent);
+		verify(invoicesServiceMock).getPdfInvoice(ORGANIZATION_NUMBER, INVOICE_NUMBER, INVOICE_TYPE, MUNICIPALITY_ID);
 	}
 
 	@Test

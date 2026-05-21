@@ -8,7 +8,6 @@ _The service provides invoice metadata for citizens within Sundsvall municipalit
 
 - **Java 25 or higher**
 - **Maven**
-- **MariaDB**
 - **Git**
 - **[Dependent Microservices](#dependencies)**
 
@@ -70,8 +69,16 @@ See the [API Documentation](#api-documentation) for detailed information on avai
 
 ### Example Request
 
+Search for invoices:
+
 ```bash
 curl -X GET http://localhost:8080/2281/COMMERCIAL?partyId=fc21e65b-3608-4355-932c-442540034302
+```
+
+Download an invoice as a PDF file:
+
+```bash
+curl -X GET http://localhost:8080/2281/COMMERCIAL/5565272223/333444/pdf/download -o invoice.pdf
 ```
 
 ## Configuration
