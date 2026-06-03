@@ -134,6 +134,7 @@ public final class InvoiceMapper {
 				case "Avskriven" -> InvoiceStatus.WRITTEN_OFF;
 				case "Skickad" -> InvoiceStatus.SENT;
 				case "Makulerad" -> InvoiceStatus.VOID;
+				case "Överbetald" -> InvoiceStatus.PAID_TOO_MUCH;
 				default -> InvoiceStatus.UNKNOWN;
 			})
 			.orElse(null);
@@ -166,6 +167,8 @@ public final class InvoiceMapper {
 				case SENT -> "Skickad";
 				case REMINDER -> "Påminnelse";
 				case VOID -> "Makulerad";
+				case PAID_TOO_MUCH -> "Överbetald";
+				case UNKNOWN -> "Okänd";
 				default -> null;
 			})
 			.orElse(null);

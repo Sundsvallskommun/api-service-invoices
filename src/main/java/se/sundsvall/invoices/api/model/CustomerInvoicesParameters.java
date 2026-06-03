@@ -2,6 +2,8 @@ package se.sundsvall.invoices.api.model;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -14,8 +16,18 @@ import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 @ParameterObject
 public class CustomerInvoicesParameters extends AbstractParameterBase {
 
+	@NotEmpty
+	@ArraySchema(arraySchema = @Schema(description = "Customer numbers (one or more)", requiredMode = Schema.RequiredMode.REQUIRED), schema = @Schema(examples = "216870"), minItems = 1)
+	private List<@NotBlank String> customerNumbers;
+
 	@ArraySchema(schema = @Schema(description = "Organization id of invoice issuer, if not provided all will be returned.", examples = "5565027223"))
 	private List<@ValidOrganizationNumber String> organizationNumbers;
+
+	@ArraySchema(schema = @Schema(description = "Facility ids to filter by, if not provided all will be returned.", examples = "735999109425048010"))
+	private List<String> facilityIds;
+
+	@Schema(description = "Invoice status filter", examples = "PAID")
+	private InvoiceStatus status;
 
 	@DateTimeFormat(iso = ISO.DATE)
 	@Schema(description = "Earliest invoice period start. Format is YYYY-MM-DD.", examples = "2025-01-01")
@@ -35,6 +47,19 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		return new CustomerInvoicesParameters();
 	}
 
+	public List<String> getCustomerNumbers() {
+		return customerNumbers;
+	}
+
+	public void setCustomerNumbers(final List<String> customerNumbers) {
+		this.customerNumbers = customerNumbers;
+	}
+
+	public CustomerInvoicesParameters withCustomerNumbers(final List<String> customerNumbers) {
+		this.customerNumbers = customerNumbers;
+		return this;
+	}
+
 	public List<String> getOrganizationNumbers() {
 		return organizationNumbers;
 	}
@@ -45,6 +70,32 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 
 	public CustomerInvoicesParameters withOrganizationNumbers(final List<String> organizationNumbers) {
 		this.organizationNumbers = organizationNumbers;
+		return this;
+	}
+
+	public List<String> getFacilityIds() {
+		return facilityIds;
+	}
+
+	public void setFacilityIds(final List<String> facilityIds) {
+		this.facilityIds = facilityIds;
+	}
+
+	public CustomerInvoicesParameters withFacilityIds(final List<String> facilityIds) {
+		this.facilityIds = facilityIds;
+		return this;
+	}
+
+	public InvoiceStatus getStatus() {
+		return status;
+	}
+
+	public void setStatus(final InvoiceStatus status) {
+		this.status = status;
+	}
+
+	public CustomerInvoicesParameters withStatus(final InvoiceStatus status) {
+		this.status = status;
 		return this;
 	}
 
@@ -104,18 +155,22 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		if (!super.equals(o))
 			return false;
 		final CustomerInvoicesParameters that = (CustomerInvoicesParameters) o;
-		return Objects.equals(organizationNumbers, that.organizationNumbers) && Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo) && Objects.equals(sortBy, that.sortBy);
+		return Objects.equals(customerNumbers, that.customerNumbers) && Objects.equals(organizationNumbers, that.organizationNumbers) && Objects.equals(facilityIds, that.facilityIds) && Objects.equals(status, that.status)
+			&& Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo) && Objects.equals(sortBy, that.sortBy);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), organizationNumbers, periodFrom, periodTo, sortBy);
+		return Objects.hash(super.hashCode(), customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy);
 	}
 
 	@Override
 	public String toString() {
 		return "CustomerInvoicesParameters{" +
-			"organizationNumbers=" + organizationNumbers +
+			"customerNumbers=" + customerNumbers +
+			", organizationNumbers=" + organizationNumbers +
+			", facilityIds=" + facilityIds +
+			", status=" + status +
 			", periodFrom=" + periodFrom +
 			", periodTo=" + periodTo +
 			", sortBy='" + sortBy + '\'' +

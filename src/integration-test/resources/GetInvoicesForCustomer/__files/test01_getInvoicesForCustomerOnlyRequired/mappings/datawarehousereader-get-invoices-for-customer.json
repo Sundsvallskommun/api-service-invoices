@@ -6,7 +6,12 @@
 			}
 		},
 		"method": "GET",
-		"urlPath": "/api-datawarehousereader/2281/invoices/customers/600606"
+		"queryParameters": {
+			"customerNumbers": {
+				"equalTo": "600606"
+			}
+		},
+		"urlPath": "/api-datawarehousereader/2281/invoices/customers"
 	},
 	"response": {
 		"headers": {

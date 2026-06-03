@@ -97,11 +97,13 @@ public class InvoicesService {
 		return toInvoiceFile(invoiceCacheClient.downloadInvoicePdfs(municipalityId, organizationNumber, invoiceNumber, toInvoiceCacheInvoiceType(invoiceType)), invoiceNumber);
 	}
 
-	public CustomerInvoicesResponse getInvoicesForCustomer(final String municipalityId, final String customerNumber, final CustomerInvoicesParameters parameters) {
+	public CustomerInvoicesResponse getInvoicesForCustomer(final String municipalityId, final CustomerInvoicesParameters parameters) {
 		return toCustomerInvoicesResponse(dataWarehouseReaderClient.getInvoicesForCustomer(
 			municipalityId,
-			customerNumber,
+			parameters.getCustomerNumbers(),
 			parameters.getOrganizationNumbers(),
+			parameters.getFacilityIds(),
+			toDataWarehouseReaderInvoiceStatus(parameters.getStatus()),
 			parameters.getPeriodFrom(),
 			parameters.getPeriodTo(),
 			parameters.getSortBy(),

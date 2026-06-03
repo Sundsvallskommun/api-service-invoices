@@ -34,7 +34,7 @@ class InvoicesResourceFailureTest {
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
-	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices";
+	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/invoices";
 	private static final String INVOICE_NUMBER = "333";
 	private static final String ORGANIZATION_NUMBER = "5565732223";
 	private static final List<String> PARTY_IDS = List.of(randomUUID().toString());
@@ -391,7 +391,8 @@ class InvoicesResourceFailureTest {
 	void getInvoicesForCustomerInvalidMunicipalityId() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.build("9999", "216870"))
+				.queryParam("customerNumbers", "216870")
+				.build("9999"))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -409,10 +410,10 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
-	void getInvoicesForCustomerBlankCustomerNumber() {
+	void getInvoicesForCustomerMissingCustomerNumbers() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.build(MUNICIPALITY_ID, " "))
+				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -424,7 +425,29 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("getInvoicesForCustomer.customerNumber", "must not be blank"));
+			.containsExactly(tuple("customerNumbers", "must not be empty"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerBlankCustomerNumber() {
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("customerNumbers", " ")
+				.build(MUNICIPALITY_ID))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("customerNumbers[0]", "must not be blank"));
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
@@ -433,8 +456,9 @@ class InvoicesResourceFailureTest {
 	void getInvoicesForCustomerInvalidOrganizationId() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("customerNumbers", "216870")
 				.queryParam("organizationNumbers", "190010301234")
-				.build(MUNICIPALITY_ID, "216870"))
+				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -455,8 +479,9 @@ class InvoicesResourceFailureTest {
 	void getInvoicesForCustomerInvalidPeriodFrom() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("customerNumbers", "216870")
 				.queryParam("periodFrom", "25-01-01")
-				.build(MUNICIPALITY_ID, "216870"))
+				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)

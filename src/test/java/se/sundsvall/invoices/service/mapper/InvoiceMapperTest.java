@@ -182,7 +182,9 @@ class InvoiceMapperTest {
 			Arguments.of(InvoiceStatus.WRITTEN_OFF, "Avskriven"),
 			Arguments.of(InvoiceStatus.SENT, "Skickad"),
 			Arguments.of(InvoiceStatus.VOID, "Makulerad"),
-			Arguments.of(InvoiceStatus.UNKNOWN, null),
+			Arguments.of(InvoiceStatus.PAID_TOO_MUCH, "Överbetald"),
+			Arguments.of(InvoiceStatus.UNKNOWN, "Okänd"),
+			Arguments.of(InvoiceStatus.PARTIALLY_PAID, null),
 			Arguments.of(null, null));
 	}
 
@@ -195,6 +197,8 @@ class InvoiceMapperTest {
 			Arguments.of("Avskriven", InvoiceStatus.WRITTEN_OFF),
 			Arguments.of("Skickad", InvoiceStatus.SENT),
 			Arguments.of("Makulerad", InvoiceStatus.VOID),
+			Arguments.of("Överbetald", InvoiceStatus.PAID_TOO_MUCH),
+			Arguments.of("Okänd", InvoiceStatus.UNKNOWN),
 			Arguments.of("something-unknown", InvoiceStatus.UNKNOWN),
 			Arguments.of(null, null));
 	}

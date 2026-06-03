@@ -59,7 +59,7 @@ class InvoicesResourceTest {
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 	private static final String DOWNLOAD_PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf/download";
-	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices";
+	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/invoices";
 
 	private static final int DEFAULT_PAGE = 1;
 	private static final int DEFAULT_LIMIT = 100;
@@ -284,18 +284,20 @@ class InvoicesResourceTest {
 
 	@Test
 	void getInvoicesForCustomerAllParameters() {
-		final var customerNumber = "216870";
+		final var customerNumbers = List.of("216870", "600606");
 		final var organizationNumbers = List.of("5565027223", "5564786647");
+		final var facilityIds = List.of("735999109425048010", "735999109425048011");
+		final var status = InvoiceStatus.PAID;
 		final var periodFrom = LocalDate.of(2025, 1, 1);
 		final var periodTo = LocalDate.of(2025, 12, 31);
 		final var sortBy = "periodFrom";
 
-		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
+		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.queryParams(createCustomerParameterMap(PAGE, LIMIT, organizationNumbers, periodFrom, periodTo, sortBy))
-				.build(MUNICIPALITY_ID, customerNumber))
+				.queryParams(createCustomerParameterMap(PAGE, LIMIT, customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy))
+				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -303,9 +305,12 @@ class InvoicesResourceTest {
 			.returnResult()
 			.getResponseBody();
 
-		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), eq(customerNumber), customerParametersCaptor.capture());
+		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), customerParametersCaptor.capture());
 		final CustomerInvoicesParameters parameters = customerParametersCaptor.getValue();
+		assertThat(parameters.getCustomerNumbers()).isEqualTo(customerNumbers);
 		assertThat(parameters.getOrganizationNumbers()).isEqualTo(organizationNumbers);
+		assertThat(parameters.getFacilityIds()).isEqualTo(facilityIds);
+		assertThat(parameters.getStatus()).isEqualTo(status);
 		assertThat(parameters.getPeriodFrom()).isEqualTo(periodFrom);
 		assertThat(parameters.getPeriodTo()).isEqualTo(periodTo);
 		assertThat(parameters.getSortBy()).isEqualTo(sortBy);
@@ -316,14 +321,14 @@ class InvoicesResourceTest {
 
 	@Test
 	void getInvoicesForCustomerOnlyMandatoryParameters() {
-		final var customerNumber = "216870";
+		final var customerNumbers = List.of("216870");
 
-		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
+		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.queryParams(createCustomerParameterMap(null, null, null, null, null, null))
-				.build(MUNICIPALITY_ID, customerNumber))
+				.queryParams(createCustomerParameterMap(null, null, customerNumbers, null, null, null, null, null, null))
+				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isOk()
 			.expectHeader().contentType(APPLICATION_JSON)
@@ -331,21 +336,26 @@ class InvoicesResourceTest {
 			.returnResult()
 			.getResponseBody();
 
-		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), eq(customerNumber), customerParametersCaptor.capture());
+		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), customerParametersCaptor.capture());
 		final CustomerInvoicesParameters parameters = customerParametersCaptor.getValue();
+		assertThat(parameters.getCustomerNumbers()).isEqualTo(customerNumbers);
 		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
 		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);
-		assertThat(parameters).hasAllNullFieldsOrPropertiesExcept("page", "limit");
+		assertThat(parameters).hasAllNullFieldsOrPropertiesExcept("customerNumbers", "page", "limit");
 		assertThat(response).isNotNull().isEqualTo(CustomerInvoicesResponse.create());
 	}
 
-	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> organizationNumbers,
+	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> customerNumbers,
+		final List<String> organizationNumbers, final List<String> facilityIds, final InvoiceStatus status,
 		final LocalDate periodFrom, final LocalDate periodTo, final String sortBy) {
 
 		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		ofNullable(page).ifPresent(p -> parameters.add("page", valueOf(p)));
 		ofNullable(limit).ifPresent(p -> parameters.add("limit", valueOf(p)));
+		ofNullable(customerNumbers).ifPresent(p -> parameters.addAll("customerNumbers", p));
 		ofNullable(organizationNumbers).ifPresent(p -> parameters.addAll("organizationNumbers", p));
+		ofNullable(facilityIds).ifPresent(p -> parameters.addAll("facilityIds", p));
+		ofNullable(status).ifPresent(p -> parameters.add("status", p.toString()));
 		ofNullable(periodFrom).ifPresent(p -> parameters.add("periodFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(periodTo).ifPresent(p -> parameters.add("periodTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(sortBy).ifPresent(p -> parameters.add("sortBy", p));

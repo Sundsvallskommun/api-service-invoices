@@ -122,16 +122,15 @@ class InvoicesResource {
 			.body(outputStream -> outputStream.write(ofNullable(invoiceFile.content()).orElse(new byte[0])));
 	}
 
-	@GetMapping(value = "/COMMERCIAL/customers/{customerNumber}/invoices", produces = {
+	@GetMapping(value = "/COMMERCIAL/customers/invoices", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
-	@Operation(summary = "Returns invoices for a customer (commercial source)")
+	@Operation(summary = "Returns invoices for one or more customers (commercial source)")
 	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	ResponseEntity<CustomerInvoicesResponse> getInvoicesForCustomer(
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
-		@Parameter(name = "customerNumber", description = "Customer number", example = "216870", required = true) @PathVariable @NotBlank final String customerNumber,
 		@Valid final CustomerInvoicesParameters searchParams) {
 
-		return ok(invoicesService.getInvoicesForCustomer(municipalityId, customerNumber, searchParams));
+		return ok(invoicesService.getInvoicesForCustomer(municipalityId, searchParams));
 	}
 }

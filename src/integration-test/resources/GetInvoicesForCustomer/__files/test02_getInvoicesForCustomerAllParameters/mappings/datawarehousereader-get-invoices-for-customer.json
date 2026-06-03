@@ -7,8 +7,24 @@
 		},
 		"method": "GET",
 		"queryParameters": {
+			"customerNumbers": {
+				"hasExactly": [
+					{
+						"equalTo": "600606"
+					},
+					{
+						"equalTo": "216870"
+					}
+				]
+			},
 			"organizationIds": {
 				"equalTo": "5565027223"
+			},
+			"facilityIds": {
+				"equalTo": "735999109425048010"
+			},
+			"status": {
+				"equalTo": "Betalad"
 			},
 			"periodFrom": {
 				"equalTo": "2025-01-01"
@@ -26,7 +42,7 @@
 				"equalTo": "100"
 			}
 		},
-		"urlPath": "/api-datawarehousereader/2281/invoices/customers/600606"
+		"urlPath": "/api-datawarehousereader/2281/invoices/customers"
 	},
 	"response": {
 		"headers": {

@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "9.3"
+  version: "9.4"
 servers:
-- url: http://localhost:63914
+- url: http://localhost:62836
   description: Generated server url
 tags:
 - name: Invoices
@@ -424,11 +424,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InvoiceDetailsResponse"
-  /{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices:
+  /{municipalityId}/COMMERCIAL/customers/invoices:
     get:
       tags:
       - Invoices
-      summary: Returns invoices for a customer (commercial source)
+      summary: Returns invoices for one or more customers (commercial source)
       operationId: getInvoicesForCustomer
       parameters:
       - name: municipalityId
@@ -438,14 +438,17 @@ paths:
         schema:
           type: string
         example: 2281
-      - name: customerNumber
-        in: path
-        description: Customer number
+      - name: customerNumbers
+        in: query
         required: true
         schema:
-          type: string
-          minLength: 1
-        example: 216870
+          type: array
+          description: Customer numbers (one or more)
+          items:
+            type: string
+            examples:
+            - "216870"
+          minItems: 1
       - name: organizationNumbers
         in: query
         required: false
@@ -457,6 +460,22 @@ paths:
               \ be returned."
             examples:
             - "5565027223"
+      - name: facilityIds
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            description: "Facility ids to filter by, if not provided all will be returned."
+            examples:
+            - "735999109425048010"
+      - name: status
+        in: query
+        description: Invoice status filter
+        required: false
+        schema:
+          $ref: "#/components/schemas/InvoiceStatus"
       - name: periodFrom
         in: query
         description: Earliest invoice period start. Format is YYYY-MM-DD.
@@ -636,10 +655,10 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        causeAsProblem:
-          $ref: "#/components/schemas/ThrowableProblem"
         detail:
           type: string
+        causeAsProblem:
+          $ref: "#/components/schemas/ThrowableProblem"
         instance:
           type: string
           format: uri
