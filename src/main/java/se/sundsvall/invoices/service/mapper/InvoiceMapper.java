@@ -208,7 +208,7 @@ public final class InvoiceMapper {
 		return CustomerInvoice.create()
 			.withCustomerNumber(customerInvoice.getCustomerNumber())
 			.withCustomerType(toCustomerType(customerInvoice.getCustomerType()))
-			.withFacilityId(customerInvoice.getFacilityId())
+			.withFacilityIds(customerInvoice.getFacilityIds())
 			.withInvoiceNumber(toString(customerInvoice.getInvoiceNumber()))
 			.withInvoiceId(customerInvoice.getInvoiceId())
 			.withJointInvoiceId(customerInvoice.getJointInvoiceId())

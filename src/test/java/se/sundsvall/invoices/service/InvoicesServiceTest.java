@@ -273,7 +273,7 @@ class InvoicesServiceTest {
 		final var customerNumber = "216870";
 		final var customerNumbers = List.of(customerNumber, "600606");
 		final var organizationNumbers = List.of("5565027223");
-		final var facilityIds = List.of("735999109425048010");
+		final var facilityIds = List.of("123456789012345670");
 		final var status = InvoiceStatus.PAID;
 		final var dataWarehouseReaderStatus = "Betalad";
 		final var periodFrom = java.time.LocalDate.of(2025, 1, 1);

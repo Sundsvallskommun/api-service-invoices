@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Customer invoice model")
@@ -18,8 +19,8 @@ public class CustomerInvoice {
 	@Schema(implementation = CustomerType.class)
 	private CustomerType customerType;
 
-	@Schema(description = "Facility id", examples = "735999109425048010")
-	private String facilityId;
+	@Schema(description = "List of facility ids")
+	private Set<String> facilityIds;
 
 	@Schema(description = "Invoice number", examples = "999")
 	private String invoiceNumber;
@@ -132,16 +133,16 @@ public class CustomerInvoice {
 		return this;
 	}
 
-	public String getFacilityId() {
-		return facilityId;
+	public Set<String> getFacilityIds() {
+		return facilityIds;
 	}
 
-	public void setFacilityId(final String facilityId) {
-		this.facilityId = facilityId;
+	public void setFacilityIds(final Set<String> facilityIds) {
+		this.facilityIds = facilityIds;
 	}
 
-	public CustomerInvoice withFacilityId(final String facilityId) {
-		this.facilityId = facilityId;
+	public CustomerInvoice withFacilityIds(final Set<String> facilityIds) {
+		this.facilityIds = facilityIds;
 		return this;
 	}
 
@@ -503,7 +504,7 @@ public class CustomerInvoice {
 		final CustomerInvoice that = (CustomerInvoice) o;
 		return Objects.equals(totalAmount, that.totalAmount) && Objects.equals(amountVatIncluded, that.amountVatIncluded) && Objects.equals(amountVatExcluded, that.amountVatExcluded)
 			&& Objects.equals(vatEligibleAmount, that.vatEligibleAmount) && Objects.equals(rounding, that.rounding) && Objects.equals(customerNumber, that.customerNumber) && customerType == that.customerType
-			&& Objects.equals(facilityId, that.facilityId) && Objects.equals(invoiceNumber, that.invoiceNumber) && Objects.equals(invoiceId, that.invoiceId) && Objects.equals(jointInvoiceId, that.jointInvoiceId)
+			&& Objects.equals(facilityIds, that.facilityIds) && Objects.equals(invoiceNumber, that.invoiceNumber) && Objects.equals(invoiceId, that.invoiceId) && Objects.equals(jointInvoiceId, that.jointInvoiceId)
 			&& Objects.equals(invoiceDate, that.invoiceDate) && Objects.equals(invoiceName, that.invoiceName) && invoiceType == that.invoiceType && Objects.equals(invoiceDescription, that.invoiceDescription)
 			&& invoiceStatus == that.invoiceStatus && Objects.equals(ocrNumber, that.ocrNumber) && Objects.equals(dueDate, that.dueDate) && Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo)
 			&& Objects.equals(organizationGroup, that.organizationGroup) && Objects.equals(organizationNumber, that.organizationNumber) && Objects.equals(administration, that.administration) && Objects.equals(street, that.street)
@@ -513,7 +514,7 @@ public class CustomerInvoice {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(customerNumber, customerType, facilityId, invoiceNumber, invoiceId, jointInvoiceId, invoiceDate, invoiceName, invoiceType, invoiceDescription, invoiceStatus, ocrNumber, dueDate, periodFrom, periodTo, totalAmount,
+		return Objects.hash(customerNumber, customerType, facilityIds, invoiceNumber, invoiceId, jointInvoiceId, invoiceDate, invoiceName, invoiceType, invoiceDescription, invoiceStatus, ocrNumber, dueDate, periodFrom, periodTo, totalAmount,
 			amountVatIncluded, amountVatExcluded, vatEligibleAmount, rounding, organizationGroup, organizationNumber, administration, street, postCode, city, careOf, invoiceReference, pdfAvailable, details);
 	}
 
@@ -522,7 +523,7 @@ public class CustomerInvoice {
 		return "CustomerInvoice{" +
 			"customerNumber='" + customerNumber + '\'' +
 			", customerType=" + customerType +
-			", facilityId='" + facilityId + '\'' +
+			", facilityIds=" + facilityIds +
 			", invoiceNumber='" + invoiceNumber + '\'' +
 			", invoiceId=" + invoiceId +
 			", jointInvoiceId=" + jointInvoiceId +

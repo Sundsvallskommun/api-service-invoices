@@ -469,7 +469,7 @@ paths:
             type: string
             description: "Facility ids to filter by, if not provided all will be returned."
             examples:
-            - "735999109425048010"
+            - "123456789012345670"
       - name: status
         in: query
         description: Invoice status filter
@@ -981,11 +981,12 @@ components:
           - "123456"
         customerType:
           $ref: "#/components/schemas/CustomerType"
-        facilityId:
-          type: string
-          description: Facility id
-          examples:
-          - "735999109425048010"
+        facilityIds:
+          type: array
+          description: List of facility ids
+          items:
+            type: string
+          uniqueItems: true
         invoiceNumber:
           type: string
           description: Invoice number

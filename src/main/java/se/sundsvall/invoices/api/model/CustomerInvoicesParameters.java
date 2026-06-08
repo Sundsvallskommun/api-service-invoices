@@ -23,7 +23,7 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 	@ArraySchema(schema = @Schema(description = "Organization id of invoice issuer, if not provided all will be returned.", examples = "5565027223"))
 	private List<@ValidOrganizationNumber String> organizationNumbers;
 
-	@ArraySchema(schema = @Schema(description = "Facility ids to filter by, if not provided all will be returned.", examples = "735999109425048010"))
+	@ArraySchema(schema = @Schema(description = "Facility ids to filter by, if not provided all will be returned.", examples = "123456789012345670"))
 	private List<String> facilityIds;
 
 	@Schema(description = "Invoice status filter", examples = "PAID")

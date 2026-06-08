@@ -3,6 +3,7 @@
 		{
 			"customerNumber": "600606",
 			"customerType": "PRIVATE",
+			"facilityIds": [],
 			"invoiceNumber": "137968392",
 			"invoiceDate": "2025-10-08",
 			"invoiceType": "INVOICE",

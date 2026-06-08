@@ -286,7 +286,7 @@ class InvoicesResourceTest {
 	void getInvoicesForCustomerAllParameters() {
 		final var customerNumbers = List.of("216870", "600606");
 		final var organizationNumbers = List.of("5565027223", "5564786647");
-		final var facilityIds = List.of("735999109425048010", "735999109425048011");
+		final var facilityIds = List.of("123456789012345670", "123456789012345671");
 		final var status = InvoiceStatus.PAID;
 		final var periodFrom = LocalDate.of(2025, 1, 1);
 		final var periodTo = LocalDate.of(2025, 12, 31);

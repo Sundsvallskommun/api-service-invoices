@@ -25,15 +25,16 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 	}
 
 	@Test
-	// All query parameters populated, including multiple customer/facility ids. Upstream detail intentionally
-	// omits administration/facilityId to verify the mapper passes nulls through cleanly.
+	// All query parameters populated, including multiple customer/facility ids. The upstream detail intentionally
+	// omits administration/facilityId to verify the mapper passes nulls through cleanly. The invoice-level facilityIds
+	// is also omitted upstream, surfacing as an empty array (the generated client defaults the set to empty).
 	void test02_getInvoicesForCustomerAllParameters() {
 		setupCall()
 			.withServicePath("/2281/COMMERCIAL/customers/invoices" +
 				"?customerNumbers=600606" +
 				"&customerNumbers=216870" +
 				"&organizationNumbers=5565027223" +
-				"&facilityIds=735999109425048010" +
+				"&facilityIds=123456789012345670" +
 				"&status=PAID" +
 				"&periodFrom=2025-01-01" +
 				"&periodTo=2025-12-31" +

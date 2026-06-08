@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
+import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +40,7 @@ class CustomerInvoiceTest {
 	void testBuilderMethods() {
 		final var customerNumber = "123456";
 		final var customerType = CustomerType.ENTERPRISE;
-		final var facilityId = "facilityId";
+		final var facilityIds = Set.of("facilityId");
 		final var invoiceNumber = "999";
 		final var invoiceId = 1062916396L;
 		final var jointInvoiceId = 123L;
@@ -71,7 +72,7 @@ class CustomerInvoiceTest {
 		final var customerInvoice = CustomerInvoice.create()
 			.withCustomerNumber(customerNumber)
 			.withCustomerType(customerType)
-			.withFacilityId(facilityId)
+			.withFacilityIds(facilityIds)
 			.withInvoiceNumber(invoiceNumber)
 			.withInvoiceId(invoiceId)
 			.withJointInvoiceId(jointInvoiceId)
@@ -103,7 +104,7 @@ class CustomerInvoiceTest {
 		assertThat(customerInvoice).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(customerInvoice.getCustomerNumber()).isEqualTo(customerNumber);
 		assertThat(customerInvoice.getCustomerType()).isEqualTo(customerType);
-		assertThat(customerInvoice.getFacilityId()).isEqualTo(facilityId);
+		assertThat(customerInvoice.getFacilityIds()).isEqualTo(facilityIds);
 		assertThat(customerInvoice.getInvoiceNumber()).isEqualTo(invoiceNumber);
 		assertThat(customerInvoice.getInvoiceId()).isEqualTo(invoiceId);
 		assertThat(customerInvoice.getJointInvoiceId()).isEqualTo(jointInvoiceId);

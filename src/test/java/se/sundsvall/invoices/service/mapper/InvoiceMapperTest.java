@@ -660,7 +660,7 @@ class InvoiceMapperTest {
 	@Test
 	void toCustomerInvoicesResponse() {
 		final var customerNumber = "123456";
-		final var facilityId = "facilityId";
+		final var facilityIds = Set.of("facilityId");
 		final var invoiceNumber = 999L;
 		final var invoiceId = 1062916396L;
 		final var jointInvoiceId = 123L;
@@ -688,7 +688,7 @@ class InvoiceMapperTest {
 		final var upstream = new generated.se.sundsvall.datawarehousereader.CustomerInvoice()
 			.customerNumber(customerNumber)
 			.customerType(generated.se.sundsvall.datawarehousereader.CustomerType.ENTERPRISE)
-			.facilityId(facilityId)
+			.facilityIds(facilityIds)
 			.invoiceNumber(invoiceNumber)
 			.invoiceId(invoiceId)
 			.jointInvoiceId(jointInvoiceId)
@@ -734,7 +734,7 @@ class InvoiceMapperTest {
 		final var mapped = response.getInvoices().getFirst();
 		assertThat(mapped.getCustomerNumber()).isEqualTo(customerNumber);
 		assertThat(mapped.getCustomerType()).isEqualTo(CustomerType.ENTERPRISE);
-		assertThat(mapped.getFacilityId()).isEqualTo(facilityId);
+		assertThat(mapped.getFacilityIds()).isEqualTo(facilityIds);
 		assertThat(mapped.getInvoiceNumber()).isEqualTo(String.valueOf(invoiceNumber));
 		assertThat(mapped.getInvoiceId()).isEqualTo(invoiceId);
 		assertThat(mapped.getJointInvoiceId()).isEqualTo(jointInvoiceId);
