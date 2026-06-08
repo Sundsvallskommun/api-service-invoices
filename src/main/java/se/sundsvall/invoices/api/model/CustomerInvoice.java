@@ -19,7 +19,7 @@ public class CustomerInvoice {
 	@Schema(implementation = CustomerType.class)
 	private CustomerType customerType;
 
-	@Schema(description = "List of facility ids")
+	@Schema(description = "List of facility ids", examples = "123456789012345670")
 	private Set<String> facilityIds;
 
 	@Schema(description = "Invoice number", examples = "999")

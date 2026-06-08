@@ -22,7 +22,7 @@ class CustomerInvoiceTest {
 
 	@BeforeAll
 	static void setup() {
-		BeanMatchers.registerValueGenerator(() -> LocalDate.now().plusDays(new Random().nextInt()), LocalDate.class);
+		BeanMatchers.registerValueGenerator(() -> LocalDate.parse("2024-01-01").plusDays(new Random().nextInt()), LocalDate.class);
 		BeanMatchers.registerValueGenerator(() -> BigDecimal.valueOf(new Random().nextDouble()), BigDecimal.class);
 	}
 
@@ -44,15 +44,15 @@ class CustomerInvoiceTest {
 		final var invoiceNumber = "999";
 		final var invoiceId = 1062916396L;
 		final var jointInvoiceId = 123L;
-		final var invoiceDate = LocalDate.now().minusDays(10);
+		final var invoiceDate = LocalDate.parse("2024-01-01").minusDays(10);
 		final var invoiceName = "invoiceName";
 		final var invoiceType = InvoiceType.INVOICE;
 		final var invoiceDescription = "El";
 		final var invoiceStatus = InvoiceStatus.PAID;
 		final var ocrNumber = "295334999";
-		final var dueDate = LocalDate.now().plusDays(20);
-		final var periodFrom = LocalDate.now().minusMonths(2);
-		final var periodTo = LocalDate.now().minusMonths(1);
+		final var dueDate = LocalDate.parse("2024-01-01").plusDays(20);
+		final var periodFrom = LocalDate.parse("2024-01-01").minusMonths(2);
+		final var periodTo = LocalDate.parse("2024-01-01").minusMonths(1);
 		final var totalAmount = BigDecimal.valueOf(1234.0);
 		final var amountVatIncluded = BigDecimal.valueOf(1233.51);
 		final var amountVatExcluded = BigDecimal.valueOf(986.81);

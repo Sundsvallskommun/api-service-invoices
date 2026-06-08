@@ -4,7 +4,8 @@
 			"customerNumber": "600606",
 			"customerType": "Enterprise",
 			"facilityIds": [
-				"123456789012345670"
+				"123456789012345670",
+				"123456789012345671"
 			],
 			"invoiceNumber": 137968392,
 			"invoiceId": 1062916396,
@@ -67,7 +68,7 @@
 					"productName": "Energiskatt",
 					"organizationNumber": "5565027223",
 					"administration": "Sundsvall Elnät",
-					"facilityId": "123456789012345670"
+					"facilityId": "123456789012345671"
 				}
 			]
 		}
