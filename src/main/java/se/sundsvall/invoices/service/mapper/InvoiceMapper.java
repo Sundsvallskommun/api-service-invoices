@@ -14,12 +14,12 @@ import java.util.Base64.Decoder;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.CustomerInvoice;
 import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
 import se.sundsvall.invoices.api.model.CustomerType;
-import se.sundsvall.invoices.api.model.Direction;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceStatus;
@@ -249,7 +249,7 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	public static generated.se.sundsvall.datawarehousereader.Direction toDataWarehouseReaderDirection(final Direction direction) {
+	public static generated.se.sundsvall.datawarehousereader.Direction toDataWarehouseReaderDirection(final Sort.Direction direction) {
 		return ofNullable(direction)
 			.map(d -> switch (d)
 			{

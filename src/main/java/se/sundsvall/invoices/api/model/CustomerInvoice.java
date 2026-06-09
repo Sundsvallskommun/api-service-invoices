@@ -7,7 +7,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @Schema(description = "Customer invoice model")
@@ -20,7 +19,7 @@ public class CustomerInvoice {
 	private CustomerType customerType;
 
 	@Schema(description = "List of facility ids", examples = "123456789012345670")
-	private Set<String> facilityIds;
+	private List<String> facilityIds;
 
 	@Schema(description = "Invoice number", examples = "999")
 	private String invoiceNumber;
@@ -133,15 +132,15 @@ public class CustomerInvoice {
 		return this;
 	}
 
-	public Set<String> getFacilityIds() {
+	public List<String> getFacilityIds() {
 		return facilityIds;
 	}
 
-	public void setFacilityIds(final Set<String> facilityIds) {
+	public void setFacilityIds(final List<String> facilityIds) {
 		this.facilityIds = facilityIds;
 	}
 
-	public CustomerInvoice withFacilityIds(final Set<String> facilityIds) {
+	public CustomerInvoice withFacilityIds(final List<String> facilityIds) {
 		this.facilityIds = facilityIds;
 		return this;
 	}

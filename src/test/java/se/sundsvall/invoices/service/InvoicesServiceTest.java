@@ -23,6 +23,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import se.sundsvall.dept44.problem.ThrowableProblem;
 import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
@@ -280,8 +281,8 @@ class InvoicesServiceTest {
 		final var dataWarehouseReaderStatus = "Betalad";
 		final var periodFrom = java.time.LocalDate.of(2025, Month.JANUARY, 1);
 		final var periodTo = java.time.LocalDate.of(2025, Month.DECEMBER, 31);
-		final var sortBy = "periodFrom";
-		final var sortDirection = se.sundsvall.invoices.api.model.Direction.DESC;
+		final var sortBy = List.of("periodFrom");
+		final var sortDirection = Sort.Direction.DESC;
 		final var dataWarehouseReaderDirection = Direction.DESC;
 		final var page = 1;
 		final var limit = 100;
@@ -321,14 +322,14 @@ class InvoicesServiceTest {
 		final var customerNumbers = List.of("216870");
 		final var parameters = CustomerInvoicesParameters.create().withCustomerNumbers(customerNumbers);
 
-		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumbers, null, null, null, null, null, null, null, 1, 100))
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumbers, null, null, null, null, null, null, Direction.ASC, 1, 100))
 			.thenReturn(new CustomerInvoiceResponse().invoices(emptyList()).meta(createPagingAndSortingMetaData()));
 
 		final var response = invoicesService.getInvoicesForCustomer(municipalityId, parameters);
 
 		assertThat(response).isNotNull();
 		assertThat(response.getInvoices()).isEmpty();
-		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumbers, null, null, null, null, null, null, null, 1, 100);
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumbers, null, null, null, null, null, null, Direction.ASC, 1, 100);
 		verifyNoInteractions(invoiceCacheClientMock);
 	}
 

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Sort;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
@@ -41,8 +42,8 @@ class CustomerInvoicesParametersTest {
 		final var status = InvoiceStatus.PAID;
 		final var periodFrom = LocalDate.parse("2024-01-01").minusMonths(6);
 		final var periodTo = LocalDate.parse("2024-01-01");
-		final var sortBy = "periodFrom";
-		final var sortDirection = Direction.DESC;
+		final var sortBy = List.of("periodFrom");
+		final var sortDirection = Sort.Direction.DESC;
 		final var page = 3;
 		final var limit = 50;
 
@@ -74,13 +75,15 @@ class CustomerInvoicesParametersTest {
 	@Test
 	void testNoDirtOnCreatedBean() {
 		assertThat(CustomerInvoicesParameters.create())
-			.hasAllNullFieldsOrPropertiesExcept("page", "limit")
+			.hasAllNullFieldsOrPropertiesExcept("page", "limit", "sortDirection")
 			.hasFieldOrPropertyWithValue("page", 1)
-			.hasFieldOrPropertyWithValue("limit", 100);
+			.hasFieldOrPropertyWithValue("limit", 100)
+			.hasFieldOrPropertyWithValue("sortDirection", Sort.Direction.ASC);
 
 		assertThat(new CustomerInvoicesParameters())
-			.hasAllNullFieldsOrPropertiesExcept("page", "limit")
+			.hasAllNullFieldsOrPropertiesExcept("page", "limit", "sortDirection")
 			.hasFieldOrPropertyWithValue("page", 1)
-			.hasFieldOrPropertyWithValue("limit", 100);
+			.hasFieldOrPropertyWithValue("limit", 100)
+			.hasFieldOrPropertyWithValue("sortDirection", Sort.Direction.ASC);
 	}
 }

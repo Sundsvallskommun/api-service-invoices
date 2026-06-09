@@ -78,7 +78,7 @@ public interface DataWarehouseReaderClient {
 	 * @param  status          optional invoice status (DataWarehouseReader value, e.g. "Betalad").
 	 * @param  periodFrom      optional earliest invoice period start.
 	 * @param  periodTo        optional latest invoice period end.
-	 * @param  sortBy          optional column to sort by.
+	 * @param  sortBy          optional columns to sort by.
 	 * @param  sortDirection   optional sort order direction (ASC or DESC, defaults to ASC upstream when omitted).
 	 * @param  page            optional page number.
 	 * @param  limit           optional result size per page.
@@ -89,13 +89,13 @@ public interface DataWarehouseReaderClient {
 	})
 	CustomerInvoiceResponse getInvoicesForCustomer(
 		@PathVariable String municipalityId,
-		@RequestParam("customerNumbers") List<String> customerNumbers,
+		@RequestParam(value = "customerNumbers") List<String> customerNumbers,
 		@RequestParam(value = "organizationIds", required = false) List<String> organizationIds,
 		@RequestParam(value = "facilityIds", required = false) List<String> facilityIds,
 		@RequestParam(value = "status", required = false) String status,
 		@RequestParam(value = "periodFrom", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate periodFrom,
 		@RequestParam(value = "periodTo", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate periodTo,
-		@RequestParam(value = "sortBy", required = false) String sortBy,
+		@RequestParam(value = "sortBy", required = false) List<String> sortBy,
 		@RequestParam(value = "sortDirection", required = false) Direction sortDirection,
 		@RequestParam(value = "page", required = false) Integer page,
 		@RequestParam(value = "limit", required = false) Integer limit);

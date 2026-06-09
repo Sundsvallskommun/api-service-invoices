@@ -19,12 +19,12 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ContentDisposition;
 import org.springframework.http.ResponseEntity;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.CustomerInvoice;
 import se.sundsvall.invoices.api.model.CustomerType;
-import se.sundsvall.invoices.api.model.Direction;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceStatus;
@@ -648,14 +648,14 @@ class InvoiceMapperTest {
 
 	private static Stream<Arguments> toDataWarehouseReaderDirectionArguments() {
 		return Stream.of(
-			Arguments.of(Direction.ASC, generated.se.sundsvall.datawarehousereader.Direction.ASC),
-			Arguments.of(Direction.DESC, generated.se.sundsvall.datawarehousereader.Direction.DESC),
+			Arguments.of(Sort.Direction.ASC, generated.se.sundsvall.datawarehousereader.Direction.ASC),
+			Arguments.of(Sort.Direction.DESC, generated.se.sundsvall.datawarehousereader.Direction.DESC),
 			Arguments.of(null, null));
 	}
 
 	@ParameterizedTest
 	@MethodSource("toDataWarehouseReaderDirectionArguments")
-	void toDataWarehouseReaderDirection(final Direction source, final generated.se.sundsvall.datawarehousereader.Direction target) {
+	void toDataWarehouseReaderDirection(final Sort.Direction source, final generated.se.sundsvall.datawarehousereader.Direction target) {
 		assertThat(InvoiceMapper.toDataWarehouseReaderDirection(source)).isEqualTo(target);
 	}
 
@@ -675,7 +675,7 @@ class InvoiceMapperTest {
 	@Test
 	void toCustomerInvoicesResponse() {
 		final var customerNumber = "123456";
-		final var facilityIds = Set.of("facilityId");
+		final var facilityIds = List.of("facilityId1", "facilityId2");
 		final var invoiceNumber = 999L;
 		final var invoiceId = 1062916396L;
 		final var jointInvoiceId = 123L;

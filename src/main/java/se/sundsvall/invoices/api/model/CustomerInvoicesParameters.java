@@ -8,13 +8,15 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
+import se.sundsvall.dept44.models.api.paging.AbstractParameterPagingAndSortingBase;
 
 @Schema(description = "Customer invoice request parameters model")
 @ParameterObject
-public class CustomerInvoicesParameters extends AbstractParameterBase {
+public class CustomerInvoicesParameters extends AbstractParameterPagingAndSortingBase {
 
 	@NotEmpty
 	@ArraySchema(arraySchema = @Schema(description = "Customer numbers (one or more)", requiredMode = Schema.RequiredMode.REQUIRED), schema = @Schema(examples = "216870"), minItems = 1)
@@ -36,15 +38,6 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 	@DateTimeFormat(iso = ISO.DATE)
 	@Schema(description = "Latest invoice period end. Format is YYYY-MM-DD.", examples = "2025-12-31")
 	private LocalDate periodTo;
-
-	// Not validated — DataWarehouseReader silently ignores unknown sortBy values.
-	@Schema(description = "Column to sort by", examples = {
-		"periodFrom", "periodTo", "InvoiceDate", "DueDate", "InvoiceNumber", "TotalAmount"
-	})
-	private String sortBy;
-
-	@Schema(description = "Sort direction. Defaults to ASC when omitted.", examples = "ASC")
-	private Direction sortDirection;
 
 	public static CustomerInvoicesParameters create() {
 		return new CustomerInvoicesParameters();
@@ -128,28 +121,20 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		return this;
 	}
 
-	public String getSortBy() {
-		return sortBy;
+	@Override
+	@ArraySchema(schema = @Schema(description = "Column to sort by", examples = {
+		"periodFrom", "periodTo", "InvoiceDate", "DueDate", "InvoiceNumber", "TotalAmount"
+	}))
+	public List<String> getSortBy() {
+		return super.getSortBy();
 	}
 
-	public void setSortBy(final String sortBy) {
-		this.sortBy = sortBy;
-	}
-
-	public CustomerInvoicesParameters withSortBy(final String sortBy) {
+	public CustomerInvoicesParameters withSortBy(final List<String> sortBy) {
 		this.sortBy = sortBy;
 		return this;
 	}
 
-	public Direction getSortDirection() {
-		return sortDirection;
-	}
-
-	public void setSortDirection(final Direction sortDirection) {
-		this.sortDirection = sortDirection;
-	}
-
-	public CustomerInvoicesParameters withSortDirection(final Direction sortDirection) {
+	public CustomerInvoicesParameters withSortDirection(final Sort.Direction sortDirection) {
 		this.sortDirection = sortDirection;
 		return this;
 	}
@@ -171,13 +156,21 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		if (!super.equals(o))
 			return false;
 		final CustomerInvoicesParameters that = (CustomerInvoicesParameters) o;
-		return Objects.equals(customerNumbers, that.customerNumbers) && Objects.equals(organizationNumbers, that.organizationNumbers) && Objects.equals(facilityIds, that.facilityIds) && Objects.equals(status, that.status)
-			&& Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo) && Objects.equals(sortBy, that.sortBy) && sortDirection == that.sortDirection;
+		return Objects.equals(customerNumbers, that.customerNumbers)
+			&& Objects.equals(organizationNumbers, that.organizationNumbers)
+			&& Objects.equals(facilityIds, that.facilityIds)
+			&& Objects.equals(status, that.status)
+			&& Objects.equals(periodFrom, that.periodFrom)
+			&& Objects.equals(periodTo, that.periodTo)
+			&& Objects.equals(sortBy, that.sortBy)
+			&& Objects.equals(sortDirection, that.sortDirection)
+			&& Objects.equals(limit, that.limit)
+			&& Objects.equals(page, that.page);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection);
+		return Objects.hash(super.hashCode(), customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection, page, limit);
 	}
 
 	@Override
@@ -189,7 +182,7 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 			", status=" + status +
 			", periodFrom=" + periodFrom +
 			", periodTo=" + periodTo +
-			", sortBy='" + sortBy + '\'' +
+			", sortBy=" + sortBy +
 			", sortDirection=" + sortDirection +
 			", page=" + page +
 			", limit=" + limit +

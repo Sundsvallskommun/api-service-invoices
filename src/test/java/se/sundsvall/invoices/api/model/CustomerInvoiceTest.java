@@ -5,7 +5,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -40,7 +39,7 @@ class CustomerInvoiceTest {
 	void testBuilderMethods() {
 		final var customerNumber = "123456";
 		final var customerType = CustomerType.ENTERPRISE;
-		final var facilityIds = Set.of("facilityId");
+		final var facilityIds = List.of("facilityId1", "facilityId2");
 		final var invoiceNumber = "999";
 		final var invoiceId = 1062916396L;
 		final var jointInvoiceId = 123L;

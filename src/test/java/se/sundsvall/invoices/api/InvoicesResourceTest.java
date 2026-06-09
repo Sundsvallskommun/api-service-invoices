@@ -15,6 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.webtestclient.autoconfigure.AutoConfigureWebTestClient;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ContentDisposition;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
@@ -24,7 +25,6 @@ import org.springframework.util.MultiValueMap;
 import se.sundsvall.invoices.Application;
 import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
 import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
-import se.sundsvall.invoices.api.model.Direction;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceDetailsResponse;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
@@ -292,8 +292,8 @@ class InvoicesResourceTest {
 		final var status = InvoiceStatus.PAID;
 		final var periodFrom = LocalDate.of(2025, Month.JANUARY, 1);
 		final var periodTo = LocalDate.of(2025, Month.DECEMBER, 31);
-		final var sortBy = "periodFrom";
-		final var sortDirection = Direction.DESC;
+		final var sortBy = List.of("periodFrom");
+		final var sortDirection = Sort.Direction.DESC;
 
 		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
 
@@ -345,13 +345,13 @@ class InvoicesResourceTest {
 		assertThat(parameters.getCustomerNumbers()).isEqualTo(customerNumbers);
 		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
 		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);
-		assertThat(parameters).hasAllNullFieldsOrPropertiesExcept("customerNumbers", "page", "limit");
+		assertThat(parameters).hasAllNullFieldsOrPropertiesExcept("customerNumbers", "page", "limit", "sortDirection");
 		assertThat(response).isNotNull().isEqualTo(CustomerInvoicesResponse.create());
 	}
 
 	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> customerNumbers,
 		final List<String> organizationNumbers, final List<String> facilityIds, final InvoiceStatus status,
-		final LocalDate periodFrom, final LocalDate periodTo, final String sortBy, final Direction sortDirection) {
+		final LocalDate periodFrom, final LocalDate periodTo, final List<String> sortBy, final Sort.Direction sortDirection) {
 
 		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		ofNullable(page).ifPresent(p -> parameters.add("page", valueOf(p)));
@@ -362,8 +362,8 @@ class InvoicesResourceTest {
 		ofNullable(status).ifPresent(p -> parameters.add("status", p.toString()));
 		ofNullable(periodFrom).ifPresent(p -> parameters.add("periodFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(periodTo).ifPresent(p -> parameters.add("periodTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
-		ofNullable(sortBy).ifPresent(p -> parameters.add("sortBy", p));
-		ofNullable(sortDirection).ifPresent(p -> parameters.add("sortDirection", p.toString()));
+		ofNullable(sortBy).ifPresent(p -> parameters.addAll("sortBy", p));
+		ofNullable(sortDirection).ifPresent(p -> parameters.add("sortDirection", p.name()));
 		return parameters;
 	}
 

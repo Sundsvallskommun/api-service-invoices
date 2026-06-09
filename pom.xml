@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>se.sundsvall</groupId>
 	<artifactId>api-service-invoices</artifactId>
-	<version>9.5</version>
+	<version>9.4</version>
 	<name>api-service-invoices</name>
 	<description>Service for listing invoice-data</description>
 	<properties>
@@ -31,6 +31,10 @@
 		<dependency>
 			<groupId>se.sundsvall.dept44</groupId>
 			<artifactId>dept44-common-validators</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>se.sundsvall.dept44</groupId>
+			<artifactId>dept44-models</artifactId>
 		</dependency>
 		<!-- Test -->
 		<dependency>
