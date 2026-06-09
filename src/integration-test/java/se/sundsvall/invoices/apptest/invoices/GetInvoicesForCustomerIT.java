@@ -39,6 +39,7 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 				"&periodFrom=2025-01-01" +
 				"&periodTo=2025-12-31" +
 				"&sortBy=periodFrom" +
+				"&sortDirection=DESC" +
 				"&page=1" +
 				"&limit=100")
 			.withHttpMethod(GET)

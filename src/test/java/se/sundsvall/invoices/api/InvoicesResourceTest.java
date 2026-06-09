@@ -24,6 +24,7 @@ import org.springframework.util.MultiValueMap;
 import se.sundsvall.invoices.Application;
 import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
 import se.sundsvall.invoices.api.model.CustomerInvoicesResponse;
+import se.sundsvall.invoices.api.model.Direction;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceDetailsResponse;
 import se.sundsvall.invoices.api.model.InvoiceOrigin;
@@ -292,12 +293,13 @@ class InvoicesResourceTest {
 		final var periodFrom = LocalDate.of(2025, Month.JANUARY, 1);
 		final var periodTo = LocalDate.of(2025, Month.DECEMBER, 31);
 		final var sortBy = "periodFrom";
+		final var sortDirection = Direction.DESC;
 
 		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.queryParams(createCustomerParameterMap(PAGE, LIMIT, customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy))
+				.queryParams(createCustomerParameterMap(PAGE, LIMIT, customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection))
 				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isOk()
@@ -315,6 +317,7 @@ class InvoicesResourceTest {
 		assertThat(parameters.getPeriodFrom()).isEqualTo(periodFrom);
 		assertThat(parameters.getPeriodTo()).isEqualTo(periodTo);
 		assertThat(parameters.getSortBy()).isEqualTo(sortBy);
+		assertThat(parameters.getSortDirection()).isEqualTo(sortDirection);
 		assertThat(parameters.getPage()).isEqualTo(PAGE);
 		assertThat(parameters.getLimit()).isEqualTo(LIMIT);
 		assertThat(response).isNotNull().isEqualTo(CustomerInvoicesResponse.create());
@@ -328,7 +331,7 @@ class InvoicesResourceTest {
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.queryParams(createCustomerParameterMap(null, null, customerNumbers, null, null, null, null, null, null))
+				.queryParams(createCustomerParameterMap(null, null, customerNumbers, null, null, null, null, null, null, null))
 				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isOk()
@@ -348,7 +351,7 @@ class InvoicesResourceTest {
 
 	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> customerNumbers,
 		final List<String> organizationNumbers, final List<String> facilityIds, final InvoiceStatus status,
-		final LocalDate periodFrom, final LocalDate periodTo, final String sortBy) {
+		final LocalDate periodFrom, final LocalDate periodTo, final String sortBy, final Direction sortDirection) {
 
 		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		ofNullable(page).ifPresent(p -> parameters.add("page", valueOf(p)));
@@ -360,6 +363,7 @@ class InvoicesResourceTest {
 		ofNullable(periodFrom).ifPresent(p -> parameters.add("periodFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(periodTo).ifPresent(p -> parameters.add("periodTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(sortBy).ifPresent(p -> parameters.add("sortBy", p));
+		ofNullable(sortDirection).ifPresent(p -> parameters.add("sortDirection", p.toString()));
 		return parameters;
 	}
 

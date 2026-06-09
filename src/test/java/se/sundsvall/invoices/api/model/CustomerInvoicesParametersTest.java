@@ -42,6 +42,7 @@ class CustomerInvoicesParametersTest {
 		final var periodFrom = LocalDate.parse("2024-01-01").minusMonths(6);
 		final var periodTo = LocalDate.parse("2024-01-01");
 		final var sortBy = "periodFrom";
+		final var sortDirection = Direction.DESC;
 		final var page = 3;
 		final var limit = 50;
 
@@ -53,6 +54,7 @@ class CustomerInvoicesParametersTest {
 			.withPeriodFrom(periodFrom)
 			.withPeriodTo(periodTo)
 			.withSortBy(sortBy)
+			.withSortDirection(sortDirection)
 			.withPage(page)
 			.withLimit(limit);
 
@@ -64,6 +66,7 @@ class CustomerInvoicesParametersTest {
 		assertThat(parameters.getPeriodFrom()).isEqualTo(periodFrom);
 		assertThat(parameters.getPeriodTo()).isEqualTo(periodTo);
 		assertThat(parameters.getSortBy()).isEqualTo(sortBy);
+		assertThat(parameters.getSortDirection()).isEqualTo(sortDirection);
 		assertThat(parameters.getPage()).isEqualTo(page);
 		assertThat(parameters.getLimit()).isEqualTo(limit);
 	}

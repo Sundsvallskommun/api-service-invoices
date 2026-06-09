@@ -35,6 +35,9 @@
 			"sortBy": {
 				"equalTo": "periodFrom"
 			},
+			"sortDirection": {
+				"equalTo": "DESC"
+			},
 			"page": {
 				"equalTo": "1"
 			},

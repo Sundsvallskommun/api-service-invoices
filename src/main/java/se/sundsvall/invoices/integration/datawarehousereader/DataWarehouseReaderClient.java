@@ -2,6 +2,7 @@ package se.sundsvall.invoices.integration.datawarehousereader;
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import generated.se.sundsvall.datawarehousereader.CustomerInvoiceResponse;
+import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceDetail;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -78,6 +79,7 @@ public interface DataWarehouseReaderClient {
 	 * @param  periodFrom      optional earliest invoice period start.
 	 * @param  periodTo        optional latest invoice period end.
 	 * @param  sortBy          optional column to sort by.
+	 * @param  sortDirection   optional sort order direction (ASC or DESC, defaults to ASC upstream when omitted).
 	 * @param  page            optional page number.
 	 * @param  limit           optional result size per page.
 	 * @return                 a customerInvoiceResponse
@@ -94,6 +96,7 @@ public interface DataWarehouseReaderClient {
 		@RequestParam(value = "periodFrom", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate periodFrom,
 		@RequestParam(value = "periodTo", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate periodTo,
 		@RequestParam(value = "sortBy", required = false) String sortBy,
+		@RequestParam(value = "sortDirection", required = false) Direction sortDirection,
 		@RequestParam(value = "page", required = false) Integer page,
 		@RequestParam(value = "limit", required = false) Integer limit);
 }

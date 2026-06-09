@@ -29,6 +29,7 @@ import static java.util.stream.Collectors.toList;
 import static org.springframework.http.HttpStatus.NOT_FOUND;
 import static se.sundsvall.invoices.service.Constants.ERROR_NO_ENGAGEMENT_FOUND;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toCustomerInvoicesResponse;
+import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderDirection;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceStatus;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toDataWarehouseReaderInvoiceType;
 import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toInvoiceCacheInvoiceType;
@@ -107,6 +108,7 @@ public class InvoicesService {
 			parameters.getPeriodFrom(),
 			parameters.getPeriodTo(),
 			parameters.getSortBy(),
+			toDataWarehouseReaderDirection(parameters.getSortDirection()),
 			parameters.getPage(),
 			parameters.getLimit()));
 	}

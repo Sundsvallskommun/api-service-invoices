@@ -24,6 +24,7 @@ import org.springframework.http.ResponseEntity;
 import se.sundsvall.invoices.api.model.Address;
 import se.sundsvall.invoices.api.model.CustomerInvoice;
 import se.sundsvall.invoices.api.model.CustomerType;
+import se.sundsvall.invoices.api.model.Direction;
 import se.sundsvall.invoices.api.model.Invoice;
 import se.sundsvall.invoices.api.model.InvoiceDetail;
 import se.sundsvall.invoices.api.model.InvoiceStatus;
@@ -643,6 +644,19 @@ class InvoiceMapperTest {
 	@MethodSource("toCustomerTypeArguments")
 	void toCustomerType(final generated.se.sundsvall.datawarehousereader.CustomerType source, final CustomerType target) {
 		assertThat(InvoiceMapper.toCustomerType(source)).isEqualTo(target);
+	}
+
+	private static Stream<Arguments> toDataWarehouseReaderDirectionArguments() {
+		return Stream.of(
+			Arguments.of(Direction.ASC, generated.se.sundsvall.datawarehousereader.Direction.ASC),
+			Arguments.of(Direction.DESC, generated.se.sundsvall.datawarehousereader.Direction.DESC),
+			Arguments.of(null, null));
+	}
+
+	@ParameterizedTest
+	@MethodSource("toDataWarehouseReaderDirectionArguments")
+	void toDataWarehouseReaderDirection(final Direction source, final generated.se.sundsvall.datawarehousereader.Direction target) {
+		assertThat(InvoiceMapper.toDataWarehouseReaderDirection(source)).isEqualTo(target);
 	}
 
 	@Test

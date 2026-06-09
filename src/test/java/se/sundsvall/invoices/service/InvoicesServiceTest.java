@@ -281,6 +281,8 @@ class InvoicesServiceTest {
 		final var periodFrom = java.time.LocalDate.of(2025, Month.JANUARY, 1);
 		final var periodTo = java.time.LocalDate.of(2025, Month.DECEMBER, 31);
 		final var sortBy = "periodFrom";
+		final var sortDirection = se.sundsvall.invoices.api.model.Direction.DESC;
+		final var dataWarehouseReaderDirection = Direction.DESC;
 		final var page = 1;
 		final var limit = 100;
 
@@ -292,6 +294,7 @@ class InvoicesServiceTest {
 			.withPeriodFrom(periodFrom)
 			.withPeriodTo(periodTo)
 			.withSortBy(sortBy)
+			.withSortDirection(sortDirection)
 			.withPage(page)
 			.withLimit(limit);
 
@@ -299,7 +302,8 @@ class InvoicesServiceTest {
 			.invoices(List.of(new CustomerInvoice().customerNumber(customerNumber).invoiceType("Faktura").invoiceStatus("Betalad")))
 			.meta(createPagingAndSortingMetaData());
 
-		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumbers, organizationNumbers, facilityIds, dataWarehouseReaderStatus, periodFrom, periodTo, sortBy, page, limit)).thenReturn(upstreamResponse);
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumbers, organizationNumbers, facilityIds, dataWarehouseReaderStatus, periodFrom, periodTo, sortBy, dataWarehouseReaderDirection, page, limit)).thenReturn(
+			upstreamResponse);
 
 		final var response = invoicesService.getInvoicesForCustomer(municipalityId, parameters);
 
@@ -307,7 +311,7 @@ class InvoicesServiceTest {
 		assertThat(response.getInvoices()).hasSize(1);
 		assertThat(response.getInvoices().getFirst().getCustomerNumber()).isEqualTo(customerNumber);
 		assertThat(response.getInvoices().getFirst().getInvoiceType()).isEqualTo(INVOICE);
-		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumbers, organizationNumbers, facilityIds, dataWarehouseReaderStatus, periodFrom, periodTo, sortBy, page, limit);
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumbers, organizationNumbers, facilityIds, dataWarehouseReaderStatus, periodFrom, periodTo, sortBy, dataWarehouseReaderDirection, page, limit);
 		verifyNoInteractions(invoiceCacheClientMock);
 	}
 
@@ -317,14 +321,14 @@ class InvoicesServiceTest {
 		final var customerNumbers = List.of("216870");
 		final var parameters = CustomerInvoicesParameters.create().withCustomerNumbers(customerNumbers);
 
-		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumbers, null, null, null, null, null, null, 1, 100))
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, customerNumbers, null, null, null, null, null, null, null, 1, 100))
 			.thenReturn(new CustomerInvoiceResponse().invoices(emptyList()).meta(createPagingAndSortingMetaData()));
 
 		final var response = invoicesService.getInvoicesForCustomer(municipalityId, parameters);
 
 		assertThat(response).isNotNull();
 		assertThat(response.getInvoices()).isEmpty();
-		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumbers, null, null, null, null, null, null, 1, 100);
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, customerNumbers, null, null, null, null, null, null, null, 1, 100);
 		verifyNoInteractions(invoiceCacheClientMock);
 	}
 

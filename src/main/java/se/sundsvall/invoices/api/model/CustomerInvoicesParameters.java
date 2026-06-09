@@ -43,6 +43,9 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 	})
 	private String sortBy;
 
+	@Schema(description = "Sort direction. Defaults to ASC when omitted.", examples = "ASC")
+	private Direction sortDirection;
+
 	public static CustomerInvoicesParameters create() {
 		return new CustomerInvoicesParameters();
 	}
@@ -138,6 +141,19 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		return this;
 	}
 
+	public Direction getSortDirection() {
+		return sortDirection;
+	}
+
+	public void setSortDirection(final Direction sortDirection) {
+		this.sortDirection = sortDirection;
+	}
+
+	public CustomerInvoicesParameters withSortDirection(final Direction sortDirection) {
+		this.sortDirection = sortDirection;
+		return this;
+	}
+
 	public CustomerInvoicesParameters withLimit(final int limit) {
 		this.limit = limit;
 		return this;
@@ -156,12 +172,12 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 			return false;
 		final CustomerInvoicesParameters that = (CustomerInvoicesParameters) o;
 		return Objects.equals(customerNumbers, that.customerNumbers) && Objects.equals(organizationNumbers, that.organizationNumbers) && Objects.equals(facilityIds, that.facilityIds) && Objects.equals(status, that.status)
-			&& Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo) && Objects.equals(sortBy, that.sortBy);
+			&& Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo) && Objects.equals(sortBy, that.sortBy) && sortDirection == that.sortDirection;
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy);
+		return Objects.hash(super.hashCode(), customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection);
 	}
 
 	@Override
@@ -174,6 +190,7 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 			", periodFrom=" + periodFrom +
 			", periodTo=" + periodTo +
 			", sortBy='" + sortBy + '\'' +
+			", sortDirection=" + sortDirection +
 			", page=" + page +
 			", limit=" + limit +
 			'}';
