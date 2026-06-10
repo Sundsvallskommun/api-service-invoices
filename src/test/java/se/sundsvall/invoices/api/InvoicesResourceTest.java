@@ -359,7 +359,7 @@ class InvoicesResourceTest {
 		ofNullable(customerNumbers).ifPresent(p -> parameters.addAll("customerNumbers", p));
 		ofNullable(organizationNumbers).ifPresent(p -> parameters.addAll("organizationNumbers", p));
 		ofNullable(facilityIds).ifPresent(p -> parameters.addAll("facilityIds", p));
-		ofNullable(status).ifPresent(p -> parameters.add("status", p.toString()));
+		ofNullable(status).ifPresent(p -> parameters.add("status", p));
 		ofNullable(periodFrom).ifPresent(p -> parameters.add("periodFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(periodTo).ifPresent(p -> parameters.add("periodTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(sortBy).ifPresent(p -> parameters.addAll("sortBy", p));
@@ -381,8 +381,8 @@ class InvoicesResourceTest {
 		ofNullable(invoiceDateFrom).ifPresent(p -> parameters.add("invoiceDateFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(invoiceDateTo).ifPresent(p -> parameters.add("invoiceDateTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(invoiceName).ifPresent(p -> parameters.add("invoiceName", p));
-		ofNullable(invoiceType).ifPresent(p -> parameters.add("invoiceType", p.toString()));
-		ofNullable(invoiceStatus).ifPresent(p -> parameters.add("invoiceStatus", p.toString()));
+		ofNullable(invoiceType).ifPresent(p -> parameters.add("invoiceType", p));
+		ofNullable(invoiceStatus).ifPresent(p -> parameters.add("invoiceStatus", p));
 		ofNullable(ocrNumber).ifPresent(p -> parameters.add("ocrNumber", p));
 		ofNullable(dueDateFrom).ifPresent(p -> parameters.add("dueDateFrom", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
 		ofNullable(dueDateTo).ifPresent(p -> parameters.add("dueDateTo", p.format(DateTimeFormatter.ISO_LOCAL_DATE)));
