@@ -38,16 +38,16 @@ class CustomerInvoiceTest {
 	@Test
 	void testBuilderMethods() {
 		final var customerNumber = "123456";
-		final var customerType = CustomerType.ENTERPRISE;
+		final var customerType = CustomerType.ENTERPRISE.name();
 		final var facilityIds = List.of("facilityId1", "facilityId2");
 		final var invoiceNumber = "999";
 		final var invoiceId = 1062916396L;
 		final var jointInvoiceId = 123L;
 		final var invoiceDate = LocalDate.parse("2024-01-01").minusDays(10);
 		final var invoiceName = "invoiceName";
-		final var invoiceType = InvoiceType.INVOICE;
+		final var invoiceType = InvoiceType.INVOICE.name();
 		final var invoiceDescription = "El";
-		final var invoiceStatus = InvoiceStatus.PAID;
+		final var invoiceStatus = InvoiceStatus.PAID.name();
 		final var ocrNumber = "295334999";
 		final var dueDate = LocalDate.parse("2024-01-01").plusDays(20);
 		final var periodFrom = LocalDate.parse("2024-01-01").minusMonths(2);

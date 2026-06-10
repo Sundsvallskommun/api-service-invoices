@@ -11,6 +11,7 @@ import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import se.sundsvall.dept44.common.validators.annotation.MemberOf;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 import se.sundsvall.dept44.models.api.paging.AbstractParameterPagingAndSortingBase;
 
@@ -28,8 +29,11 @@ public class CustomerInvoicesParameters extends AbstractParameterPagingAndSortin
 	@ArraySchema(schema = @Schema(description = "Facility ids to filter by, if not provided all will be returned.", examples = "123456789012345670"))
 	private List<String> facilityIds;
 
-	@Schema(description = "Invoice status filter", examples = "PAID")
-	private InvoiceStatus status;
+	@MemberOf(value = InvoiceStatus.class, nullable = true)
+	@Schema(description = "Invoice status filter", examples = "PAID", allowableValues = {
+		"PAID", "SENT", "PARTIALLY_PAID", "DEBT_COLLECTION", "PAID_TOO_MUCH", "REMINDER", "VOID", "CREDITED", "WRITTEN_OFF", "UNKNOWN"
+	})
+	private String status;
 
 	@DateTimeFormat(iso = ISO.DATE)
 	@Schema(description = "Earliest invoice period start. Format is YYYY-MM-DD.", examples = "2025-01-01")
@@ -82,15 +86,15 @@ public class CustomerInvoicesParameters extends AbstractParameterPagingAndSortin
 		return this;
 	}
 
-	public InvoiceStatus getStatus() {
+	public String getStatus() {
 		return status;
 	}
 
-	public void setStatus(final InvoiceStatus status) {
+	public void setStatus(final String status) {
 		this.status = status;
 	}
 
-	public CustomerInvoicesParameters withStatus(final InvoiceStatus status) {
+	public CustomerInvoicesParameters withStatus(final String status) {
 		this.status = status;
 		return this;
 	}

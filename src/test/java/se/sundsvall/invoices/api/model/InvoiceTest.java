@@ -51,15 +51,15 @@ class InvoiceTest {
 		final var fromDate = LocalDate.parse("2024-01-01").minusDays(10);
 		final var toDate = LocalDate.parse("2024-01-01").plusDays(10);
 		final var invoiceNumber = "invoiceNumber";
-		final var invoiceStatus = InvoiceStatus.PAID;
+		final var invoiceStatus = InvoiceStatus.PAID.name();
 		final var ocrNumber = "ocrNumber";
 		final var invoiceName = "invoiceName";
-		final var invoiceType = InvoiceType.INVOICE;
+		final var invoiceType = InvoiceType.INVOICE.name();
 		final var invoiceDescriptions = Set.of("invoiceDescription");
 		final var invoiceAddress = Address.create();
 		final var facilityIds = Set.of("facilityId");
 		final var organizationNumber = "organizationNumber";
-		final var invoiceOrigin = InvoiceOrigin.PUBLIC_ADMINISTRATION;
+		final var invoiceOrigin = InvoiceOrigin.PUBLIC_ADMINISTRATION.name();
 
 		final var invoice = Invoice.create()
 			.withDueDate(dueDate)

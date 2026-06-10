@@ -1,8 +1,6 @@
 package se.sundsvall.invoices.api.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
-@Schema(description = "Invoice origin (invoices originates from either commercial or public activities)", enumAsRef = true, example = "COMMERCIAL")
+// Internal backing enum for the API's invoiceOrigin String path variable; validated against via @MemberOf and used to route commercial vs public-administration requests.
 public enum InvoiceOrigin {
 	COMMERCIAL,
 	PUBLIC_ADMINISTRATION

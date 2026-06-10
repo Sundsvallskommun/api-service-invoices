@@ -87,7 +87,7 @@ public final class InvoiceMapper {
 			.withFacilityIds(dataWarehouseReaderInvoice.getFacilityIds())
 			.withPdfAvailable(dataWarehouseReaderInvoice.getPdfAvailable())
 			.withInvoiceAddress(toAddress(dataWarehouseReaderInvoice))
-			.withInvoiceOrigin(COMMERCIAL);
+			.withInvoiceOrigin(COMMERCIAL.name());
 	}
 
 	private static InvoiceDetail toInvoiceDetail(final generated.se.sundsvall.datawarehousereader.InvoiceDetail dataWarehouseReaderInvoiceDetail) {
@@ -124,7 +124,7 @@ public final class InvoiceMapper {
 			.withPostcode(dataWarehouseReaderInvoice.getPostCode());
 	}
 
-	static InvoiceStatus toInvoiceStatus(final String dataWarehouseReaderInvoiceStatus) {
+	static String toInvoiceStatus(final String dataWarehouseReaderInvoiceStatus) {
 		return Optional.ofNullable(dataWarehouseReaderInvoiceStatus)
 			.map(invoiceStatus -> switch (invoiceStatus)
 			{
@@ -138,10 +138,11 @@ public final class InvoiceMapper {
 				case "Överbetald" -> InvoiceStatus.PAID_TOO_MUCH;
 				default -> InvoiceStatus.UNKNOWN;
 			})
+			.map(InvoiceStatus::name)
 			.orElse(null);
 	}
 
-	static InvoiceType toInvoiceType(final String dataWarehouseReaderInvoiceType) {
+	static String toInvoiceType(final String dataWarehouseReaderInvoiceType) {
 		return Optional.ofNullable(dataWarehouseReaderInvoiceType)
 			.map(invoiceType -> switch (invoiceType)
 			{
@@ -154,11 +155,13 @@ public final class InvoiceMapper {
 				case "Samlingsfaktura" -> InvoiceType.CONSOLIDATED_INVOICE;
 				default -> InvoiceType.UNKNOWN;
 			})
+			.map(InvoiceType::name)
 			.orElse(null);
 	}
 
-	public static String toDataWarehouseReaderInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public static String toDataWarehouseReaderInvoiceStatus(final String invoiceStatus) {
 		return ofNullable(invoiceStatus)
+			.map(InvoiceStatus::valueOf)
 			.map(status -> switch (status)
 			{
 				case PAID -> "Betalad";
@@ -175,8 +178,9 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	public static String toDataWarehouseReaderInvoiceType(final InvoiceType invoiceType) {
+	public static String toDataWarehouseReaderInvoiceType(final String invoiceType) {
 		return ofNullable(invoiceType)
+			.map(InvoiceType::valueOf)
 			.map(type -> switch (type)
 			{
 				case INVOICE -> "Faktura";
@@ -239,13 +243,14 @@ public final class InvoiceMapper {
 			.withDetails(toInvoiceDetails(customerInvoice.getDetails()));
 	}
 
-	static CustomerType toCustomerType(final generated.se.sundsvall.datawarehousereader.CustomerType customerType) {
+	static String toCustomerType(final generated.se.sundsvall.datawarehousereader.CustomerType customerType) {
 		return ofNullable(customerType)
 			.map(type -> switch (type)
 			{
 				case ENTERPRISE -> CustomerType.ENTERPRISE;
 				case PRIVATE -> CustomerType.PRIVATE;
 			})
+			.map(CustomerType::name)
 			.orElse(null);
 	}
 
@@ -264,8 +269,9 @@ public final class InvoiceMapper {
 	 * INVOICECACHE (i.e. public administration) MAPPING
 	 ***************************************************************/
 
-	public static InvoiceTypeEnum toInvoiceCacheInvoiceType(final InvoiceType invoiceType) {
+	public static InvoiceTypeEnum toInvoiceCacheInvoiceType(final String invoiceType) {
 		return Optional.ofNullable(invoiceType)
+			.map(InvoiceType::valueOf)
 			.map(type -> switch (type)
 			{
 				case INVOICE -> InvoiceTypeEnum.INVOICE;
@@ -319,7 +325,7 @@ public final class InvoiceMapper {
 			.withInvoiceStatus(toInvoiceStatus(invoiceCacheInvoice.getInvoiceStatus()))
 			.withInvoiceType(toInvoiceType(invoiceCacheInvoice.getInvoiceType()))
 			.withInvoiceAddress(toAddress(invoiceCacheInvoice))
-			.withInvoiceOrigin(PUBLIC_ADMINISTRATION);
+			.withInvoiceOrigin(PUBLIC_ADMINISTRATION.name());
 	}
 
 	private static Address toAddress(final generated.se.sundsvall.invoicecache.Invoice invoiceCacheInvoice) {
@@ -332,7 +338,7 @@ public final class InvoiceMapper {
 			.orElse(null);
 	}
 
-	static InvoiceStatus toInvoiceStatus(final InvoiceStatusEnum invoiceStatusEnum) {
+	static String toInvoiceStatus(final InvoiceStatusEnum invoiceStatusEnum) {
 		return Optional.ofNullable(invoiceStatusEnum)
 			.map(invoiceStatus -> switch (invoiceStatus)
 			{
@@ -345,10 +351,11 @@ public final class InvoiceMapper {
 				case VOID -> InvoiceStatus.VOID;
 				case UNKNOWN -> InvoiceStatus.UNKNOWN;
 			})
+			.map(InvoiceStatus::name)
 			.orElse(null);
 	}
 
-	static InvoiceType toInvoiceType(final InvoiceTypeEnum invoiceTypeEnum) {
+	static String toInvoiceType(final InvoiceTypeEnum invoiceTypeEnum) {
 		return Optional.ofNullable(invoiceTypeEnum)
 			.map(invoiceType -> switch (invoiceType)
 			{
@@ -360,6 +367,7 @@ public final class InvoiceMapper {
 				case REMINDER -> InvoiceType.REMINDER;
 				case CONSOLIDATED_INVOICE -> InvoiceType.CONSOLIDATED_INVOICE;
 			})
+			.map(InvoiceType::name)
 			.orElse(null);
 	}
 

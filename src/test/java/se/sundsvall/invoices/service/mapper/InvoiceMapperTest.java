@@ -107,8 +107,8 @@ class InvoiceMapperTest {
 	private static final String INVOICE_DESCRIPTION = "invoiceDescription";
 	private static final String INVOICE_NAME = "invoiceName";
 	private static final String INVOICE_NUMBER = "4321";
-	private static final InvoiceStatus INVOICE_STATUS = InvoiceStatus.PAID;
-	private static final InvoiceType INVOICE_TYPE = InvoiceType.INVOICE;
+	private static final String INVOICE_STATUS = InvoiceStatus.PAID.name();
+	private static final String INVOICE_TYPE = InvoiceType.INVOICE.name();
 	private static final String OCR_NUMBER = "1234";
 	private static final boolean REVERSED_VAT = false;
 	private static final BigDecimal ROUNDING = DATAWAREHOUSEREADER_ROUNDING;
@@ -135,99 +135,99 @@ class InvoiceMapperTest {
 
 	private static Stream<Arguments> toInvoiceCacheInvoiceTypeArguments() {
 		return Stream.of(
-			Arguments.of(InvoiceType.CONSOLIDATED_INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.CONSOLIDATED_INVOICE),
-			Arguments.of(InvoiceType.CREDIT_INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.CREDIT_INVOICE),
-			Arguments.of(InvoiceType.DIRECT_DEBIT, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.DIRECT_DEBIT),
-			Arguments.of(InvoiceType.FINAL_INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.FINAL_INVOICE),
-			Arguments.of(InvoiceType.INTERNAL_INVOICE, null),
-			Arguments.of(InvoiceType.INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.INVOICE),
-			Arguments.of(InvoiceType.OFFSET_INVOICE, null),
-			Arguments.of(InvoiceType.REMINDER, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.REMINDER),
-			Arguments.of(InvoiceType.SELF_INVOICE, generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.SELF_INVOICE),
-			Arguments.of(InvoiceType.START_INVOICE, null),
-			Arguments.of(InvoiceType.UNKNOWN, null),
+			Arguments.of(InvoiceType.CONSOLIDATED_INVOICE.name(), generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.CONSOLIDATED_INVOICE),
+			Arguments.of(InvoiceType.CREDIT_INVOICE.name(), generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.CREDIT_INVOICE),
+			Arguments.of(InvoiceType.DIRECT_DEBIT.name(), generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.DIRECT_DEBIT),
+			Arguments.of(InvoiceType.FINAL_INVOICE.name(), generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.FINAL_INVOICE),
+			Arguments.of(InvoiceType.INTERNAL_INVOICE.name(), null),
+			Arguments.of(InvoiceType.INVOICE.name(), generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.INVOICE),
+			Arguments.of(InvoiceType.OFFSET_INVOICE.name(), null),
+			Arguments.of(InvoiceType.REMINDER.name(), generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.REMINDER),
+			Arguments.of(InvoiceType.SELF_INVOICE.name(), generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum.SELF_INVOICE),
+			Arguments.of(InvoiceType.START_INVOICE.name(), null),
+			Arguments.of(InvoiceType.UNKNOWN.name(), null),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toInvoiceTypeArguments() {
 		return Stream.of(
-			Arguments.of("Kreditfaktura", InvoiceType.CREDIT_INVOICE),
-			Arguments.of("Faktura", InvoiceType.INVOICE),
-			Arguments.of("Startfaktura", InvoiceType.START_INVOICE),
-			Arguments.of("Slutfaktura", InvoiceType.FINAL_INVOICE),
-			Arguments.of("Kvittning", InvoiceType.OFFSET_INVOICE),
-			Arguments.of("Internfaktura", InvoiceType.INTERNAL_INVOICE),
-			Arguments.of("Samlingsfaktura", InvoiceType.CONSOLIDATED_INVOICE),
-			Arguments.of("Samlingsfaktura-unknown", InvoiceType.UNKNOWN),
+			Arguments.of("Kreditfaktura", InvoiceType.CREDIT_INVOICE.name()),
+			Arguments.of("Faktura", InvoiceType.INVOICE.name()),
+			Arguments.of("Startfaktura", InvoiceType.START_INVOICE.name()),
+			Arguments.of("Slutfaktura", InvoiceType.FINAL_INVOICE.name()),
+			Arguments.of("Kvittning", InvoiceType.OFFSET_INVOICE.name()),
+			Arguments.of("Internfaktura", InvoiceType.INTERNAL_INVOICE.name()),
+			Arguments.of("Samlingsfaktura", InvoiceType.CONSOLIDATED_INVOICE.name()),
+			Arguments.of("Samlingsfaktura-unknown", InvoiceType.UNKNOWN.name()),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toDataWarehouseReaderInvoiceTypeArguments() {
 		return Stream.of(
-			Arguments.of(InvoiceType.CREDIT_INVOICE, "Kreditfaktura"),
-			Arguments.of(InvoiceType.INVOICE, "Faktura"),
-			Arguments.of(InvoiceType.START_INVOICE, "Startfaktura"),
-			Arguments.of(InvoiceType.FINAL_INVOICE, "Slutfaktura"),
-			Arguments.of(InvoiceType.OFFSET_INVOICE, "Kvittning"),
-			Arguments.of(InvoiceType.INTERNAL_INVOICE, "Internfaktura"),
-			Arguments.of(InvoiceType.CONSOLIDATED_INVOICE, "Samlingsfaktura"),
-			Arguments.of(InvoiceType.UNKNOWN, null),
+			Arguments.of(InvoiceType.CREDIT_INVOICE.name(), "Kreditfaktura"),
+			Arguments.of(InvoiceType.INVOICE.name(), "Faktura"),
+			Arguments.of(InvoiceType.START_INVOICE.name(), "Startfaktura"),
+			Arguments.of(InvoiceType.FINAL_INVOICE.name(), "Slutfaktura"),
+			Arguments.of(InvoiceType.OFFSET_INVOICE.name(), "Kvittning"),
+			Arguments.of(InvoiceType.INTERNAL_INVOICE.name(), "Internfaktura"),
+			Arguments.of(InvoiceType.CONSOLIDATED_INVOICE.name(), "Samlingsfaktura"),
+			Arguments.of(InvoiceType.UNKNOWN.name(), null),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toDataWarehouseReaderInvoiceStatusArguments() {
 		return Stream.of(
-			Arguments.of(InvoiceStatus.PAID, "Betalad"),
-			Arguments.of(InvoiceStatus.CREDITED, "Krediterad"),
-			Arguments.of(InvoiceStatus.DEBT_COLLECTION, "Inkasso"),
-			Arguments.of(InvoiceStatus.REMINDER, "Påminnelse"),
-			Arguments.of(InvoiceStatus.WRITTEN_OFF, "Avskriven"),
-			Arguments.of(InvoiceStatus.SENT, "Skickad"),
-			Arguments.of(InvoiceStatus.VOID, "Makulerad"),
-			Arguments.of(InvoiceStatus.PAID_TOO_MUCH, "Överbetald"),
-			Arguments.of(InvoiceStatus.UNKNOWN, "Okänd"),
-			Arguments.of(InvoiceStatus.PARTIALLY_PAID, null),
+			Arguments.of(InvoiceStatus.PAID.name(), "Betalad"),
+			Arguments.of(InvoiceStatus.CREDITED.name(), "Krediterad"),
+			Arguments.of(InvoiceStatus.DEBT_COLLECTION.name(), "Inkasso"),
+			Arguments.of(InvoiceStatus.REMINDER.name(), "Påminnelse"),
+			Arguments.of(InvoiceStatus.WRITTEN_OFF.name(), "Avskriven"),
+			Arguments.of(InvoiceStatus.SENT.name(), "Skickad"),
+			Arguments.of(InvoiceStatus.VOID.name(), "Makulerad"),
+			Arguments.of(InvoiceStatus.PAID_TOO_MUCH.name(), "Överbetald"),
+			Arguments.of(InvoiceStatus.UNKNOWN.name(), "Okänd"),
+			Arguments.of(InvoiceStatus.PARTIALLY_PAID.name(), null),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toInvoiceStatusFromDataWarehouseReaderStatusArguments() {
 		return Stream.of(
-			Arguments.of("Betalad", InvoiceStatus.PAID),
-			Arguments.of("Krediterad", InvoiceStatus.CREDITED),
-			Arguments.of("Inkasso", InvoiceStatus.DEBT_COLLECTION),
-			Arguments.of("Påminnelse", InvoiceStatus.REMINDER),
-			Arguments.of("Avskriven", InvoiceStatus.WRITTEN_OFF),
-			Arguments.of("Skickad", InvoiceStatus.SENT),
-			Arguments.of("Makulerad", InvoiceStatus.VOID),
-			Arguments.of("Överbetald", InvoiceStatus.PAID_TOO_MUCH),
-			Arguments.of("Okänd", InvoiceStatus.UNKNOWN),
-			Arguments.of("something-unknown", InvoiceStatus.UNKNOWN),
+			Arguments.of("Betalad", InvoiceStatus.PAID.name()),
+			Arguments.of("Krediterad", InvoiceStatus.CREDITED.name()),
+			Arguments.of("Inkasso", InvoiceStatus.DEBT_COLLECTION.name()),
+			Arguments.of("Påminnelse", InvoiceStatus.REMINDER.name()),
+			Arguments.of("Avskriven", InvoiceStatus.WRITTEN_OFF.name()),
+			Arguments.of("Skickad", InvoiceStatus.SENT.name()),
+			Arguments.of("Makulerad", InvoiceStatus.VOID.name()),
+			Arguments.of("Överbetald", InvoiceStatus.PAID_TOO_MUCH.name()),
+			Arguments.of("Okänd", InvoiceStatus.UNKNOWN.name()),
+			Arguments.of("something-unknown", InvoiceStatus.UNKNOWN.name()),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toInvoiceStatusFromInvoiceCacheStatusArguments() {
 		return Stream.of(
-			Arguments.of(InvoiceStatusEnum.DEBT_COLLECTION, InvoiceStatus.DEBT_COLLECTION),
-			Arguments.of(InvoiceStatusEnum.PAID, InvoiceStatus.PAID),
-			Arguments.of(InvoiceStatusEnum.PAID_TOO_MUCH, InvoiceStatus.PAID_TOO_MUCH),
-			Arguments.of(InvoiceStatusEnum.PARTIALLY_PAID, InvoiceStatus.PARTIALLY_PAID),
-			Arguments.of(InvoiceStatusEnum.REMINDER, InvoiceStatus.REMINDER),
-			Arguments.of(InvoiceStatusEnum.SENT, InvoiceStatus.SENT),
-			Arguments.of(InvoiceStatusEnum.UNKNOWN, InvoiceStatus.UNKNOWN),
-			Arguments.of(InvoiceStatusEnum.UNPAID, InvoiceStatus.SENT),
-			Arguments.of(InvoiceStatusEnum.VOID, InvoiceStatus.VOID),
+			Arguments.of(InvoiceStatusEnum.DEBT_COLLECTION, InvoiceStatus.DEBT_COLLECTION.name()),
+			Arguments.of(InvoiceStatusEnum.PAID, InvoiceStatus.PAID.name()),
+			Arguments.of(InvoiceStatusEnum.PAID_TOO_MUCH, InvoiceStatus.PAID_TOO_MUCH.name()),
+			Arguments.of(InvoiceStatusEnum.PARTIALLY_PAID, InvoiceStatus.PARTIALLY_PAID.name()),
+			Arguments.of(InvoiceStatusEnum.REMINDER, InvoiceStatus.REMINDER.name()),
+			Arguments.of(InvoiceStatusEnum.SENT, InvoiceStatus.SENT.name()),
+			Arguments.of(InvoiceStatusEnum.UNKNOWN, InvoiceStatus.UNKNOWN.name()),
+			Arguments.of(InvoiceStatusEnum.UNPAID, InvoiceStatus.SENT.name()),
+			Arguments.of(InvoiceStatusEnum.VOID, InvoiceStatus.VOID.name()),
 			Arguments.of(null, null));
 	}
 
 	private static Stream<Arguments> toInvoiceTypeFromInvoiceCacheStatusArguments() {
 		return Stream.of(
-			Arguments.of(InvoiceTypeEnum.CONSOLIDATED_INVOICE, InvoiceType.CONSOLIDATED_INVOICE),
-			Arguments.of(InvoiceTypeEnum.CREDIT_INVOICE, InvoiceType.CREDIT_INVOICE),
-			Arguments.of(InvoiceTypeEnum.DIRECT_DEBIT, InvoiceType.DIRECT_DEBIT),
-			Arguments.of(InvoiceTypeEnum.FINAL_INVOICE, InvoiceType.FINAL_INVOICE),
-			Arguments.of(InvoiceTypeEnum.INVOICE, InvoiceType.INVOICE),
-			Arguments.of(InvoiceTypeEnum.REMINDER, InvoiceType.REMINDER),
-			Arguments.of(InvoiceTypeEnum.SELF_INVOICE, InvoiceType.SELF_INVOICE),
+			Arguments.of(InvoiceTypeEnum.CONSOLIDATED_INVOICE, InvoiceType.CONSOLIDATED_INVOICE.name()),
+			Arguments.of(InvoiceTypeEnum.CREDIT_INVOICE, InvoiceType.CREDIT_INVOICE.name()),
+			Arguments.of(InvoiceTypeEnum.DIRECT_DEBIT, InvoiceType.DIRECT_DEBIT.name()),
+			Arguments.of(InvoiceTypeEnum.FINAL_INVOICE, InvoiceType.FINAL_INVOICE.name()),
+			Arguments.of(InvoiceTypeEnum.INVOICE, InvoiceType.INVOICE.name()),
+			Arguments.of(InvoiceTypeEnum.REMINDER, InvoiceType.REMINDER.name()),
+			Arguments.of(InvoiceTypeEnum.SELF_INVOICE, InvoiceType.SELF_INVOICE.name()),
 			Arguments.of(null, null));
 	}
 
@@ -472,7 +472,7 @@ class InvoiceMapperTest {
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceCacheInvoiceTypeArguments")
-	void toInvoiceCacheInvoiceType(final InvoiceType source, final generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum target) {
+	void toInvoiceCacheInvoiceType(final String source, final generated.se.sundsvall.invoicecache.Invoice.InvoiceTypeEnum target) {
 		assertThat(InvoiceMapper.toInvoiceCacheInvoiceType(source)).isEqualTo(target);
 	}
 
@@ -599,50 +599,50 @@ class InvoiceMapperTest {
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceTypeArguments")
-	void toInvoiceType(final String source, final InvoiceType target) {
+	void toInvoiceType(final String source, final String target) {
 		assertThat(InvoiceMapper.toInvoiceType(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toDataWarehouseReaderInvoiceTypeArguments")
-	void toDataWarehouseReaderInvoiceType(final InvoiceType source, final String target) {
+	void toDataWarehouseReaderInvoiceType(final String source, final String target) {
 		assertThat(InvoiceMapper.toDataWarehouseReaderInvoiceType(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toDataWarehouseReaderInvoiceStatusArguments")
-	void toDataWarehouseReaderInvoiceStatus(final InvoiceStatus source, final String target) {
+	void toDataWarehouseReaderInvoiceStatus(final String source, final String target) {
 		assertThat(InvoiceMapper.toDataWarehouseReaderInvoiceStatus(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceStatusFromDataWarehouseReaderStatusArguments")
-	void toInvoiceStatusFromDataWarehouseReaderStatus(final String source, final InvoiceStatus target) {
+	void toInvoiceStatusFromDataWarehouseReaderStatus(final String source, final String target) {
 		assertThat(InvoiceMapper.toInvoiceStatus(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceStatusFromInvoiceCacheStatusArguments")
-	void toInvoiceStatusFromInvoiceCacheStatus(final InvoiceStatusEnum source, final InvoiceStatus target) {
+	void toInvoiceStatusFromInvoiceCacheStatus(final InvoiceStatusEnum source, final String target) {
 		assertThat(InvoiceMapper.toInvoiceStatus(source)).isEqualTo(target);
 	}
 
 	@ParameterizedTest
 	@MethodSource("toInvoiceTypeFromInvoiceCacheStatusArguments")
-	void toInvoiceTypeFromInvoiceCacheType(final InvoiceTypeEnum source, final InvoiceType target) {
+	void toInvoiceTypeFromInvoiceCacheType(final InvoiceTypeEnum source, final String target) {
 		assertThat(InvoiceMapper.toInvoiceType(source)).isEqualTo(target);
 	}
 
 	private static Stream<Arguments> toCustomerTypeArguments() {
 		return Stream.of(
-			Arguments.of(generated.se.sundsvall.datawarehousereader.CustomerType.ENTERPRISE, CustomerType.ENTERPRISE),
-			Arguments.of(generated.se.sundsvall.datawarehousereader.CustomerType.PRIVATE, CustomerType.PRIVATE),
+			Arguments.of(generated.se.sundsvall.datawarehousereader.CustomerType.ENTERPRISE, CustomerType.ENTERPRISE.name()),
+			Arguments.of(generated.se.sundsvall.datawarehousereader.CustomerType.PRIVATE, CustomerType.PRIVATE.name()),
 			Arguments.of(null, null));
 	}
 
 	@ParameterizedTest
 	@MethodSource("toCustomerTypeArguments")
-	void toCustomerType(final generated.se.sundsvall.datawarehousereader.CustomerType source, final CustomerType target) {
+	void toCustomerType(final generated.se.sundsvall.datawarehousereader.CustomerType source, final String target) {
 		assertThat(InvoiceMapper.toCustomerType(source)).isEqualTo(target);
 	}
 
@@ -748,16 +748,16 @@ class InvoiceMapperTest {
 		assertThat(response.getInvoices()).hasSize(1);
 		final var mapped = response.getInvoices().getFirst();
 		assertThat(mapped.getCustomerNumber()).isEqualTo(customerNumber);
-		assertThat(mapped.getCustomerType()).isEqualTo(CustomerType.ENTERPRISE);
+		assertThat(mapped.getCustomerType()).isEqualTo(CustomerType.ENTERPRISE.name());
 		assertThat(mapped.getFacilityIds()).isEqualTo(facilityIds);
 		assertThat(mapped.getInvoiceNumber()).isEqualTo(String.valueOf(invoiceNumber));
 		assertThat(mapped.getInvoiceId()).isEqualTo(invoiceId);
 		assertThat(mapped.getJointInvoiceId()).isEqualTo(jointInvoiceId);
 		assertThat(mapped.getInvoiceDate()).isEqualTo(invoiceDate);
 		assertThat(mapped.getInvoiceName()).isEqualTo(invoiceName);
-		assertThat(mapped.getInvoiceType()).isEqualTo(InvoiceType.INVOICE);
+		assertThat(mapped.getInvoiceType()).isEqualTo(InvoiceType.INVOICE.name());
 		assertThat(mapped.getInvoiceDescription()).isEqualTo(invoiceDescription);
-		assertThat(mapped.getInvoiceStatus()).isEqualTo(InvoiceStatus.PAID);
+		assertThat(mapped.getInvoiceStatus()).isEqualTo(InvoiceStatus.PAID.name());
 		assertThat(mapped.getOcrNumber()).isEqualTo(String.valueOf(ocrNumber));
 		assertThat(mapped.getDueDate()).isEqualTo(dueDate);
 		assertThat(mapped.getPeriodFrom()).isEqualTo(periodFrom);

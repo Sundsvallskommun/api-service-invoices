@@ -73,8 +73,8 @@ class InvoicesResourceTest {
 	private static final LocalDate INVOICE_DATE_FROM = LocalDate.parse("2024-01-01").minusYears(2);
 	private static final LocalDate INVOICE_DATE_TO = LocalDate.parse("2024-01-01").minusYears(1);
 	private static final String INVOICE_NAME = "invoiceName";
-	private static final InvoiceType INVOICE_TYPE = InvoiceType.INVOICE;
-	private static final InvoiceStatus INVOICE_STATUS = InvoiceStatus.PAID;
+	private static final String INVOICE_TYPE = InvoiceType.INVOICE.name();
+	private static final String INVOICE_STATUS = InvoiceStatus.PAID.name();
 	private static final String OCR_NUMBER = "444";
 	private static final LocalDate DUE_DATE_FROM = LocalDate.parse("2024-01-01").minusMonths(1);
 	private static final LocalDate DUE_DATE_TO = LocalDate.parse("2024-01-01");
@@ -114,7 +114,7 @@ class InvoicesResourceTest {
 			.getResponseBody();
 
 		// Assert
-		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), parametersCaptor.capture());
+		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL.name()), parametersCaptor.capture());
 		final InvoicesParameters parameters = parametersCaptor.getValue();
 		assertThat(parameters.getDueDateFrom()).isEqualTo(DUE_DATE_FROM);
 		assertThat(parameters.getDueDateTo()).isEqualTo(DUE_DATE_TO);
@@ -153,7 +153,7 @@ class InvoicesResourceTest {
 			.getResponseBody();
 
 		// Assert
-		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL), parametersCaptor.capture());
+		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL.name()), parametersCaptor.capture());
 		final InvoicesParameters parameters = parametersCaptor.getValue();
 		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
 		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);
@@ -289,7 +289,7 @@ class InvoicesResourceTest {
 		final var customerNumbers = List.of("216870", "600606");
 		final var organizationNumbers = List.of("5565027223", "5564786647");
 		final var facilityIds = List.of("123456789012345670", "123456789012345671");
-		final var status = InvoiceStatus.PAID;
+		final var status = InvoiceStatus.PAID.name();
 		final var periodFrom = LocalDate.of(2025, Month.JANUARY, 1);
 		final var periodTo = LocalDate.of(2025, Month.DECEMBER, 31);
 		final var sortBy = List.of("periodFrom");
@@ -350,7 +350,7 @@ class InvoicesResourceTest {
 	}
 
 	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> customerNumbers,
-		final List<String> organizationNumbers, final List<String> facilityIds, final InvoiceStatus status,
+		final List<String> organizationNumbers, final List<String> facilityIds, final String status,
 		final LocalDate periodFrom, final LocalDate periodTo, final List<String> sortBy, final Sort.Direction sortDirection) {
 
 		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
@@ -368,7 +368,7 @@ class InvoicesResourceTest {
 	}
 
 	private MultiValueMap<String, String> createParameterMap(final Integer page, final Integer limit, final List<String> facilityIds, final String invoiceNumber, final LocalDate invoiceDateFrom,
-		final LocalDate invoiceDateTo, final String invoiceName, final InvoiceType invoiceType, final InvoiceStatus invoiceStatus,
+		final LocalDate invoiceDateTo, final String invoiceName, final String invoiceType, final String invoiceStatus,
 		final String ocrNumber, final LocalDate dueDateFrom, final LocalDate dueDateTo, final String organizationGroup,
 		final List<String> organizationNumber, final List<String> partyIds) {
 

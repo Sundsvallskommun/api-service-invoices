@@ -39,7 +39,7 @@ class CustomerInvoicesParametersTest {
 		final var customerNumbers = List.of("216870", "600606");
 		final var organizationNumbers = List.of("5565027223", "5564786647");
 		final var facilityIds = List.of("123456789012345670", "123456789012345671");
-		final var status = InvoiceStatus.PAID;
+		final var status = InvoiceStatus.PAID.name();
 		final var periodFrom = LocalDate.parse("2024-01-01").minusMonths(6);
 		final var periodTo = LocalDate.parse("2024-01-01");
 		final var sortBy = List.of("periodFrom");

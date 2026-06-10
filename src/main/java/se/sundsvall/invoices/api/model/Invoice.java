@@ -53,8 +53,10 @@ public class Invoice {
 	@Schema(examples = "999", description = "Invoice-number")
 	private String invoiceNumber;
 
-	@Schema(implementation = InvoiceStatus.class)
-	private InvoiceStatus invoiceStatus;
+	@Schema(description = "Status of invoice", examples = "PAID", allowableValues = {
+		"PAID", "SENT", "PARTIALLY_PAID", "DEBT_COLLECTION", "PAID_TOO_MUCH", "REMINDER", "VOID", "CREDITED", "WRITTEN_OFF", "UNKNOWN"
+	})
+	private String invoiceStatus;
 
 	@Schema(examples = "96758235", description = "OCR-number")
 	private String ocrNumber;
@@ -65,8 +67,10 @@ public class Invoice {
 	@Schema(examples = "faktura-999.pdf", description = "Invoice-name")
 	private String invoiceName;
 
-	@Schema(implementation = InvoiceType.class)
-	private InvoiceType invoiceType;
+	@Schema(description = "Type of invoice", examples = "INVOICE", allowableValues = {
+		"INVOICE", "CREDIT_INVOICE", "START_INVOICE", "FINAL_INVOICE", "DIRECT_DEBIT", "SELF_INVOICE", "REMINDER", "CONSOLIDATED_INVOICE", "INTERNAL_INVOICE", "OFFSET_INVOICE", "UNKNOWN"
+	})
+	private String invoiceType;
 
 	@Schema(examples = "Fjärrvärme", description = "Invoice-description")
 	private Set<String> invoiceDescriptions;
@@ -77,8 +81,10 @@ public class Invoice {
 	@Schema(description = "Facility-id")
 	private Set<String> facilityIds;
 
-	@Schema(implementation = InvoiceOrigin.class)
-	private InvoiceOrigin invoiceOrigin;
+	@Schema(description = "Invoice origin (invoices originates from either commercial or public activities)", examples = "COMMERCIAL", allowableValues = {
+		"COMMERCIAL", "PUBLIC_ADMINISTRATION"
+	})
+	private String invoiceOrigin;
 
 	public static Invoice create() {
 		return new Invoice();
@@ -266,15 +272,15 @@ public class Invoice {
 		return this;
 	}
 
-	public InvoiceStatus getInvoiceStatus() {
+	public String getInvoiceStatus() {
 		return invoiceStatus;
 	}
 
-	public void setInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public void setInvoiceStatus(final String invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 	}
 
-	public Invoice withInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public Invoice withInvoiceStatus(final String invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 		return this;
 	}
@@ -305,15 +311,15 @@ public class Invoice {
 		return this;
 	}
 
-	public InvoiceType getInvoiceType() {
+	public String getInvoiceType() {
 		return invoiceType;
 	}
 
-	public void setInvoiceType(final InvoiceType invoiceType) {
+	public void setInvoiceType(final String invoiceType) {
 		this.invoiceType = invoiceType;
 	}
 
-	public Invoice withInvoiceType(final InvoiceType invoiceType) {
+	public Invoice withInvoiceType(final String invoiceType) {
 		this.invoiceType = invoiceType;
 		return this;
 	}
@@ -370,15 +376,15 @@ public class Invoice {
 		return this;
 	}
 
-	public InvoiceOrigin getInvoiceOrigin() {
+	public String getInvoiceOrigin() {
 		return invoiceOrigin;
 	}
 
-	public void setInvoiceOrigin(final InvoiceOrigin invoiceOrigin) {
+	public void setInvoiceOrigin(final String invoiceOrigin) {
 		this.invoiceOrigin = invoiceOrigin;
 	}
 
-	public Invoice withInvoiceOrigin(final InvoiceOrigin invoiceOrigin) {
+	public Invoice withInvoiceOrigin(final String invoiceOrigin) {
 		this.invoiceOrigin = invoiceOrigin;
 		return this;
 	}
@@ -391,9 +397,9 @@ public class Invoice {
 		return Objects.equals(totalAmount, invoice.totalAmount) && Objects.equals(amountVatIncluded, invoice.amountVatIncluded) && Objects.equals(amountVatExcluded, invoice.amountVatExcluded)
 			&& Objects.equals(vatEligibleAmount, invoice.vatEligibleAmount) && Objects.equals(rounding, invoice.rounding) && Objects.equals(vat, invoice.vat) && Objects.equals(dueDate, invoice.dueDate)
 			&& Objects.equals(reversedVat, invoice.reversedVat) && Objects.equals(pdfAvailable, invoice.pdfAvailable) && Objects.equals(currency, invoice.currency) && Objects.equals(invoiceDate, invoice.invoiceDate)
-			&& Objects.equals(fromDate, invoice.fromDate) && Objects.equals(toDate, invoice.toDate) && Objects.equals(invoiceNumber, invoice.invoiceNumber) && invoiceStatus == invoice.invoiceStatus && Objects.equals(
-				ocrNumber, invoice.ocrNumber) && Objects.equals(organizationNumber, invoice.organizationNumber) && Objects.equals(invoiceName, invoice.invoiceName) && invoiceType == invoice.invoiceType && Objects.equals(
-					invoiceDescriptions, invoice.invoiceDescriptions) && Objects.equals(invoiceAddress, invoice.invoiceAddress) && Objects.equals(facilityIds, invoice.facilityIds) && invoiceOrigin == invoice.invoiceOrigin;
+			&& Objects.equals(fromDate, invoice.fromDate) && Objects.equals(toDate, invoice.toDate) && Objects.equals(invoiceNumber, invoice.invoiceNumber) && Objects.equals(invoiceStatus, invoice.invoiceStatus) && Objects.equals(
+				ocrNumber, invoice.ocrNumber) && Objects.equals(organizationNumber, invoice.organizationNumber) && Objects.equals(invoiceName, invoice.invoiceName) && Objects.equals(invoiceType, invoice.invoiceType) && Objects.equals(
+					invoiceDescriptions, invoice.invoiceDescriptions) && Objects.equals(invoiceAddress, invoice.invoiceAddress) && Objects.equals(facilityIds, invoice.facilityIds) && Objects.equals(invoiceOrigin, invoice.invoiceOrigin);
 	}
 
 	@Override
