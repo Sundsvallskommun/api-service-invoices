@@ -21,7 +21,14 @@
 				"equalTo": "5565027223"
 			},
 			"facilityIds": {
-				"equalTo": "123456789012345670"
+				"hasExactly": [
+					{
+						"equalTo": "123456789012345670"
+					},
+					{
+						"equalTo": "123456789012345671"
+					}
+				]
 			},
 			"status": {
 				"equalTo": "Betalad"

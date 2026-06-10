@@ -650,7 +650,7 @@ class InvoiceMapperTest {
 		return Stream.of(
 			Arguments.of(Sort.Direction.ASC, generated.se.sundsvall.datawarehousereader.Direction.ASC),
 			Arguments.of(Sort.Direction.DESC, generated.se.sundsvall.datawarehousereader.Direction.DESC),
-			Arguments.of(null, null));
+			Arguments.of(null, generated.se.sundsvall.datawarehousereader.Direction.ASC));
 	}
 
 	@ParameterizedTest

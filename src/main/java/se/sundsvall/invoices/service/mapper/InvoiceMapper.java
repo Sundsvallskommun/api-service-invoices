@@ -256,7 +256,8 @@ public final class InvoiceMapper {
 				case ASC -> generated.se.sundsvall.datawarehousereader.Direction.ASC;
 				case DESC -> generated.se.sundsvall.datawarehousereader.Direction.DESC;
 			})
-			.orElse(null);
+			// Default to ASC
+			.orElse(generated.se.sundsvall.datawarehousereader.Direction.ASC);
 	}
 
 	/***************************************************************

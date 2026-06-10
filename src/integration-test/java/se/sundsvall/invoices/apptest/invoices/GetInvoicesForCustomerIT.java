@@ -35,6 +35,7 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 				"&customerNumbers=216870" +
 				"&organizationNumbers=5565027223" +
 				"&facilityIds=123456789012345670" +
+				"&facilityIds=123456789012345671" +
 				"&status=PAID" +
 				"&periodFrom=2025-01-01" +
 				"&periodTo=2025-12-31" +
