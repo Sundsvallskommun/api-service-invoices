@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.data.domain.Sort;
 
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanConstructor;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanEquals;
@@ -12,7 +13,6 @@ import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanHashCode;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidBeanToString;
 import static com.google.code.beanmatchers.BeanMatchers.hasValidGettersAndSetters;
 import static com.google.code.beanmatchers.BeanMatchers.registerValueGenerator;
-import static java.time.LocalDate.now;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.CoreMatchers.allOf;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,7 +21,7 @@ class CustomerInvoicesParametersTest {
 
 	@BeforeAll
 	static void setup() {
-		registerValueGenerator(() -> now().plusDays(new Random().nextInt()), LocalDate.class);
+		registerValueGenerator(() -> LocalDate.parse("2024-01-01").plusDays(new Random().nextInt()), LocalDate.class);
 	}
 
 	@Test
@@ -36,26 +36,38 @@ class CustomerInvoicesParametersTest {
 
 	@Test
 	void testBuilderMethods() {
+		final var customerNumbers = List.of("216870", "600606");
 		final var organizationNumbers = List.of("5565027223", "5564786647");
-		final var periodFrom = LocalDate.now().minusMonths(6);
-		final var periodTo = LocalDate.now();
-		final var sortBy = "periodFrom";
+		final var facilityIds = List.of("123456789012345670", "123456789012345671");
+		final var status = InvoiceStatus.PAID.name();
+		final var periodFrom = LocalDate.parse("2024-01-01").minusMonths(6);
+		final var periodTo = LocalDate.parse("2024-01-01");
+		final var sortBy = List.of("periodFrom");
+		final var sortDirection = Sort.Direction.DESC;
 		final var page = 3;
 		final var limit = 50;
 
 		final var parameters = CustomerInvoicesParameters.create()
+			.withCustomerNumbers(customerNumbers)
 			.withOrganizationNumbers(organizationNumbers)
+			.withFacilityIds(facilityIds)
+			.withStatus(status)
 			.withPeriodFrom(periodFrom)
 			.withPeriodTo(periodTo)
 			.withSortBy(sortBy)
+			.withSortDirection(sortDirection)
 			.withPage(page)
 			.withLimit(limit);
 
 		assertThat(parameters).isNotNull().hasNoNullFieldsOrProperties();
+		assertThat(parameters.getCustomerNumbers()).isEqualTo(customerNumbers);
 		assertThat(parameters.getOrganizationNumbers()).isEqualTo(organizationNumbers);
+		assertThat(parameters.getFacilityIds()).isEqualTo(facilityIds);
+		assertThat(parameters.getStatus()).isEqualTo(status);
 		assertThat(parameters.getPeriodFrom()).isEqualTo(periodFrom);
 		assertThat(parameters.getPeriodTo()).isEqualTo(periodTo);
 		assertThat(parameters.getSortBy()).isEqualTo(sortBy);
+		assertThat(parameters.getSortDirection()).isEqualTo(sortDirection);
 		assertThat(parameters.getPage()).isEqualTo(page);
 		assertThat(parameters.getLimit()).isEqualTo(limit);
 	}
@@ -63,13 +75,15 @@ class CustomerInvoicesParametersTest {
 	@Test
 	void testNoDirtOnCreatedBean() {
 		assertThat(CustomerInvoicesParameters.create())
-			.hasAllNullFieldsOrPropertiesExcept("page", "limit")
+			.hasAllNullFieldsOrPropertiesExcept("page", "limit", "sortDirection")
 			.hasFieldOrPropertyWithValue("page", 1)
-			.hasFieldOrPropertyWithValue("limit", 100);
+			.hasFieldOrPropertyWithValue("limit", 100)
+			.hasFieldOrPropertyWithValue("sortDirection", Sort.Direction.ASC);
 
 		assertThat(new CustomerInvoicesParameters())
-			.hasAllNullFieldsOrPropertiesExcept("page", "limit")
+			.hasAllNullFieldsOrPropertiesExcept("page", "limit", "sortDirection")
 			.hasFieldOrPropertyWithValue("page", 1)
-			.hasFieldOrPropertyWithValue("limit", 100);
+			.hasFieldOrPropertyWithValue("limit", 100)
+			.hasFieldOrPropertyWithValue("sortDirection", Sort.Direction.ASC);
 	}
 }

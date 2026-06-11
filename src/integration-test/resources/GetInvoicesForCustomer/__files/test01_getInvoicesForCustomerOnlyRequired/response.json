@@ -3,7 +3,10 @@
 		{
 			"customerNumber": "600606",
 			"customerType": "ENTERPRISE",
-			"facilityId": "735999109425048010",
+			"facilityIds": [
+				"123456789012345670",
+				"123456789012345671"
+			],
 			"invoiceNumber": "137968392",
 			"invoiceId": 1062916396,
 			"jointInvoiceId": 12345,
@@ -44,7 +47,7 @@
 					"productName": "Elöverföring",
 					"fromDate": "2025-09-01",
 					"toDate": "2025-09-30",
-					"facilityId": "735999109425048010",
+					"facilityId": "123456789012345670",
 					"administration": "Sundsvall Elnät"
 				},
 				{
@@ -60,7 +63,7 @@
 					"productName": "Energiskatt",
 					"fromDate": "2025-09-01",
 					"toDate": "2025-09-30",
-					"facilityId": "735999109425048010",
+					"facilityId": "123456789012345671",
 					"administration": "Sundsvall Elnät"
 				}
 			]

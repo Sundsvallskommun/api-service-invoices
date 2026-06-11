@@ -1,8 +1,6 @@
 package se.sundsvall.invoices.api.model;
 
-import io.swagger.v3.oas.annotations.media.Schema;
-
-@Schema(examples = "ENTERPRISE", description = "Customer type", enumAsRef = true)
+// Internal backing enum for the API's customerType String field; validated against via @MemberOf and used for upstream value mapping.
 public enum CustomerType {
 	ENTERPRISE,
 	PRIVATE

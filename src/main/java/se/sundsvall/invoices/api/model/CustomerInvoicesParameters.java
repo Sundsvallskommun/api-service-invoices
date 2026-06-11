@@ -2,20 +2,38 @@ package se.sundsvall.invoices.api.model;
 
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import org.springdoc.core.annotations.ParameterObject;
+import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import se.sundsvall.dept44.common.validators.annotation.MemberOf;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
+import se.sundsvall.dept44.models.api.paging.AbstractParameterPagingAndSortingBase;
 
 @Schema(description = "Customer invoice request parameters model")
 @ParameterObject
-public class CustomerInvoicesParameters extends AbstractParameterBase {
+public class CustomerInvoicesParameters extends AbstractParameterPagingAndSortingBase {
+
+	@NotEmpty
+	@ArraySchema(arraySchema = @Schema(description = "Customer numbers (one or more)", requiredMode = Schema.RequiredMode.REQUIRED), schema = @Schema(examples = "216870"), minItems = 1)
+	private List<@NotBlank String> customerNumbers;
 
 	@ArraySchema(schema = @Schema(description = "Organization id of invoice issuer, if not provided all will be returned.", examples = "5565027223"))
 	private List<@ValidOrganizationNumber String> organizationNumbers;
+
+	@ArraySchema(schema = @Schema(description = "Facility ids to filter by, if not provided all will be returned.", examples = "123456789012345670"))
+	private List<String> facilityIds;
+
+	@MemberOf(value = InvoiceStatus.class, nullable = true)
+	@Schema(description = "Invoice status filter", examples = "PAID", allowableValues = {
+		"PAID", "SENT", "PARTIALLY_PAID", "DEBT_COLLECTION", "PAID_TOO_MUCH", "REMINDER", "VOID", "CREDITED", "WRITTEN_OFF", "UNKNOWN"
+	})
+	private String status;
 
 	@DateTimeFormat(iso = ISO.DATE)
 	@Schema(description = "Earliest invoice period start. Format is YYYY-MM-DD.", examples = "2025-01-01")
@@ -25,14 +43,21 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 	@Schema(description = "Latest invoice period end. Format is YYYY-MM-DD.", examples = "2025-12-31")
 	private LocalDate periodTo;
 
-	// Not validated — DataWarehouseReader silently ignores unknown sortBy values.
-	@Schema(description = "Column to sort by", examples = {
-		"periodFrom", "periodTo", "InvoiceDate", "DueDate", "InvoiceNumber", "TotalAmount"
-	})
-	private String sortBy;
-
 	public static CustomerInvoicesParameters create() {
 		return new CustomerInvoicesParameters();
+	}
+
+	public List<String> getCustomerNumbers() {
+		return customerNumbers;
+	}
+
+	public void setCustomerNumbers(final List<String> customerNumbers) {
+		this.customerNumbers = customerNumbers;
+	}
+
+	public CustomerInvoicesParameters withCustomerNumbers(final List<String> customerNumbers) {
+		this.customerNumbers = customerNumbers;
+		return this;
 	}
 
 	public List<String> getOrganizationNumbers() {
@@ -45,6 +70,32 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 
 	public CustomerInvoicesParameters withOrganizationNumbers(final List<String> organizationNumbers) {
 		this.organizationNumbers = organizationNumbers;
+		return this;
+	}
+
+	public List<String> getFacilityIds() {
+		return facilityIds;
+	}
+
+	public void setFacilityIds(final List<String> facilityIds) {
+		this.facilityIds = facilityIds;
+	}
+
+	public CustomerInvoicesParameters withFacilityIds(final List<String> facilityIds) {
+		this.facilityIds = facilityIds;
+		return this;
+	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(final String status) {
+		this.status = status;
+	}
+
+	public CustomerInvoicesParameters withStatus(final String status) {
+		this.status = status;
 		return this;
 	}
 
@@ -74,16 +125,21 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		return this;
 	}
 
-	public String getSortBy() {
-		return sortBy;
+	@Override
+	@ArraySchema(schema = @Schema(description = "Column to sort by", examples = {
+		"periodFrom", "periodTo", "InvoiceDate", "DueDate", "InvoiceNumber", "TotalAmount"
+	}))
+	public List<String> getSortBy() {
+		return super.getSortBy();
 	}
 
-	public void setSortBy(final String sortBy) {
+	public CustomerInvoicesParameters withSortBy(final List<String> sortBy) {
 		this.sortBy = sortBy;
+		return this;
 	}
 
-	public CustomerInvoicesParameters withSortBy(final String sortBy) {
-		this.sortBy = sortBy;
+	public CustomerInvoicesParameters withSortDirection(final Sort.Direction sortDirection) {
+		this.sortDirection = sortDirection;
 		return this;
 	}
 
@@ -104,21 +160,34 @@ public class CustomerInvoicesParameters extends AbstractParameterBase {
 		if (!super.equals(o))
 			return false;
 		final CustomerInvoicesParameters that = (CustomerInvoicesParameters) o;
-		return Objects.equals(organizationNumbers, that.organizationNumbers) && Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo) && Objects.equals(sortBy, that.sortBy);
+		return Objects.equals(customerNumbers, that.customerNumbers)
+			&& Objects.equals(organizationNumbers, that.organizationNumbers)
+			&& Objects.equals(facilityIds, that.facilityIds)
+			&& Objects.equals(status, that.status)
+			&& Objects.equals(periodFrom, that.periodFrom)
+			&& Objects.equals(periodTo, that.periodTo)
+			&& Objects.equals(sortBy, that.sortBy)
+			&& Objects.equals(sortDirection, that.sortDirection)
+			&& Objects.equals(limit, that.limit)
+			&& Objects.equals(page, that.page);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), organizationNumbers, periodFrom, periodTo, sortBy);
+		return Objects.hash(super.hashCode(), customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection, page, limit);
 	}
 
 	@Override
 	public String toString() {
 		return "CustomerInvoicesParameters{" +
-			"organizationNumbers=" + organizationNumbers +
+			"customerNumbers=" + customerNumbers +
+			", organizationNumbers=" + organizationNumbers +
+			", facilityIds=" + facilityIds +
+			", status=" + status +
 			", periodFrom=" + periodFrom +
 			", periodTo=" + periodTo +
-			", sortBy='" + sortBy + '\'' +
+			", sortBy=" + sortBy +
+			", sortDirection=" + sortDirection +
 			", page=" + page +
 			", limit=" + limit +
 			'}';

@@ -2,6 +2,7 @@ package se.sundsvall.invoices.integration.datawarehousereader;
 
 import generated.se.sundsvall.datawarehousereader.CustomerEngagementResponse;
 import generated.se.sundsvall.datawarehousereader.CustomerInvoiceResponse;
+import generated.se.sundsvall.datawarehousereader.Direction;
 import generated.se.sundsvall.datawarehousereader.InvoiceDetail;
 import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
@@ -68,28 +69,34 @@ public interface DataWarehouseReaderClient {
 		@PathVariable long invoiceNumber);
 
 	/**
-	 * Get invoices for a customer.
+	 * Get invoices for one or more customers.
 	 *
 	 * @param  municipalityId  a municipalityId.
-	 * @param  customerNumber  the customer number.
+	 * @param  customerNumbers the customer numbers (one or more).
 	 * @param  organizationIds optional list of organization ids of invoice issuers.
+	 * @param  facilityIds     optional list of facility ids to filter by.
+	 * @param  status          optional invoice status (DataWarehouseReader value, e.g. "Betalad").
 	 * @param  periodFrom      optional earliest invoice period start.
 	 * @param  periodTo        optional latest invoice period end.
-	 * @param  sortBy          optional column to sort by.
+	 * @param  sortBy          optional columns to sort by.
+	 * @param  sortDirection   optional sort order direction (ASC or DESC, defaults to ASC upstream when omitted).
 	 * @param  page            optional page number.
 	 * @param  limit           optional result size per page.
 	 * @return                 a customerInvoiceResponse
 	 */
-	@GetMapping(path = "/{municipalityId}/invoices/customers/{customerNumber}", produces = {
+	@GetMapping(path = "/{municipalityId}/invoices/customers", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	CustomerInvoiceResponse getInvoicesForCustomer(
 		@PathVariable String municipalityId,
-		@PathVariable String customerNumber,
+		@RequestParam(value = "customerNumbers") List<String> customerNumbers,
 		@RequestParam(value = "organizationIds", required = false) List<String> organizationIds,
+		@RequestParam(value = "facilityIds", required = false) List<String> facilityIds,
+		@RequestParam(value = "status", required = false) String status,
 		@RequestParam(value = "periodFrom", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate periodFrom,
 		@RequestParam(value = "periodTo", required = false) @DateTimeFormat(iso = ISO.DATE) LocalDate periodTo,
-		@RequestParam(value = "sortBy", required = false) String sortBy,
+		@RequestParam(value = "sortBy", required = false) List<String> sortBy,
+		@RequestParam(value = "sortDirection", required = false) Direction sortDirection,
 		@RequestParam(value = "page", required = false) Integer page,
 		@RequestParam(value = "limit", required = false) Integer limit);
 }

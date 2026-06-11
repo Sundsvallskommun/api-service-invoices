@@ -21,7 +21,7 @@ class InvoiceTest {
 
 	@BeforeAll
 	static void setup() {
-		BeanMatchers.registerValueGenerator(() -> LocalDate.now().plusDays(new Random().nextInt()), LocalDate.class);
+		BeanMatchers.registerValueGenerator(() -> LocalDate.parse("2024-01-01").plusDays(new Random().nextInt()), LocalDate.class);
 		BeanMatchers.registerValueGenerator(() -> BigDecimal.valueOf(new Random().nextDouble()), BigDecimal.class);
 	}
 
@@ -37,7 +37,7 @@ class InvoiceTest {
 
 	@Test
 	void testBuilderMethods() {
-		final var dueDate = LocalDate.now();
+		final var dueDate = LocalDate.parse("2024-01-01");
 		final var totalAmount = BigDecimal.valueOf(100);
 		final var amountVatExcluded = BigDecimal.valueOf(80);
 		final var amountVatIncluded = BigDecimal.valueOf(100);
@@ -47,19 +47,19 @@ class InvoiceTest {
 		final var reverseVat = true;
 		final var pdfAvailable = true;
 		final var currency = "currency";
-		final var invoiceDate = LocalDate.now();
-		final var fromDate = LocalDate.now().minusDays(10);
-		final var toDate = LocalDate.now().plusDays(10);
+		final var invoiceDate = LocalDate.parse("2024-01-01");
+		final var fromDate = LocalDate.parse("2024-01-01").minusDays(10);
+		final var toDate = LocalDate.parse("2024-01-01").plusDays(10);
 		final var invoiceNumber = "invoiceNumber";
-		final var invoiceStatus = InvoiceStatus.PAID;
+		final var invoiceStatus = InvoiceStatus.PAID.name();
 		final var ocrNumber = "ocrNumber";
 		final var invoiceName = "invoiceName";
-		final var invoiceType = InvoiceType.INVOICE;
+		final var invoiceType = InvoiceType.INVOICE.name();
 		final var invoiceDescriptions = Set.of("invoiceDescription");
 		final var invoiceAddress = Address.create();
 		final var facilityIds = Set.of("facilityId");
 		final var organizationNumber = "organizationNumber";
-		final var invoiceOrigin = InvoiceOrigin.PUBLIC_ADMINISTRATION;
+		final var invoiceOrigin = InvoiceOrigin.PUBLIC_ADMINISTRATION.name();
 
 		final var invoice = Invoice.create()
 			.withDueDate(dueDate)

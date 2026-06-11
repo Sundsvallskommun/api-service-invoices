@@ -17,7 +17,7 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 	@Test
 	void test01_getInvoicesForCustomerOnlyRequired() {
 		setupCall()
-			.withServicePath("/2281/COMMERCIAL/customers/600606/invoices")
+			.withServicePath("/2281/COMMERCIAL/customers/invoices?customerNumbers=600606")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
@@ -25,15 +25,22 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 	}
 
 	@Test
-	// All query parameters populated. Upstream detail intentionally omits administration/facilityId
-	// to verify the mapper passes nulls through cleanly.
+	// All query parameters populated, including multiple customer/facility ids. The upstream detail intentionally
+	// omits administration/facilityId to verify the mapper passes nulls through cleanly. The invoice-level facilityIds
+	// is also omitted upstream, surfacing as an empty array (the generated client defaults the set to empty).
 	void test02_getInvoicesForCustomerAllParameters() {
 		setupCall()
-			.withServicePath("/2281/COMMERCIAL/customers/600606/invoices" +
-				"?organizationNumbers=5565027223" +
+			.withServicePath("/2281/COMMERCIAL/customers/invoices" +
+				"?customerNumbers=600606" +
+				"&customerNumbers=216870" +
+				"&organizationNumbers=5565027223" +
+				"&facilityIds=123456789012345670" +
+				"&facilityIds=123456789012345671" +
+				"&status=PAID" +
 				"&periodFrom=2025-01-01" +
 				"&periodTo=2025-12-31" +
 				"&sortBy=periodFrom" +
+				"&sortDirection=DESC" +
 				"&page=1" +
 				"&limit=100")
 			.withHttpMethod(GET)
@@ -45,7 +52,7 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 	@Test
 	void test03_getInvoicesForCustomerUpstreamError() {
 		setupCall()
-			.withServicePath("/2281/COMMERCIAL/customers/999999/invoices")
+			.withServicePath("/2281/COMMERCIAL/customers/invoices?customerNumbers=999999")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(BAD_GATEWAY)
 			.withExpectedResponse(RESPONSE_FILE)
@@ -57,7 +64,7 @@ class GetInvoicesForCustomerIT extends AbstractAppTest {
 	// This test pins that behavior: an upstream 404 surfaces as a 404 to the caller.
 	void test04_getInvoicesForCustomerNotFound() {
 		setupCall()
-			.withServicePath("/2281/COMMERCIAL/customers/777777/invoices")
+			.withServicePath("/2281/COMMERCIAL/customers/invoices?customerNumbers=777777")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(NOT_FOUND)
 			.withExpectedResponse(RESPONSE_FILE)

@@ -15,11 +15,13 @@ public class CustomerInvoice {
 	@Schema(description = "Customer number", examples = "123456")
 	private String customerNumber;
 
-	@Schema(implementation = CustomerType.class)
-	private CustomerType customerType;
+	@Schema(description = "Customer type", examples = "ENTERPRISE", allowableValues = {
+		"ENTERPRISE", "PRIVATE"
+	})
+	private String customerType;
 
-	@Schema(description = "Facility id", examples = "735999109425048010")
-	private String facilityId;
+	@Schema(description = "List of facility ids", examples = "123456789012345670")
+	private List<String> facilityIds;
 
 	@Schema(description = "Invoice number", examples = "999")
 	private String invoiceNumber;
@@ -36,14 +38,18 @@ public class CustomerInvoice {
 	@Schema(description = "Invoice name", examples = "123456789.pdf")
 	private String invoiceName;
 
-	@Schema(implementation = InvoiceType.class)
-	private InvoiceType invoiceType;
+	@Schema(description = "Type of invoice", examples = "INVOICE", allowableValues = {
+		"INVOICE", "CREDIT_INVOICE", "START_INVOICE", "FINAL_INVOICE", "DIRECT_DEBIT", "SELF_INVOICE", "REMINDER", "CONSOLIDATED_INVOICE", "INTERNAL_INVOICE", "OFFSET_INVOICE", "UNKNOWN"
+	})
+	private String invoiceType;
 
 	@Schema(description = "Invoice description", examples = "El")
 	private String invoiceDescription;
 
-	@Schema(implementation = InvoiceStatus.class)
-	private InvoiceStatus invoiceStatus;
+	@Schema(description = "Status of invoice", examples = "PAID", allowableValues = {
+		"PAID", "SENT", "PARTIALLY_PAID", "DEBT_COLLECTION", "PAID_TOO_MUCH", "REMINDER", "VOID", "CREDITED", "WRITTEN_OFF", "UNKNOWN"
+	})
+	private String invoiceStatus;
 
 	@Schema(description = "OCR number", examples = "295334999")
 	private String ocrNumber;
@@ -119,29 +125,29 @@ public class CustomerInvoice {
 		return this;
 	}
 
-	public CustomerType getCustomerType() {
+	public String getCustomerType() {
 		return customerType;
 	}
 
-	public void setCustomerType(final CustomerType customerType) {
+	public void setCustomerType(final String customerType) {
 		this.customerType = customerType;
 	}
 
-	public CustomerInvoice withCustomerType(final CustomerType customerType) {
+	public CustomerInvoice withCustomerType(final String customerType) {
 		this.customerType = customerType;
 		return this;
 	}
 
-	public String getFacilityId() {
-		return facilityId;
+	public List<String> getFacilityIds() {
+		return facilityIds;
 	}
 
-	public void setFacilityId(final String facilityId) {
-		this.facilityId = facilityId;
+	public void setFacilityIds(final List<String> facilityIds) {
+		this.facilityIds = facilityIds;
 	}
 
-	public CustomerInvoice withFacilityId(final String facilityId) {
-		this.facilityId = facilityId;
+	public CustomerInvoice withFacilityIds(final List<String> facilityIds) {
+		this.facilityIds = facilityIds;
 		return this;
 	}
 
@@ -210,15 +216,15 @@ public class CustomerInvoice {
 		return this;
 	}
 
-	public InvoiceType getInvoiceType() {
+	public String getInvoiceType() {
 		return invoiceType;
 	}
 
-	public void setInvoiceType(final InvoiceType invoiceType) {
+	public void setInvoiceType(final String invoiceType) {
 		this.invoiceType = invoiceType;
 	}
 
-	public CustomerInvoice withInvoiceType(final InvoiceType invoiceType) {
+	public CustomerInvoice withInvoiceType(final String invoiceType) {
 		this.invoiceType = invoiceType;
 		return this;
 	}
@@ -236,15 +242,15 @@ public class CustomerInvoice {
 		return this;
 	}
 
-	public InvoiceStatus getInvoiceStatus() {
+	public String getInvoiceStatus() {
 		return invoiceStatus;
 	}
 
-	public void setInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public void setInvoiceStatus(final String invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 	}
 
-	public CustomerInvoice withInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public CustomerInvoice withInvoiceStatus(final String invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 		return this;
 	}
@@ -502,10 +508,10 @@ public class CustomerInvoice {
 			return false;
 		final CustomerInvoice that = (CustomerInvoice) o;
 		return Objects.equals(totalAmount, that.totalAmount) && Objects.equals(amountVatIncluded, that.amountVatIncluded) && Objects.equals(amountVatExcluded, that.amountVatExcluded)
-			&& Objects.equals(vatEligibleAmount, that.vatEligibleAmount) && Objects.equals(rounding, that.rounding) && Objects.equals(customerNumber, that.customerNumber) && customerType == that.customerType
-			&& Objects.equals(facilityId, that.facilityId) && Objects.equals(invoiceNumber, that.invoiceNumber) && Objects.equals(invoiceId, that.invoiceId) && Objects.equals(jointInvoiceId, that.jointInvoiceId)
-			&& Objects.equals(invoiceDate, that.invoiceDate) && Objects.equals(invoiceName, that.invoiceName) && invoiceType == that.invoiceType && Objects.equals(invoiceDescription, that.invoiceDescription)
-			&& invoiceStatus == that.invoiceStatus && Objects.equals(ocrNumber, that.ocrNumber) && Objects.equals(dueDate, that.dueDate) && Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo)
+			&& Objects.equals(vatEligibleAmount, that.vatEligibleAmount) && Objects.equals(rounding, that.rounding) && Objects.equals(customerNumber, that.customerNumber) && Objects.equals(customerType, that.customerType)
+			&& Objects.equals(facilityIds, that.facilityIds) && Objects.equals(invoiceNumber, that.invoiceNumber) && Objects.equals(invoiceId, that.invoiceId) && Objects.equals(jointInvoiceId, that.jointInvoiceId)
+			&& Objects.equals(invoiceDate, that.invoiceDate) && Objects.equals(invoiceName, that.invoiceName) && Objects.equals(invoiceType, that.invoiceType) && Objects.equals(invoiceDescription, that.invoiceDescription)
+			&& Objects.equals(invoiceStatus, that.invoiceStatus) && Objects.equals(ocrNumber, that.ocrNumber) && Objects.equals(dueDate, that.dueDate) && Objects.equals(periodFrom, that.periodFrom) && Objects.equals(periodTo, that.periodTo)
 			&& Objects.equals(organizationGroup, that.organizationGroup) && Objects.equals(organizationNumber, that.organizationNumber) && Objects.equals(administration, that.administration) && Objects.equals(street, that.street)
 			&& Objects.equals(postCode, that.postCode) && Objects.equals(city, that.city) && Objects.equals(careOf, that.careOf) && Objects.equals(invoiceReference, that.invoiceReference) && Objects.equals(pdfAvailable, that.pdfAvailable)
 			&& Objects.equals(details, that.details);
@@ -513,7 +519,7 @@ public class CustomerInvoice {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(customerNumber, customerType, facilityId, invoiceNumber, invoiceId, jointInvoiceId, invoiceDate, invoiceName, invoiceType, invoiceDescription, invoiceStatus, ocrNumber, dueDate, periodFrom, periodTo, totalAmount,
+		return Objects.hash(customerNumber, customerType, facilityIds, invoiceNumber, invoiceId, jointInvoiceId, invoiceDate, invoiceName, invoiceType, invoiceDescription, invoiceStatus, ocrNumber, dueDate, periodFrom, periodTo, totalAmount,
 			amountVatIncluded, amountVatExcluded, vatEligibleAmount, rounding, organizationGroup, organizationNumber, administration, street, postCode, city, careOf, invoiceReference, pdfAvailable, details);
 	}
 
@@ -522,7 +528,7 @@ public class CustomerInvoice {
 		return "CustomerInvoice{" +
 			"customerNumber='" + customerNumber + '\'' +
 			", customerType=" + customerType +
-			", facilityId='" + facilityId + '\'' +
+			", facilityIds=" + facilityIds +
 			", invoiceNumber='" + invoiceNumber + '\'' +
 			", invoiceId=" + invoiceId +
 			", jointInvoiceId=" + jointInvoiceId +

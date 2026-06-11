@@ -10,6 +10,7 @@ import java.util.Objects;
 import org.springdoc.core.annotations.ParameterObject;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
+import se.sundsvall.dept44.common.validators.annotation.MemberOf;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
 import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 
@@ -38,11 +39,17 @@ public class InvoicesParameters extends AbstractParameterBase {
 	@Schema(description = "invoice name", examples = "765801493.pdf")
 	private String invoiceName;
 
-	@Schema(description = "Invoice type", examples = "NORMAL", enumAsRef = true)
-	private InvoiceType invoiceType;
+	@MemberOf(value = InvoiceType.class, nullable = true)
+	@Schema(description = "Invoice type", examples = "INVOICE", allowableValues = {
+		"INVOICE", "CREDIT_INVOICE", "START_INVOICE", "FINAL_INVOICE", "DIRECT_DEBIT", "SELF_INVOICE", "REMINDER", "CONSOLIDATED_INVOICE", "INTERNAL_INVOICE", "OFFSET_INVOICE", "UNKNOWN"
+	})
+	private String invoiceType;
 
-	@Schema(description = "Invoice status", examples = "PAID", enumAsRef = true)
-	private InvoiceStatus invoiceStatus;
+	@MemberOf(value = InvoiceStatus.class, nullable = true)
+	@Schema(description = "Invoice status", examples = "PAID", allowableValues = {
+		"PAID", "SENT", "PARTIALLY_PAID", "DEBT_COLLECTION", "PAID_TOO_MUCH", "REMINDER", "VOID", "CREDITED", "WRITTEN_OFF", "UNKNOWN"
+	})
+	private String invoiceStatus;
 
 	@Schema(description = "Ocr number", examples = "767915994")
 	private String ocrNumber;
@@ -144,28 +151,28 @@ public class InvoicesParameters extends AbstractParameterBase {
 		return this;
 	}
 
-	public InvoiceType getInvoiceType() {
+	public String getInvoiceType() {
 		return invoiceType;
 	}
 
-	public void setInvoiceType(final InvoiceType invoiceType) {
+	public void setInvoiceType(final String invoiceType) {
 		this.invoiceType = invoiceType;
 	}
 
-	public InvoicesParameters withInvoiceType(final InvoiceType invoiceType) {
+	public InvoicesParameters withInvoiceType(final String invoiceType) {
 		this.invoiceType = invoiceType;
 		return this;
 	}
 
-	public InvoiceStatus getInvoiceStatus() {
+	public String getInvoiceStatus() {
 		return invoiceStatus;
 	}
 
-	public void setInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public void setInvoiceStatus(final String invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 	}
 
-	public InvoicesParameters withInvoiceStatus(final InvoiceStatus invoiceStatus) {
+	public InvoicesParameters withInvoiceStatus(final String invoiceStatus) {
 		this.invoiceStatus = invoiceStatus;
 		return this;
 	}
@@ -257,7 +264,7 @@ public class InvoicesParameters extends AbstractParameterBase {
 			return false;
 		final InvoicesParameters that = (InvoicesParameters) o;
 		return Objects.equals(partyId, that.partyId) && Objects.equals(facilityIds, that.facilityIds) && Objects.equals(invoiceNumber, that.invoiceNumber) && Objects.equals(invoiceDateFrom, that.invoiceDateFrom)
-			&& Objects.equals(invoiceDateTo, that.invoiceDateTo) && Objects.equals(invoiceName, that.invoiceName) && invoiceType == that.invoiceType && invoiceStatus == that.invoiceStatus && Objects.equals(ocrNumber,
+			&& Objects.equals(invoiceDateTo, that.invoiceDateTo) && Objects.equals(invoiceName, that.invoiceName) && Objects.equals(invoiceType, that.invoiceType) && Objects.equals(invoiceStatus, that.invoiceStatus) && Objects.equals(ocrNumber,
 				that.ocrNumber) && Objects.equals(dueDateFrom, that.dueDateFrom) && Objects.equals(dueDateTo, that.dueDateTo) && Objects.equals(organizationNumbers, that.organizationNumbers) && Objects.equals(
 					organizationGroup, that.organizationGroup);
 	}

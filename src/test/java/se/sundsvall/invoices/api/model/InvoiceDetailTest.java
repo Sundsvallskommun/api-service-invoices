@@ -20,7 +20,7 @@ class InvoiceDetailTest {
 
 	@BeforeAll
 	static void setup() {
-		BeanMatchers.registerValueGenerator(() -> LocalDate.now().plusDays(new Random().nextInt()), LocalDate.class);
+		BeanMatchers.registerValueGenerator(() -> LocalDate.parse("2024-01-01").plusDays(new Random().nextInt()), LocalDate.class);
 		BeanMatchers.registerValueGenerator(() -> BigDecimal.valueOf(new Random().nextDouble()), BigDecimal.class);
 	}
 
@@ -46,8 +46,8 @@ class InvoiceDetailTest {
 		final var description = "description";
 		final var productCode = "productCode";
 		final var productName = "productName";
-		final var fromDate = LocalDate.now().minusDays(10);
-		final var toDate = LocalDate.now().plusDays(10);
+		final var fromDate = LocalDate.parse("2024-01-01").minusDays(10);
+		final var toDate = LocalDate.parse("2024-01-01").plusDays(10);
 		final var facilityId = "facilityId";
 		final var administration = "administration";
 

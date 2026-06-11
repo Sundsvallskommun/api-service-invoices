@@ -10,7 +10,6 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.dept44.problem.violations.ConstraintViolationProblem;
 import se.sundsvall.dept44.problem.violations.Violation;
 import se.sundsvall.invoices.Application;
@@ -34,7 +33,7 @@ class InvoicesResourceFailureTest {
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
-	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices";
+	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/invoices";
 	private static final String INVOICE_NUMBER = "333";
 	private static final String ORGANIZATION_NUMBER = "5565732223";
 	private static final List<String> PARTY_IDS = List.of(randomUUID().toString());
@@ -191,9 +190,11 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("invoiceType",
-				"Failed to convert property value of type 'java.lang.String' to required type 'se.sundsvall.invoices.api.model.InvoiceType' for property 'invoiceType'; Failed to convert from type [java.lang.String] to type [@io.swagger.v3.oas.annotations.media.Schema se.sundsvall.invoices.api.model.InvoiceType] for value [Not valid]"));
+			.hasSize(1)
+			.allSatisfy(violation -> {
+				assertThat(violation.field()).isEqualTo("invoiceType");
+				assertThat(violation.message()).startsWith("must be one of:");
+			});
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
@@ -217,9 +218,11 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
-			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("invoiceStatus",
-				"Failed to convert property value of type 'java.lang.String' to required type 'se.sundsvall.invoices.api.model.InvoiceStatus' for property 'invoiceStatus'; Failed to convert from type [java.lang.String] to type [@io.swagger.v3.oas.annotations.media.Schema se.sundsvall.invoices.api.model.InvoiceStatus] for value [Not valid]"));
+			.hasSize(1)
+			.allSatisfy(violation -> {
+				assertThat(violation.field()).isEqualTo("invoiceStatus");
+				assertThat(violation.message()).startsWith("must be one of:");
+			});
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
@@ -303,14 +306,19 @@ class InvoicesResourceFailureTest {
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
-			.expectBody(Problem.class)
+			.expectBody(ConstraintViolationProblem.class)
 			.returnResult()
 			.getResponseBody();
 
 		// Assert
-		assertThat(response.getTitle()).isEqualTo(BAD_REQUEST.getReasonPhrase());
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
-		assertThat(response.getDetail()).isEqualTo("Failed to convert 'invoiceOrigin' with value: 'not-valid'");
+		assertThat(response.getViolations())
+			.hasSize(1)
+			.allSatisfy(violation -> {
+				assertThat(violation.field()).isEqualTo("getPdfInvoice.invoiceOrigin");
+				assertThat(violation.message()).startsWith("must be one of:");
+			});
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
@@ -391,7 +399,8 @@ class InvoicesResourceFailureTest {
 	void getInvoicesForCustomerInvalidMunicipalityId() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.build("9999", "216870"))
+				.queryParam("customerNumbers", "216870")
+				.build("9999"))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -409,10 +418,10 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
-	void getInvoicesForCustomerBlankCustomerNumber() {
+	void getInvoicesForCustomerMissingCustomerNumbers() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.build(MUNICIPALITY_ID, " "))
+				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -424,7 +433,29 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("getInvoicesForCustomer.customerNumber", "must not be blank"));
+			.containsExactly(tuple("customerNumbers", "must not be empty"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerBlankCustomerNumber() {
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("customerNumbers", " ")
+				.build(MUNICIPALITY_ID))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("customerNumbers[0]", "must not be blank"));
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
@@ -433,8 +464,9 @@ class InvoicesResourceFailureTest {
 	void getInvoicesForCustomerInvalidOrganizationId() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("customerNumbers", "216870")
 				.queryParam("organizationNumbers", "190010301234")
-				.build(MUNICIPALITY_ID, "216870"))
+				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
@@ -455,8 +487,9 @@ class InvoicesResourceFailureTest {
 	void getInvoicesForCustomerInvalidPeriodFrom() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("customerNumbers", "216870")
 				.queryParam("periodFrom", "25-01-01")
-				.build(MUNICIPALITY_ID, "216870"))
+				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isBadRequest()
 			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)

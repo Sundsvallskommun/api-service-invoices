@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "9.3"
+  version: "9.4"
 servers:
-- url: http://localhost:63914
+- url: http://localhost:65206
   description: Generated server url
 tags:
 - name: Invoices
@@ -29,9 +29,15 @@ paths:
         example: 2281
       - name: invoiceOrigin
         in: path
+        description: Invoice origin (invoices originates from either commercial or
+          public activities)
         required: true
         schema:
-          $ref: "#/components/schemas/InvoiceOrigin"
+          type: string
+          enum:
+          - COMMERCIAL
+          - PUBLIC_ADMINISTRATION
+          example: COMMERCIAL
       - name: partyId
         in: query
         required: true
@@ -97,13 +103,42 @@ paths:
         description: Invoice type
         required: false
         schema:
-          $ref: "#/components/schemas/InvoiceType"
+          type: string
+          description: Invoice type
+          enum:
+          - INVOICE
+          - CREDIT_INVOICE
+          - START_INVOICE
+          - FINAL_INVOICE
+          - DIRECT_DEBIT
+          - SELF_INVOICE
+          - REMINDER
+          - CONSOLIDATED_INVOICE
+          - INTERNAL_INVOICE
+          - OFFSET_INVOICE
+          - UNKNOWN
+          examples:
+          - INVOICE
       - name: invoiceStatus
         in: query
         description: Invoice status
         required: false
         schema:
-          $ref: "#/components/schemas/InvoiceStatus"
+          type: string
+          description: Invoice status
+          enum:
+          - PAID
+          - SENT
+          - PARTIALLY_PAID
+          - DEBT_COLLECTION
+          - PAID_TOO_MUCH
+          - REMINDER
+          - VOID
+          - CREDITED
+          - WRITTEN_OFF
+          - UNKNOWN
+          examples:
+          - PAID
       - name: ocrNumber
         in: query
         description: Ocr number
@@ -246,15 +281,33 @@ paths:
         example: 333444
       - name: invoiceOrigin
         in: path
+        description: Invoice origin (invoices originates from either commercial or
+          public activities)
         required: true
         schema:
-          $ref: "#/components/schemas/InvoiceOrigin"
+          type: string
+          enum:
+          - COMMERCIAL
+          - PUBLIC_ADMINISTRATION
+          example: COMMERCIAL
       - name: invoiceType
         in: query
         description: InvoiceType filter parameter
         required: false
         schema:
-          $ref: "#/components/schemas/InvoiceType"
+          type: string
+          enum:
+          - INVOICE
+          - CREDIT_INVOICE
+          - START_INVOICE
+          - FINAL_INVOICE
+          - DIRECT_DEBIT
+          - SELF_INVOICE
+          - REMINDER
+          - CONSOLIDATED_INVOICE
+          - INTERNAL_INVOICE
+          - OFFSET_INVOICE
+          - UNKNOWN
       responses:
         "200":
           description: Successful operation
@@ -321,15 +374,33 @@ paths:
         example: 333444
       - name: invoiceOrigin
         in: path
+        description: Invoice origin (invoices originates from either commercial or
+          public activities)
         required: true
         schema:
-          $ref: "#/components/schemas/InvoiceOrigin"
+          type: string
+          enum:
+          - COMMERCIAL
+          - PUBLIC_ADMINISTRATION
+          example: COMMERCIAL
       - name: invoiceType
         in: query
         description: InvoiceType filter parameter
         required: false
         schema:
-          $ref: "#/components/schemas/InvoiceType"
+          type: string
+          enum:
+          - INVOICE
+          - CREDIT_INVOICE
+          - START_INVOICE
+          - FINAL_INVOICE
+          - DIRECT_DEBIT
+          - SELF_INVOICE
+          - REMINDER
+          - CONSOLIDATED_INVOICE
+          - INTERNAL_INVOICE
+          - OFFSET_INVOICE
+          - UNKNOWN
       responses:
         "200":
           description: Successful operation
@@ -424,11 +495,11 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/InvoiceDetailsResponse"
-  /{municipalityId}/COMMERCIAL/customers/{customerNumber}/invoices:
+  /{municipalityId}/COMMERCIAL/customers/invoices:
     get:
       tags:
       - Invoices
-      summary: Returns invoices for a customer (commercial source)
+      summary: Returns invoices for one or more customers (commercial source)
       operationId: getInvoicesForCustomer
       parameters:
       - name: municipalityId
@@ -438,14 +509,17 @@ paths:
         schema:
           type: string
         example: 2281
-      - name: customerNumber
-        in: path
-        description: Customer number
+      - name: customerNumbers
+        in: query
         required: true
         schema:
-          type: string
-          minLength: 1
-        example: 216870
+          type: array
+          description: Customer numbers (one or more)
+          items:
+            type: string
+            examples:
+            - "216870"
+          minItems: 1
       - name: organizationNumbers
         in: query
         required: false
@@ -457,6 +531,36 @@ paths:
               \ be returned."
             examples:
             - "5565027223"
+      - name: facilityIds
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            description: "Facility ids to filter by, if not provided all will be returned."
+            examples:
+            - "123456789012345670"
+      - name: status
+        in: query
+        description: Invoice status filter
+        required: false
+        schema:
+          type: string
+          description: Invoice status filter
+          enum:
+          - PAID
+          - SENT
+          - PARTIALLY_PAID
+          - DEBT_COLLECTION
+          - PAID_TOO_MUCH
+          - REMINDER
+          - VOID
+          - CREDITED
+          - WRITTEN_OFF
+          - UNKNOWN
+          examples:
+          - PAID
       - name: periodFrom
         in: query
         description: Earliest invoice period start. Format is YYYY-MM-DD.
@@ -479,18 +583,25 @@ paths:
           - 2025-12-31
       - name: sortBy
         in: query
-        description: Column to sort by
         required: false
         schema:
-          type: string
-          description: Column to sort by
-          examples:
-          - periodFrom
-          - periodTo
-          - InvoiceDate
-          - DueDate
-          - InvoiceNumber
-          - TotalAmount
+          type: array
+          items:
+            type: string
+            description: Column to sort by
+            examples:
+            - periodFrom
+            - periodTo
+            - InvoiceDate
+            - DueDate
+            - InvoiceNumber
+            - TotalAmount
+      - name: sortDirection
+        in: query
+        description: The sort order direction
+        required: false
+        schema:
+          $ref: "#/components/schemas/Direction"
       - name: page
         in: query
         description: Page number
@@ -505,16 +616,15 @@ paths:
           minimum: 1
       - name: limit
         in: query
-        description: Result size per page
+        description: Result size per page. Maximum allowed value is dynamically configured
         required: false
         schema:
           type: integer
           format: int32
-          default: 100
-          description: Result size per page
+          description: Result size per page. Maximum allowed value is dynamically
+            configured
           examples:
-          - 100
-          maximum: 1000
+          - 15
           minimum: 1
       responses:
         "400":
@@ -564,47 +674,6 @@ paths:
       x-wso2-mutual-ssl: Optional
 components:
   schemas:
-    InvoiceOrigin:
-      type: string
-      description: Invoice origin (invoices originates from either commercial or public
-        activities)
-      enum:
-      - COMMERCIAL
-      - PUBLIC_ADMINISTRATION
-      example: COMMERCIAL
-    InvoiceType:
-      type: string
-      description: Type of invoice
-      enum:
-      - INVOICE
-      - CREDIT_INVOICE
-      - START_INVOICE
-      - FINAL_INVOICE
-      - DIRECT_DEBIT
-      - SELF_INVOICE
-      - REMINDER
-      - CONSOLIDATED_INVOICE
-      - INTERNAL_INVOICE
-      - OFFSET_INVOICE
-      - UNKNOWN
-      examples:
-      - INVOICE
-    InvoiceStatus:
-      type: string
-      description: Status of invoice
-      enum:
-      - PAID
-      - SENT
-      - PARTIALLY_PAID
-      - DEBT_COLLECTION
-      - PAID_TOO_MUCH
-      - REMINDER
-      - VOID
-      - CREDITED
-      - WRITTEN_OFF
-      - UNKNOWN
-      examples:
-      - PAID
     Problem:
       type: object
       properties:
@@ -769,7 +838,21 @@ components:
           examples:
           - "999"
         invoiceStatus:
-          $ref: "#/components/schemas/InvoiceStatus"
+          type: string
+          description: Status of invoice
+          enum:
+          - PAID
+          - SENT
+          - PARTIALLY_PAID
+          - DEBT_COLLECTION
+          - PAID_TOO_MUCH
+          - REMINDER
+          - VOID
+          - CREDITED
+          - WRITTEN_OFF
+          - UNKNOWN
+          examples:
+          - PAID
         ocrNumber:
           type: string
           description: OCR-number
@@ -786,7 +869,22 @@ components:
           examples:
           - faktura-999.pdf
         invoiceType:
-          $ref: "#/components/schemas/InvoiceType"
+          type: string
+          description: Type of invoice
+          enum:
+          - INVOICE
+          - CREDIT_INVOICE
+          - START_INVOICE
+          - FINAL_INVOICE
+          - DIRECT_DEBIT
+          - SELF_INVOICE
+          - REMINDER
+          - CONSOLIDATED_INVOICE
+          - INTERNAL_INVOICE
+          - OFFSET_INVOICE
+          - UNKNOWN
+          examples:
+          - INVOICE
         invoiceDescriptions:
           type: array
           description: Invoice-description
@@ -805,7 +903,14 @@ components:
             type: string
           uniqueItems: true
         invoiceOrigin:
-          $ref: "#/components/schemas/InvoiceOrigin"
+          type: string
+          description: Invoice origin (invoices originates from either commercial
+            or public activities)
+          enum:
+          - COMMERCIAL
+          - PUBLIC_ADMINISTRATION
+          examples:
+          - COMMERCIAL
     InvoicesResponse:
       type: object
       description: InvoicesResponse model
@@ -951,6 +1056,14 @@ components:
           type: array
           items:
             $ref: "#/components/schemas/InvoiceDetail"
+    Direction:
+      type: string
+      description: The sort order direction
+      enum:
+      - ASC
+      - DESC
+      examples:
+      - ASC
     CustomerInvoice:
       type: object
       description: Customer invoice model
@@ -961,12 +1074,20 @@ components:
           examples:
           - "123456"
         customerType:
-          $ref: "#/components/schemas/CustomerType"
-        facilityId:
           type: string
-          description: Facility id
+          description: Customer type
+          enum:
+          - ENTERPRISE
+          - PRIVATE
           examples:
-          - "735999109425048010"
+          - ENTERPRISE
+        facilityIds:
+          type: array
+          description: List of facility ids
+          examples:
+          - 123456789012345670
+          items:
+            type: string
         invoiceNumber:
           type: string
           description: Invoice number
@@ -996,14 +1117,43 @@ components:
           examples:
           - 123456789.pdf
         invoiceType:
-          $ref: "#/components/schemas/InvoiceType"
+          type: string
+          description: Type of invoice
+          enum:
+          - INVOICE
+          - CREDIT_INVOICE
+          - START_INVOICE
+          - FINAL_INVOICE
+          - DIRECT_DEBIT
+          - SELF_INVOICE
+          - REMINDER
+          - CONSOLIDATED_INVOICE
+          - INTERNAL_INVOICE
+          - OFFSET_INVOICE
+          - UNKNOWN
+          examples:
+          - INVOICE
         invoiceDescription:
           type: string
           description: Invoice description
           examples:
           - El
         invoiceStatus:
-          $ref: "#/components/schemas/InvoiceStatus"
+          type: string
+          description: Status of invoice
+          enum:
+          - PAID
+          - SENT
+          - PARTIALLY_PAID
+          - DEBT_COLLECTION
+          - PAID_TOO_MUCH
+          - REMINDER
+          - VOID
+          - CREDITED
+          - WRITTEN_OFF
+          - UNKNOWN
+          examples:
+          - PAID
         ocrNumber:
           type: string
           description: OCR number
@@ -1110,12 +1260,4 @@ components:
         _meta:
           $ref: "#/components/schemas/MetaData"
           readOnly: true
-    CustomerType:
-      type: string
-      description: Customer type
-      enum:
-      - ENTERPRISE
-      - PRIVATE
-      examples:
-      - ENTERPRISE
   securitySchemes: {}
