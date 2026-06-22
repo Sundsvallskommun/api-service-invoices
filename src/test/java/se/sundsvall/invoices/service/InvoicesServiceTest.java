@@ -333,6 +333,51 @@ class InvoicesServiceTest {
 		verifyNoInteractions(invoiceCacheClientMock);
 	}
 
+	@Test
+	void getInvoicesForCustomerWithPartyIdsMergesAndDeduplicates() {
+		final var municipalityId = "municipalityId";
+		final var partyIds = List.of(randomUUID().toString(), randomUUID().toString());
+		final var providedCustomerNumbers = List.of("111111", "222222");
+		// partyIds resolve to 222222 (overlaps provided, deduplicated) and 333333 (new)
+		final var mergedCustomerNumbers = List.of("111111", "222222", "333333");
+		final var parameters = CustomerInvoicesParameters.create()
+			.withCustomerNumbers(providedCustomerNumbers)
+			.withPartyIds(partyIds);
+
+		when(dataWarehouseReaderClientMock.getCustomerEngagements(municipalityId, partyIds)).thenReturn(customerEngagementResponseMock);
+		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(List.of(customerEngagementMock, customerEngagementMock));
+		when(customerEngagementMock.getCustomerNumber()).thenReturn("222222", "333333");
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, mergedCustomerNumbers, null, null, null, null, null, null, Direction.ASC, 1, 100))
+			.thenReturn(new CustomerInvoiceResponse().invoices(emptyList()).meta(createPagingAndSortingMetaData()));
+
+		final var response = invoicesService.getInvoicesForCustomer(municipalityId, parameters);
+
+		assertThat(response).isNotNull();
+		verify(dataWarehouseReaderClientMock).getCustomerEngagements(municipalityId, partyIds);
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, mergedCustomerNumbers, null, null, null, null, null, null, Direction.ASC, 1, 100);
+		verifyNoInteractions(invoiceCacheClientMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerWithPartyIdsNoEngagements() {
+		final var municipalityId = "municipalityId";
+		final var partyIds = List.of(randomUUID().toString());
+		final var parameters = CustomerInvoicesParameters.create()
+			.withCustomerNumbers(List.of("111111"))
+			.withPartyIds(partyIds);
+
+		when(dataWarehouseReaderClientMock.getCustomerEngagements(municipalityId, partyIds)).thenReturn(customerEngagementResponseMock);
+		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(emptyList());
+
+		final ThrowableProblem e = assertThrows(ThrowableProblem.class, () -> invoicesService.getInvoicesForCustomer(municipalityId, parameters));
+
+		assertThat(e.getStatus()).isEqualTo(NOT_FOUND);
+		assertThat(e.getMessage()).isEqualTo("Not Found: No engagements found for partyIds: '" + partyIds + "'");
+		verify(dataWarehouseReaderClientMock).getCustomerEngagements(municipalityId, partyIds);
+		verifyNoMoreInteractions(dataWarehouseReaderClientMock);
+		verifyNoInteractions(invoiceCacheClientMock);
+	}
+
 	private InvoiceResponse createDataWarehouseReaderInvoiceResponse() {
 		final var invoiceName = "invoiceName";
 		return new InvoiceResponse()

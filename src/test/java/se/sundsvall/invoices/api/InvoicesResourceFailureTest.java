@@ -535,6 +535,29 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
+	void getInvoicesForCustomerInvalidPartyId() {
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("customerNumbers", "216870")
+				.queryParam("partyIds", "invalid-uuid")
+				.build(MUNICIPALITY_ID))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("partyIds[0]", "not a valid UUID"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
 	void getInvoicesForCustomerInvalidPeriodFrom() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)

@@ -357,6 +357,7 @@ class InvoicesResourceTest {
 	@Test
 	void getInvoicesForCustomerAllParameters() {
 		final var customerNumbers = List.of("216870", "600606");
+		final var partyIds = List.of(randomUUID().toString(), randomUUID().toString());
 		final var organizationNumbers = List.of("5565027223", "5564786647");
 		final var facilityIds = List.of("123456789012345670", "123456789012345671");
 		final var status = InvoiceStatus.PAID.name();
@@ -369,7 +370,7 @@ class InvoicesResourceTest {
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.queryParams(createCustomerParameterMap(PAGE, LIMIT, customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection))
+				.queryParams(createCustomerParameterMap(PAGE, LIMIT, customerNumbers, partyIds, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection))
 				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isOk()
@@ -381,6 +382,7 @@ class InvoicesResourceTest {
 		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), customerParametersCaptor.capture());
 		final CustomerInvoicesParameters parameters = customerParametersCaptor.getValue();
 		assertThat(parameters.getCustomerNumbers()).isEqualTo(customerNumbers);
+		assertThat(parameters.getPartyIds()).isEqualTo(partyIds);
 		assertThat(parameters.getOrganizationNumbers()).isEqualTo(organizationNumbers);
 		assertThat(parameters.getFacilityIds()).isEqualTo(facilityIds);
 		assertThat(parameters.getStatus()).isEqualTo(status);
@@ -401,7 +403,7 @@ class InvoicesResourceTest {
 
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
-				.queryParams(createCustomerParameterMap(null, null, customerNumbers, null, null, null, null, null, null, null))
+				.queryParams(createCustomerParameterMap(null, null, customerNumbers, null, null, null, null, null, null, null, null))
 				.build(MUNICIPALITY_ID))
 			.exchange()
 			.expectStatus().isOk()
@@ -420,13 +422,14 @@ class InvoicesResourceTest {
 	}
 
 	private MultiValueMap<String, String> createCustomerParameterMap(final Integer page, final Integer limit, final List<String> customerNumbers,
-		final List<String> organizationNumbers, final List<String> facilityIds, final String status,
+		final List<String> partyIds, final List<String> organizationNumbers, final List<String> facilityIds, final String status,
 		final LocalDate periodFrom, final LocalDate periodTo, final List<String> sortBy, final Sort.Direction sortDirection) {
 
 		final MultiValueMap<String, String> parameters = new LinkedMultiValueMap<>();
 		ofNullable(page).ifPresent(p -> parameters.add("page", valueOf(p)));
 		ofNullable(limit).ifPresent(p -> parameters.add("limit", valueOf(p)));
 		ofNullable(customerNumbers).ifPresent(p -> parameters.addAll("customerNumbers", p));
+		ofNullable(partyIds).ifPresent(p -> parameters.addAll("partyIds", p));
 		ofNullable(organizationNumbers).ifPresent(p -> parameters.addAll("organizationNumbers", p));
 		ofNullable(facilityIds).ifPresent(p -> parameters.addAll("facilityIds", p));
 		ofNullable(status).ifPresent(p -> parameters.add("status", p));
