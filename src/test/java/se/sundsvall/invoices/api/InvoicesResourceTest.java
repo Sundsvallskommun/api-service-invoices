@@ -50,6 +50,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.http.MediaType.APPLICATION_PDF;
 import static org.springframework.http.MediaType.parseMediaType;
 import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
+import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
 
 @AutoConfigureWebTestClient
 @ExtendWith(MockitoExtension.class)
@@ -58,6 +59,7 @@ import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 class InvoicesResourceTest {
 
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
+	private static final String PUBLIC_ADMINISTRATION_INVOICES_PATH = "/{municipalityId}/PUBLIC_ADMINISTRATION/invoices";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 	private static final String DOWNLOAD_PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf/download";
@@ -154,6 +156,74 @@ class InvoicesResourceTest {
 
 		// Assert
 		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(COMMERCIAL.name()), parametersCaptor.capture());
+		final InvoicesParameters parameters = parametersCaptor.getValue();
+		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
+		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);
+		assertThat(parameters.getPartyId()).isEqualTo(PARTY_IDS);
+		assertThat(parameters).hasAllNullFieldsOrPropertiesExcept("limit", "page", "partyId");
+		assertThat(response).isNotNull().isEqualTo(InvoicesResponse.create());
+	}
+
+	@Test
+	void getPublicAdministrationInvoicesAllParameters() {
+
+		// Arrange
+		when(invoicesServiceMock.getInvoices(anyString(), any(), any())).thenReturn(InvoicesResponse.create());
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PUBLIC_ADMINISTRATION_INVOICES_PATH)
+				.queryParams(createParameterMap(PAGE, LIMIT, FACILITY_IDS, INVOICE_NUMBER, INVOICE_DATE_FROM, INVOICE_DATE_TO, INVOICE_NAME,
+					INVOICE_TYPE, INVOICE_STATUS, OCR_NUMBER, DUE_DATE_FROM, DUE_DATE_TO, ORGANIZATION_GROUP, List.of(ORGANIZATION_NUMBER), PARTY_IDS))
+				.build(MUNICIPALITY_ID))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(InvoicesResponse.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(PUBLIC_ADMINISTRATION.name()), parametersCaptor.capture());
+		final InvoicesParameters parameters = parametersCaptor.getValue();
+		assertThat(parameters.getDueDateFrom()).isEqualTo(DUE_DATE_FROM);
+		assertThat(parameters.getDueDateTo()).isEqualTo(DUE_DATE_TO);
+		assertThat(parameters.getFacilityIds()).isEqualTo(FACILITY_IDS);
+		assertThat(parameters.getInvoiceDateFrom()).isEqualTo(INVOICE_DATE_FROM);
+		assertThat(parameters.getInvoiceDateTo()).isEqualTo(INVOICE_DATE_TO);
+		assertThat(parameters.getInvoiceName()).isEqualTo(INVOICE_NAME);
+		assertThat(parameters.getInvoiceNumber()).isEqualTo(INVOICE_NUMBER);
+		assertThat(parameters.getInvoiceStatus()).isEqualTo(INVOICE_STATUS);
+		assertThat(parameters.getInvoiceType()).isEqualTo(INVOICE_TYPE);
+		assertThat(parameters.getLimit()).isEqualTo(LIMIT);
+		assertThat(parameters.getOcrNumber()).isEqualTo(OCR_NUMBER);
+		assertThat(parameters.getOrganizationGroup()).isEqualTo(ORGANIZATION_GROUP);
+		assertThat(parameters.getOrganizationNumbers()).isEqualTo(List.of(ORGANIZATION_NUMBER));
+		assertThat(parameters.getPage()).isEqualTo(PAGE);
+		assertThat(parameters.getPartyId()).isEqualTo(PARTY_IDS);
+		assertThat(response).isNotNull().isEqualTo(InvoicesResponse.create());
+	}
+
+	@Test
+	void getPublicAdministrationInvoicesOnlyMandatoryParameters() {
+
+		// Arrange
+		when(invoicesServiceMock.getInvoices(anyString(), any(), any())).thenReturn(InvoicesResponse.create());
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PUBLIC_ADMINISTRATION_INVOICES_PATH)
+				.queryParams(createParameterMap(null, null, null, null, null, null, null, null, null, null, null, null, null, null, PARTY_IDS))
+				.build(MUNICIPALITY_ID))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(InvoicesResponse.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		verify(invoicesServiceMock).getInvoices(eq(MUNICIPALITY_ID), eq(PUBLIC_ADMINISTRATION.name()), parametersCaptor.capture());
 		final InvoicesParameters parameters = parametersCaptor.getValue();
 		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
 		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);

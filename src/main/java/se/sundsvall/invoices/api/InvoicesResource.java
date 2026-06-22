@@ -39,6 +39,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
+import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
 
 @RestController
 // Regex-constrain {municipalityId} to digits so non-numeric prefixes (e.g. /swagger-ui/index.html, /actuator/...) fall through to their real
@@ -59,10 +60,13 @@ class InvoicesResource {
 		this.invoicesService = invoicesService;
 	}
 
+	@Deprecated(forRemoval = true, since = "2026-06-22")
 	@GetMapping(value = "/{invoiceOrigin}", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
-	@Operation(summary = "Returns invoices matching sent in search parameters")
+	@Operation(summary = "Returns invoices matching sent in search parameters",
+		description = "Deprecated. Use /COMMERCIAL/customers/invoices for commercial invoices and /PUBLIC_ADMINISTRATION/invoices for public administration invoices.",
+		deprecated = true)
 	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<InvoicesResponse> getInvoices(
@@ -73,6 +77,19 @@ class InvoicesResource {
 		@Valid final InvoicesParameters searchParams) {
 
 		return ok(invoicesService.getInvoices(municipalityId, invoiceOrigin, searchParams));
+	}
+
+	@GetMapping(value = "/PUBLIC_ADMINISTRATION/invoices", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
+	@Operation(summary = "Returns public administration invoices matching sent in search parameters")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
+	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	ResponseEntity<InvoicesResponse> getPublicAdministrationInvoices(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Valid final InvoicesParameters searchParams) {
+
+		return ok(invoicesService.getInvoices(municipalityId, PUBLIC_ADMINISTRATION.name(), searchParams));
 	}
 
 	@GetMapping(value = "/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details", produces = APPLICATION_JSON_VALUE)

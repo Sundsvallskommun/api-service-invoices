@@ -1,0 +1,57 @@
+{
+	"invoices": [
+		{
+			"ocrNumber": "8907136421",
+			"invoiceDescriptions": [
+				"Avdelning 44"
+			],
+			"invoiceOrigin": "PUBLIC_ADMINISTRATION",
+			"dueDate": "2022-09-30",
+			"amountVatIncluded": 4995,
+			"vat": 999,
+			"invoiceAddress": {
+				"careOf": "John Doe",
+				"city": "Sundsvall",
+				"street": "Storgatan 10",
+				"postcode": "85740"
+			},
+			"invoiceDate": "2022-09-01",
+			"totalAmount": 4995,
+			"invoiceNumber": "53489546",
+			"invoiceType": "INVOICE",
+			"currency": "SEK",
+			"invoiceStatus": "PAID",
+			"amountVatExcluded": 3996
+		},
+		{
+			"ocrNumber": "8907136422",
+			"invoiceDescriptions": [
+				"Avdelning 44"
+			],
+			"invoiceOrigin": "PUBLIC_ADMINISTRATION",
+			"dueDate": "2022-10-30",
+			"amountVatIncluded": 4995,
+			"vat": 999,
+			"invoiceAddress": {
+				"careOf": "John Doe",
+				"city": "Sundsvall",
+				"street": "Storgatan 10",
+				"postcode": "85740"
+			},
+			"invoiceDate": "2022-10-01",
+			"totalAmount": 4995,
+			"invoiceNumber": "53489547",
+			"invoiceType": "INVOICE",
+			"currency": "SEK",
+			"invoiceStatus": "PAID",
+			"amountVatExcluded": 3996
+		}
+	],
+	"_meta": {
+		"totalRecords": 2,
+		"limit": 100,
+		"count": 2,
+		"totalPages": 1,
+		"page": 1
+	}
+}
