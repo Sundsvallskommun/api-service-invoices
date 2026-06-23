@@ -39,6 +39,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 import static org.springframework.http.MediaType.APPLICATION_PROBLEM_JSON_VALUE;
 import static org.springframework.http.ResponseEntity.ok;
+import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATION;
 
 @RestController
 // Regex-constrain {municipalityId} to digits so non-numeric prefixes (e.g. /swagger-ui/index.html, /actuator/...) fall through to their real
@@ -59,10 +60,13 @@ class InvoicesResource {
 		this.invoicesService = invoicesService;
 	}
 
+	@Deprecated(forRemoval = true, since = "2026-06-22")
 	@GetMapping(value = "/{invoiceOrigin}", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
-	@Operation(summary = "Returns invoices matching sent in search parameters")
+	@Operation(summary = "Returns invoices matching sent in search parameters",
+		description = "Deprecated. Use /COMMERCIAL/customers/invoices for commercial invoices and /PUBLIC_ADMINISTRATION/customers/invoices for public administration invoices.",
+		deprecated = true)
 	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
 	ResponseEntity<InvoicesResponse> getInvoices(
@@ -73,6 +77,19 @@ class InvoicesResource {
 		@Valid final InvoicesParameters searchParams) {
 
 		return ok(invoicesService.getInvoices(municipalityId, invoiceOrigin, searchParams));
+	}
+
+	@GetMapping(value = "/PUBLIC_ADMINISTRATION/customers/invoices", produces = {
+		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
+	})
+	@Operation(summary = "Returns public administration invoices matching sent in search parameters")
+	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
+	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
+	ResponseEntity<InvoicesResponse> getPublicAdministrationInvoices(
+		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
+		@Valid final InvoicesParameters searchParams) {
+
+		return ok(invoicesService.getInvoices(municipalityId, PUBLIC_ADMINISTRATION.name(), searchParams));
 	}
 
 	@GetMapping(value = "/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details", produces = APPLICATION_JSON_VALUE)
@@ -95,9 +112,9 @@ class InvoicesResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
 		@PathVariable @Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank final String invoiceNumber,
-		@Parameter(name = "invoiceOrigin", description = "Invoice origin (invoices originates from either commercial or public activities)", schema = @Schema(allowableValues = {
+		@PathVariable @Parameter(name = "invoiceOrigin", description = "Invoice origin (invoices originates from either commercial or public activities)", schema = @Schema(allowableValues = {
 			"COMMERCIAL", "PUBLIC_ADMINISTRATION"
-		}, example = "COMMERCIAL")) @MemberOf(value = InvoiceOrigin.class, caseSensitive = false) @PathVariable(name = "invoiceOrigin") final String invoiceOrigin,
+		}, example = "COMMERCIAL")) @MemberOf(value = InvoiceOrigin.class, caseSensitive = false) final String invoiceOrigin,
 		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter", schema = @Schema(allowableValues = {
 			"INVOICE", "CREDIT_INVOICE", "START_INVOICE", "FINAL_INVOICE", "DIRECT_DEBIT", "SELF_INVOICE", "REMINDER", "CONSOLIDATED_INVOICE", "INTERNAL_INVOICE", "OFFSET_INVOICE", "UNKNOWN"
 		})) @MemberOf(value = InvoiceType.class, nullable = true) @RequestParam(value = "invoiceType", required = false) final String invoiceType) {
@@ -116,9 +133,9 @@ class InvoicesResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
 		@PathVariable @Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank final String invoiceNumber,
-		@Parameter(name = "invoiceOrigin", description = "Invoice origin (invoices originates from either commercial or public activities)", schema = @Schema(allowableValues = {
+		@PathVariable @Parameter(name = "invoiceOrigin", description = "Invoice origin (invoices originates from either commercial or public activities)", schema = @Schema(allowableValues = {
 			"COMMERCIAL", "PUBLIC_ADMINISTRATION"
-		}, example = "COMMERCIAL")) @MemberOf(value = InvoiceOrigin.class, caseSensitive = false) @PathVariable(name = "invoiceOrigin") final String invoiceOrigin,
+		}, example = "COMMERCIAL")) @MemberOf(value = InvoiceOrigin.class, caseSensitive = false) final String invoiceOrigin,
 		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter", schema = @Schema(allowableValues = {
 			"INVOICE", "CREDIT_INVOICE", "START_INVOICE", "FINAL_INVOICE", "DIRECT_DEBIT", "SELF_INVOICE", "REMINDER", "CONSOLIDATED_INVOICE", "INTERNAL_INVOICE", "OFFSET_INVOICE", "UNKNOWN"
 		})) @MemberOf(value = InvoiceType.class, nullable = true) @RequestParam(value = "invoiceType", required = false) final String invoiceType) {

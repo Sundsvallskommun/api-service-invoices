@@ -31,6 +31,7 @@ import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 class InvoicesResourceFailureTest {
 
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
+	private static final String PUBLIC_ADMINISTRATION_INVOICES_PATH = "/{municipalityId}/PUBLIC_ADMINISTRATION/customers/invoices";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/invoices";
@@ -228,6 +229,56 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
+	void getPublicAdministrationInvoicesMissingPartyId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PUBLIC_ADMINISTRATION_INVOICES_PATH)
+				.queryParams(createParameterMap(null, null, null, null, null))
+				.build(MUNICIPALITY_ID))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("partyId", "must not be empty"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getPublicAdministrationInvoicesInvalidMunicipalityId() {
+
+		// Act
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(PUBLIC_ADMINISTRATION_INVOICES_PATH)
+				.queryParams(createParameterMap(null, null, null, null, PARTY_IDS))
+				.build("9999"))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		// Assert
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("getPublicAdministrationInvoices.municipalityId", "not a valid municipality ID"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
 	void getInvoiceDetailsNoInvoiceNumber() {
 
 		// Act
@@ -418,7 +469,7 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
-	void getInvoicesForCustomerMissingCustomerNumbers() {
+	void getInvoicesForCustomerMissingCustomerNumbersAndPartyIds() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
 				.build(MUNICIPALITY_ID))
@@ -433,7 +484,9 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("customerNumbers", "must not be empty"));
+			.containsExactlyInAnyOrder(
+				tuple("customerNumbers", "either customerNumbers or partyIds must be provided"),
+				tuple("partyIds", "either customerNumbers or partyIds must be provided"));
 
 		verifyNoInteractions(invoicesServiceMock);
 	}
@@ -479,6 +532,29 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
 			.containsExactly(tuple("organizationNumbers[0]", "must match the regular expression ^([1235789][\\d][2-9]\\d{7})$"));
+
+		verifyNoInteractions(invoicesServiceMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerInvalidPartyId() {
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParam("customerNumbers", "216870")
+				.queryParam("partyIds", "invalid-uuid")
+				.build(MUNICIPALITY_ID))
+			.exchange()
+			.expectStatus().isBadRequest()
+			.expectHeader().contentType(APPLICATION_PROBLEM_JSON_VALUE)
+			.expectBody(ConstraintViolationProblem.class)
+			.returnResult()
+			.getResponseBody();
+
+		assertThat(response.getTitle()).isEqualTo("Constraint Violation");
+		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
+		assertThat(response.getViolations())
+			.extracting(Violation::field, Violation::message)
+			.containsExactly(tuple("partyIds[0]", "not a valid UUID"));
 
 		verifyNoInteractions(invoicesServiceMock);
 	}

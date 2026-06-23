@@ -3,7 +3,6 @@ package se.sundsvall.invoices.api.model;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
@@ -13,15 +12,21 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import se.sundsvall.dept44.common.validators.annotation.MemberOf;
 import se.sundsvall.dept44.common.validators.annotation.ValidOrganizationNumber;
+import se.sundsvall.dept44.common.validators.annotation.ValidUuid;
 import se.sundsvall.dept44.models.api.paging.AbstractParameterPagingAndSortingBase;
+import se.sundsvall.invoices.api.validation.CustomerNumbersOrPartyIds;
 
 @Schema(description = "Customer invoice request parameters model")
 @ParameterObject
+@CustomerNumbersOrPartyIds
 public class CustomerInvoicesParameters extends AbstractParameterPagingAndSortingBase {
 
-	@NotEmpty
-	@ArraySchema(arraySchema = @Schema(description = "Customer numbers (one or more)", requiredMode = Schema.RequiredMode.REQUIRED), schema = @Schema(examples = "216870"), minItems = 1)
+	@ArraySchema(schema = @Schema(description = "Customer numbers. Either customerNumbers or partyIds must be provided.", examples = "216870"))
 	private List<@NotBlank String> customerNumbers;
+
+	@ArraySchema(schema = @Schema(description = "PartyId (e.g. a personId or an organizationId). Either customerNumbers or partyIds must be provided; partyIds are resolved to customer numbers and merged with customerNumbers.",
+		examples = "81471222-5798-11e9-ae24-57fa13b361e1"))
+	private List<@ValidUuid String> partyIds;
 
 	@ArraySchema(schema = @Schema(description = "Organization id of invoice issuer, if not provided all will be returned.", examples = "5565027223"))
 	private List<@ValidOrganizationNumber String> organizationNumbers;
@@ -57,6 +62,19 @@ public class CustomerInvoicesParameters extends AbstractParameterPagingAndSortin
 
 	public CustomerInvoicesParameters withCustomerNumbers(final List<String> customerNumbers) {
 		this.customerNumbers = customerNumbers;
+		return this;
+	}
+
+	public List<String> getPartyIds() {
+		return partyIds;
+	}
+
+	public void setPartyIds(final List<String> partyIds) {
+		this.partyIds = partyIds;
+	}
+
+	public CustomerInvoicesParameters withPartyIds(final List<String> partyIds) {
+		this.partyIds = partyIds;
 		return this;
 	}
 
@@ -161,6 +179,7 @@ public class CustomerInvoicesParameters extends AbstractParameterPagingAndSortin
 			return false;
 		final CustomerInvoicesParameters that = (CustomerInvoicesParameters) o;
 		return Objects.equals(customerNumbers, that.customerNumbers)
+			&& Objects.equals(partyIds, that.partyIds)
 			&& Objects.equals(organizationNumbers, that.organizationNumbers)
 			&& Objects.equals(facilityIds, that.facilityIds)
 			&& Objects.equals(status, that.status)
@@ -174,13 +193,14 @@ public class CustomerInvoicesParameters extends AbstractParameterPagingAndSortin
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(super.hashCode(), customerNumbers, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection, page, limit);
+		return Objects.hash(super.hashCode(), customerNumbers, partyIds, organizationNumbers, facilityIds, status, periodFrom, periodTo, sortBy, sortDirection, page, limit);
 	}
 
 	@Override
 	public String toString() {
 		return "CustomerInvoicesParameters{" +
 			"customerNumbers=" + customerNumbers +
+			", partyIds=" + partyIds +
 			", organizationNumbers=" + organizationNumbers +
 			", facilityIds=" + facilityIds +
 			", status=" + status +

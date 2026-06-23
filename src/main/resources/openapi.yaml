@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "9.4"
+  version: "9.5"
 servers:
-- url: http://localhost:65206
+- url: http://localhost:56062
   description: Generated server url
 tags:
 - name: Invoices
@@ -18,6 +18,8 @@ paths:
       tags:
       - Invoices
       summary: Returns invoices matching sent in search parameters
+      description: Deprecated. Use /COMMERCIAL/customers/invoices for commercial invoices
+        and /PUBLIC_ADMINISTRATION/customers/invoices for public administration invoices.
       operationId: getInvoices
       parameters:
       - name: municipalityId
@@ -248,6 +250,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+      deprecated: true
   /{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf:
     get:
       tags:
@@ -439,6 +442,230 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
+  /{municipalityId}/PUBLIC_ADMINISTRATION/customers/invoices:
+    get:
+      tags:
+      - Invoices
+      summary: Returns public administration invoices matching sent in search parameters
+      operationId: getPublicAdministrationInvoices
+      parameters:
+      - name: municipalityId
+        in: path
+        description: Municipality ID
+        required: true
+        schema:
+          type: string
+        example: 2281
+      - name: partyId
+        in: query
+        required: true
+        schema:
+          type: array
+          items:
+            type: string
+            description: PartyId (e.g. a personId or an organizationId)
+            examples:
+            - 81471222-5798-11e9-ae24-57fa13b361e1
+          minItems: 1
+          uniqueItems: true
+      - name: facilityIds
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            description: Facility id
+            examples:
+            - "735999109151401011"
+      - name: invoiceNumber
+        in: query
+        description: Invoice number
+        required: false
+        schema:
+          type: string
+          description: Invoice number
+          examples:
+          - "767915994"
+      - name: invoiceDateFrom
+        in: query
+        description: Earliest invoice date. Format is YYYY-MM-DD.
+        required: false
+        schema:
+          type: string
+          format: date
+          description: Earliest invoice date. Format is YYYY-MM-DD.
+          examples:
+          - 2022-01-01
+      - name: invoiceDateTo
+        in: query
+        description: Latest invoice date. Format is YYYY-MM-DD.
+        required: false
+        schema:
+          type: string
+          format: date
+          description: Latest invoice date. Format is YYYY-MM-DD.
+          examples:
+          - 2022-01-31
+      - name: invoiceName
+        in: query
+        description: invoice name
+        required: false
+        schema:
+          type: string
+          description: invoice name
+          examples:
+          - 765801493.pdf
+      - name: invoiceType
+        in: query
+        description: Invoice type
+        required: false
+        schema:
+          type: string
+          description: Invoice type
+          enum:
+          - INVOICE
+          - CREDIT_INVOICE
+          - START_INVOICE
+          - FINAL_INVOICE
+          - DIRECT_DEBIT
+          - SELF_INVOICE
+          - REMINDER
+          - CONSOLIDATED_INVOICE
+          - INTERNAL_INVOICE
+          - OFFSET_INVOICE
+          - UNKNOWN
+          examples:
+          - INVOICE
+      - name: invoiceStatus
+        in: query
+        description: Invoice status
+        required: false
+        schema:
+          type: string
+          description: Invoice status
+          enum:
+          - PAID
+          - SENT
+          - PARTIALLY_PAID
+          - DEBT_COLLECTION
+          - PAID_TOO_MUCH
+          - REMINDER
+          - VOID
+          - CREDITED
+          - WRITTEN_OFF
+          - UNKNOWN
+          examples:
+          - PAID
+      - name: ocrNumber
+        in: query
+        description: Ocr number
+        required: false
+        schema:
+          type: string
+          description: Ocr number
+          examples:
+          - "767915994"
+      - name: dueDateFrom
+        in: query
+        description: Earliest due date. Format is YYYY-MM-DD.
+        required: false
+        schema:
+          type: string
+          format: date
+          description: Earliest due date. Format is YYYY-MM-DD.
+          examples:
+          - 2022-01-01
+      - name: dueDateTo
+        in: query
+        description: Latest due date. Format is YYYY-MM-DD.
+        required: false
+        schema:
+          type: string
+          format: date
+          description: Latest due date. Format is YYYY-MM-DD.
+          examples:
+          - 2022-01-31
+      - name: organizationNumbers
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            description: Creditor organization number
+            examples:
+            - "5564786647"
+      - name: organizationGroup
+        in: query
+        description: Organization group
+        required: false
+        schema:
+          type: string
+          description: Organization group
+          examples:
+          - stadsbacken
+      - name: page
+        in: query
+        description: Page number
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 1
+          description: Page number
+          examples:
+          - 1
+          minimum: 1
+      - name: limit
+        in: query
+        description: Result size per page
+        required: false
+        schema:
+          type: integer
+          format: int32
+          default: 100
+          description: Result size per page
+          examples:
+          - 100
+          maximum: 1000
+          minimum: 1
+      responses:
+        "200":
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InvoicesResponse"
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/InvoicesResponse"
+        "404":
+          description: Not found
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "400":
+          description: Bad request
+          content:
+            application/problem+json:
+              schema:
+                oneOf:
+                - $ref: "#/components/schemas/Problem"
+                - $ref: "#/components/schemas/ConstraintViolationProblem"
+        "500":
+          description: Internal Server error
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
+        "502":
+          description: Bad Gateway
+          content:
+            application/problem+json:
+              schema:
+                $ref: "#/components/schemas/Problem"
   /{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details:
     get:
       tags:
@@ -511,15 +738,27 @@ paths:
         example: 2281
       - name: customerNumbers
         in: query
-        required: true
+        required: false
         schema:
           type: array
-          description: Customer numbers (one or more)
           items:
             type: string
+            description: Customer numbers. Either customerNumbers or partyIds must
+              be provided.
             examples:
             - "216870"
-          minItems: 1
+      - name: partyIds
+        in: query
+        required: false
+        schema:
+          type: array
+          items:
+            type: string
+            description: PartyId (e.g. a personId or an organizationId). Either customerNumbers
+              or partyIds must be provided; partyIds are resolved to customer numbers
+              and merged with customerNumbers.
+            examples:
+            - 81471222-5798-11e9-ae24-57fa13b361e1
       - name: organizationNumbers
         in: query
         required: false
@@ -705,10 +944,10 @@ components:
             $ref: "#/components/schemas/Violation"
         title:
           type: string
-        causeAsProblem:
-          $ref: "#/components/schemas/ThrowableProblem"
         detail:
           type: string
+        causeAsProblem:
+          $ref: "#/components/schemas/ThrowableProblem"
         instance:
           type: string
           format: uri

@@ -6,7 +6,10 @@ import generated.se.sundsvall.datawarehousereader.InvoiceResponse;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import java.util.stream.Stream;
 import org.apache.commons.lang3.ObjectUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import se.sundsvall.dept44.problem.Problem;
 import se.sundsvall.invoices.api.model.CustomerInvoicesParameters;
@@ -40,6 +43,8 @@ import static se.sundsvall.invoices.service.mapper.InvoiceMapper.toPdfInvoice;
 @Service
 public class InvoicesService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(InvoicesService.class);
+
 	private final DataWarehouseReaderClient dataWarehouseReaderClient;
 	private final InvoiceCacheClient invoiceCacheClient;
 
@@ -56,6 +61,7 @@ public class InvoicesService {
 	}
 
 	private InvoiceResponse getCommercialInvoices(final String municipalityId, final InvoicesParameters invoiceParameters) {
+		LOGGER.info("Getting commercial invoices via deprecated method");
 		final var query = InvoicesQueryParameters.create()
 			.withCustomerNumber(getCustomerNumbers(municipalityId, invoiceParameters.getPartyId()))
 			.withFacilityIds(invoiceParameters.getFacilityIds())
@@ -86,6 +92,21 @@ public class InvoicesService {
 			.orElseThrow(() -> Problem.valueOf(NOT_FOUND, format(ERROR_NO_ENGAGEMENT_FOUND, partyIds)));
 	}
 
+	/**
+	 * Returns the customer numbers to query for. When partyIds are supplied they are resolved to customer numbers and
+	 * merged with the provided customer numbers.
+	 */
+	private List<String> resolveCustomerNumbers(final String municipalityId, final CustomerInvoicesParameters parameters) {
+		final var providedCustomerNumbers = ofNullable(parameters.getCustomerNumbers()).orElse(List.of());
+		final var partyIdCustomerNumbers = ofNullable(parameters.getPartyIds())
+			.filter(ObjectUtils::isNotEmpty)
+			.map(partyIds -> getCustomerNumbers(municipalityId, partyIds))
+			.orElse(List.of());
+		return Stream.concat(providedCustomerNumbers.stream(), partyIdCustomerNumbers.stream())
+			.distinct()
+			.toList();
+	}
+
 	public List<InvoiceDetail> getInvoiceDetails(final String municipalityId, final String organizationNumber, final String invoiceNumber) {
 		return InvoiceMapper.toInvoiceDetails(dataWarehouseReaderClient.getInvoiceDetails(municipalityId, organizationNumber, parseLong(invoiceNumber)));
 	}
@@ -101,7 +122,7 @@ public class InvoicesService {
 	public CustomerInvoicesResponse getInvoicesForCustomer(final String municipalityId, final CustomerInvoicesParameters parameters) {
 		return toCustomerInvoicesResponse(dataWarehouseReaderClient.getInvoicesForCustomer(
 			municipalityId,
-			parameters.getCustomerNumbers(),
+			resolveCustomerNumbers(municipalityId, parameters),
 			parameters.getOrganizationNumbers(),
 			parameters.getFacilityIds(),
 			toDataWarehouseReaderInvoiceStatus(parameters.getStatus()),

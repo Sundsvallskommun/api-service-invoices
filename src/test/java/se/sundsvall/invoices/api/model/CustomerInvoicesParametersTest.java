@@ -37,6 +37,7 @@ class CustomerInvoicesParametersTest {
 	@Test
 	void testBuilderMethods() {
 		final var customerNumbers = List.of("216870", "600606");
+		final var partyIds = List.of("81471222-5798-11e9-ae24-57fa13b361e1", "81471222-5798-11e9-ae24-57fa13b361e2");
 		final var organizationNumbers = List.of("5565027223", "5564786647");
 		final var facilityIds = List.of("123456789012345670", "123456789012345671");
 		final var status = InvoiceStatus.PAID.name();
@@ -49,6 +50,7 @@ class CustomerInvoicesParametersTest {
 
 		final var parameters = CustomerInvoicesParameters.create()
 			.withCustomerNumbers(customerNumbers)
+			.withPartyIds(partyIds)
 			.withOrganizationNumbers(organizationNumbers)
 			.withFacilityIds(facilityIds)
 			.withStatus(status)
@@ -61,6 +63,7 @@ class CustomerInvoicesParametersTest {
 
 		assertThat(parameters).isNotNull().hasNoNullFieldsOrProperties();
 		assertThat(parameters.getCustomerNumbers()).isEqualTo(customerNumbers);
+		assertThat(parameters.getPartyIds()).isEqualTo(partyIds);
 		assertThat(parameters.getOrganizationNumbers()).isEqualTo(organizationNumbers);
 		assertThat(parameters.getFacilityIds()).isEqualTo(facilityIds);
 		assertThat(parameters.getStatus()).isEqualTo(status);
