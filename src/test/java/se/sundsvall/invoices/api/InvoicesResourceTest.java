@@ -59,7 +59,7 @@ import static se.sundsvall.invoices.api.model.InvoiceOrigin.PUBLIC_ADMINISTRATIO
 class InvoicesResourceTest {
 
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
-	private static final String PUBLIC_ADMINISTRATION_INVOICES_PATH = "/{municipalityId}/PUBLIC_ADMINISTRATION/invoices";
+	private static final String PUBLIC_ADMINISTRATION_INVOICES_PATH = "/{municipalityId}/PUBLIC_ADMINISTRATION/customers/invoices";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 	private static final String DOWNLOAD_PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf/download";
@@ -418,6 +418,30 @@ class InvoicesResourceTest {
 		assertThat(parameters.getPage()).isEqualTo(DEFAULT_PAGE);
 		assertThat(parameters.getLimit()).isEqualTo(DEFAULT_LIMIT);
 		assertThat(parameters).hasAllNullFieldsOrPropertiesExcept("customerNumbers", "page", "limit", "sortDirection");
+		assertThat(response).isNotNull().isEqualTo(CustomerInvoicesResponse.create());
+	}
+
+	@Test
+	void getInvoicesForCustomerWithPartyIdsOnly() {
+		final var partyIds = List.of(randomUUID().toString());
+
+		when(invoicesServiceMock.getInvoicesForCustomer(anyString(), any())).thenReturn(CustomerInvoicesResponse.create());
+
+		final var response = webTestClient.get()
+			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
+				.queryParams(createCustomerParameterMap(null, null, null, partyIds, null, null, null, null, null, null, null))
+				.build(MUNICIPALITY_ID))
+			.exchange()
+			.expectStatus().isOk()
+			.expectHeader().contentType(APPLICATION_JSON)
+			.expectBody(CustomerInvoicesResponse.class)
+			.returnResult()
+			.getResponseBody();
+
+		verify(invoicesServiceMock).getInvoicesForCustomer(eq(MUNICIPALITY_ID), customerParametersCaptor.capture());
+		final CustomerInvoicesParameters parameters = customerParametersCaptor.getValue();
+		assertThat(parameters.getCustomerNumbers()).isNull();
+		assertThat(parameters.getPartyIds()).isEqualTo(partyIds);
 		assertThat(response).isNotNull().isEqualTo(CustomerInvoicesResponse.create());
 	}
 

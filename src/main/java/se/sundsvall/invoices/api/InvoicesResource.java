@@ -65,7 +65,7 @@ class InvoicesResource {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	@Operation(summary = "Returns invoices matching sent in search parameters",
-		description = "Deprecated. Use /COMMERCIAL/customers/invoices for commercial invoices and /PUBLIC_ADMINISTRATION/invoices for public administration invoices.",
+		description = "Deprecated. Use /COMMERCIAL/customers/invoices for commercial invoices and /PUBLIC_ADMINISTRATION/customers/invoices for public administration invoices.",
 		deprecated = true)
 	@ApiResponse(responseCode = "200", description = "Successful operation", useReturnTypeSchema = true, content = @Content(mediaType = APPLICATION_JSON_VALUE))
 	@ApiResponse(responseCode = "404", description = "Not found", content = @Content(mediaType = APPLICATION_PROBLEM_JSON_VALUE, schema = @Schema(implementation = Problem.class)))
@@ -79,7 +79,7 @@ class InvoicesResource {
 		return ok(invoicesService.getInvoices(municipalityId, invoiceOrigin, searchParams));
 	}
 
-	@GetMapping(value = "/PUBLIC_ADMINISTRATION/invoices", produces = {
+	@GetMapping(value = "/PUBLIC_ADMINISTRATION/customers/invoices", produces = {
 		APPLICATION_JSON_VALUE, APPLICATION_PROBLEM_JSON_VALUE
 	})
 	@Operation(summary = "Returns public administration invoices matching sent in search parameters")
@@ -112,9 +112,9 @@ class InvoicesResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
 		@PathVariable @Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank final String invoiceNumber,
-		@Parameter(name = "invoiceOrigin", description = "Invoice origin (invoices originates from either commercial or public activities)", schema = @Schema(allowableValues = {
+		@PathVariable @Parameter(name = "invoiceOrigin", description = "Invoice origin (invoices originates from either commercial or public activities)", schema = @Schema(allowableValues = {
 			"COMMERCIAL", "PUBLIC_ADMINISTRATION"
-		}, example = "COMMERCIAL")) @MemberOf(value = InvoiceOrigin.class, caseSensitive = false) @PathVariable(name = "invoiceOrigin") final String invoiceOrigin,
+		}, example = "COMMERCIAL")) @MemberOf(value = InvoiceOrigin.class, caseSensitive = false) final String invoiceOrigin,
 		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter", schema = @Schema(allowableValues = {
 			"INVOICE", "CREDIT_INVOICE", "START_INVOICE", "FINAL_INVOICE", "DIRECT_DEBIT", "SELF_INVOICE", "REMINDER", "CONSOLIDATED_INVOICE", "INTERNAL_INVOICE", "OFFSET_INVOICE", "UNKNOWN"
 		})) @MemberOf(value = InvoiceType.class, nullable = true) @RequestParam(value = "invoiceType", required = false) final String invoiceType) {
@@ -133,9 +133,9 @@ class InvoicesResource {
 		@Parameter(name = "municipalityId", description = "Municipality ID", example = "2281") @ValidMunicipalityId @PathVariable final String municipalityId,
 		@PathVariable @Parameter(name = "organizationNumber", description = "Organization number of invoice issuer", example = "5565272223", required = true) @ValidOrganizationNumber final String organizationNumber,
 		@PathVariable @Parameter(name = "invoiceNumber", description = "Id of invoice", example = "333444", required = true) @NotBlank final String invoiceNumber,
-		@Parameter(name = "invoiceOrigin", description = "Invoice origin (invoices originates from either commercial or public activities)", schema = @Schema(allowableValues = {
+		@PathVariable @Parameter(name = "invoiceOrigin", description = "Invoice origin (invoices originates from either commercial or public activities)", schema = @Schema(allowableValues = {
 			"COMMERCIAL", "PUBLIC_ADMINISTRATION"
-		}, example = "COMMERCIAL")) @MemberOf(value = InvoiceOrigin.class, caseSensitive = false) @PathVariable(name = "invoiceOrigin") final String invoiceOrigin,
+		}, example = "COMMERCIAL")) @MemberOf(value = InvoiceOrigin.class, caseSensitive = false) final String invoiceOrigin,
 		@Parameter(name = "invoiceType", description = "InvoiceType filter parameter", schema = @Schema(allowableValues = {
 			"INVOICE", "CREDIT_INVOICE", "START_INVOICE", "FINAL_INVOICE", "DIRECT_DEBIT", "SELF_INVOICE", "REMINDER", "CONSOLIDATED_INVOICE", "INTERNAL_INVOICE", "OFFSET_INVOICE", "UNKNOWN"
 		})) @MemberOf(value = InvoiceType.class, nullable = true) @RequestParam(value = "invoiceType", required = false) final String invoiceType) {

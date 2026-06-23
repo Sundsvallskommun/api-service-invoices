@@ -5,9 +5,9 @@ info:
   license:
     name: MIT License
     url: https://opensource.org/licenses/MIT
-  version: "9.4"
+  version: "9.5"
 servers:
-- url: http://localhost:65016
+- url: http://localhost:56062
   description: Generated server url
 tags:
 - name: Invoices
@@ -19,7 +19,7 @@ paths:
       - Invoices
       summary: Returns invoices matching sent in search parameters
       description: Deprecated. Use /COMMERCIAL/customers/invoices for commercial invoices
-        and /PUBLIC_ADMINISTRATION/invoices for public administration invoices.
+        and /PUBLIC_ADMINISTRATION/customers/invoices for public administration invoices.
       operationId: getInvoices
       parameters:
       - name: municipalityId
@@ -442,7 +442,7 @@ paths:
             application/problem+json:
               schema:
                 $ref: "#/components/schemas/Problem"
-  /{municipalityId}/PUBLIC_ADMINISTRATION/invoices:
+  /{municipalityId}/PUBLIC_ADMINISTRATION/customers/invoices:
     get:
       tags:
       - Invoices
@@ -738,15 +738,15 @@ paths:
         example: 2281
       - name: customerNumbers
         in: query
-        required: true
+        required: false
         schema:
           type: array
-          description: Customer numbers (one or more)
           items:
             type: string
+            description: Customer numbers. Either customerNumbers or partyIds must
+              be provided.
             examples:
             - "216870"
-          minItems: 1
       - name: partyIds
         in: query
         required: false
@@ -754,11 +754,11 @@ paths:
           type: array
           items:
             type: string
-            description: PartyId (e.g. a personId or an organizationId). Resolved
-              to customer numbers and merged with customerNumbers.
+            description: PartyId (e.g. a personId or an organizationId). Either customerNumbers
+              or partyIds must be provided; partyIds are resolved to customer numbers
+              and merged with customerNumbers.
             examples:
             - 81471222-5798-11e9-ae24-57fa13b361e1
-          uniqueItems: true
       - name: organizationNumbers
         in: query
         required: false

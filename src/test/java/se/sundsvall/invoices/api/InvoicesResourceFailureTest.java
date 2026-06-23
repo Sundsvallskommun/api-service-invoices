@@ -31,7 +31,7 @@ import static se.sundsvall.invoices.api.model.InvoiceOrigin.COMMERCIAL;
 class InvoicesResourceFailureTest {
 
 	private static final String INVOICES_PATH = "/{municipalityId}/{invoiceOrigin}";
-	private static final String PUBLIC_ADMINISTRATION_INVOICES_PATH = "/{municipalityId}/PUBLIC_ADMINISTRATION/invoices";
+	private static final String PUBLIC_ADMINISTRATION_INVOICES_PATH = "/{municipalityId}/PUBLIC_ADMINISTRATION/customers/invoices";
 	private static final String DETAILS_PATH = "/{municipalityId}/COMMERCIAL/{organizationNumber}/{invoiceNumber}/details";
 	private static final String PDF_PATH = "/{municipalityId}/{invoiceOrigin}/{organizationNumber}/{invoiceNumber}/pdf";
 	private static final String CUSTOMER_INVOICES_PATH = "/{municipalityId}/COMMERCIAL/customers/invoices";
@@ -469,7 +469,7 @@ class InvoicesResourceFailureTest {
 	}
 
 	@Test
-	void getInvoicesForCustomerMissingCustomerNumbers() {
+	void getInvoicesForCustomerMissingCustomerNumbersAndPartyIds() {
 		final var response = webTestClient.get()
 			.uri(uriBuilder -> uriBuilder.path(CUSTOMER_INVOICES_PATH)
 				.build(MUNICIPALITY_ID))
@@ -484,7 +484,9 @@ class InvoicesResourceFailureTest {
 		assertThat(response.getStatus()).isEqualTo(BAD_REQUEST);
 		assertThat(response.getViolations())
 			.extracting(Violation::field, Violation::message)
-			.containsExactly(tuple("customerNumbers", "must not be empty"));
+			.containsExactlyInAnyOrder(
+				tuple("customerNumbers", "either customerNumbers or partyIds must be provided"),
+				tuple("partyIds", "either customerNumbers or partyIds must be provided"));
 
 		verifyNoInteractions(invoicesServiceMock);
 	}

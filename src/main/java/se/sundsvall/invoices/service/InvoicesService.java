@@ -94,17 +94,17 @@ public class InvoicesService {
 
 	/**
 	 * Returns the customer numbers to query for. When partyIds are supplied they are resolved to customer numbers and
-	 * merged with the
-	 * explicitly provided customer numbers, deduplicating so the same customer number is never requested twice.
+	 * merged with the provided customer numbers.
 	 */
 	private List<String> resolveCustomerNumbers(final String municipalityId, final CustomerInvoicesParameters parameters) {
 		final var providedCustomerNumbers = ofNullable(parameters.getCustomerNumbers()).orElse(List.of());
-		return ofNullable(parameters.getPartyIds())
+		final var partyIdCustomerNumbers = ofNullable(parameters.getPartyIds())
 			.filter(ObjectUtils::isNotEmpty)
-			.map(partyIds -> Stream.concat(providedCustomerNumbers.stream(), getCustomerNumbers(municipalityId, partyIds).stream())
-				.distinct()
-				.toList())
-			.orElse(providedCustomerNumbers);
+			.map(partyIds -> getCustomerNumbers(municipalityId, partyIds))
+			.orElse(List.of());
+		return Stream.concat(providedCustomerNumbers.stream(), partyIdCustomerNumbers.stream())
+			.distinct()
+			.toList();
 	}
 
 	public List<InvoiceDetail> getInvoiceDetails(final String municipalityId, final String organizationNumber, final String invoiceNumber) {

@@ -15,7 +15,7 @@ class GetPublicAdministrationInvoicesIT extends AbstractAppTest {
 	@Test
 	void test01_getInvoicesOnlyRequired() {
 		setupCall()
-			.withServicePath("/2281/PUBLIC_ADMINISTRATION/invoices?partyId=AC653C32-B26C-47E8-8C2E-3B18C1B5879C")
+			.withServicePath("/2281/PUBLIC_ADMINISTRATION/customers/invoices?partyId=AC653C32-B26C-47E8-8C2E-3B18C1B5879C")
 			.withHttpMethod(GET)
 			.withExpectedResponseStatus(OK)
 			.withExpectedResponse(RESPONSE_FILE)
@@ -25,7 +25,7 @@ class GetPublicAdministrationInvoicesIT extends AbstractAppTest {
 	@Test
 	void test02_getInvoicesAllAttributes() {
 		setupCall()
-			.withServicePath("/2281/PUBLIC_ADMINISTRATION/invoices?partyId=EC114D35-A46C-48EF-599E-7E32B5B5939C" +
+			.withServicePath("/2281/PUBLIC_ADMINISTRATION/customers/invoices?partyId=EC114D35-A46C-48EF-599E-7E32B5B5939C" +
 				"&page=1" +
 				"&limit=100" +
 				"&invoiceNumber=766763197" +

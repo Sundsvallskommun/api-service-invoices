@@ -378,6 +378,43 @@ class InvoicesServiceTest {
 		verifyNoInteractions(invoiceCacheClientMock);
 	}
 
+	@Test
+	void getInvoicesForCustomerWithPartyIdsOnly() {
+		final var municipalityId = "municipalityId";
+		final var partyIds = List.of(randomUUID().toString());
+		final var resolvedCustomerNumbers = List.of("111111", "222222");
+		final var parameters = CustomerInvoicesParameters.create().withPartyIds(partyIds);
+
+		when(dataWarehouseReaderClientMock.getCustomerEngagements(municipalityId, partyIds)).thenReturn(customerEngagementResponseMock);
+		when(customerEngagementResponseMock.getCustomerEngagements()).thenReturn(List.of(customerEngagementMock, customerEngagementMock));
+		when(customerEngagementMock.getCustomerNumber()).thenReturn("111111", "222222");
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, resolvedCustomerNumbers, null, null, null, null, null, null, Direction.ASC, 1, 100))
+			.thenReturn(new CustomerInvoiceResponse().invoices(emptyList()).meta(createPagingAndSortingMetaData()));
+
+		final var response = invoicesService.getInvoicesForCustomer(municipalityId, parameters);
+
+		assertThat(response).isNotNull();
+		verify(dataWarehouseReaderClientMock).getCustomerEngagements(municipalityId, partyIds);
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, resolvedCustomerNumbers, null, null, null, null, null, null, Direction.ASC, 1, 100);
+		verifyNoInteractions(invoiceCacheClientMock);
+	}
+
+	@Test
+	void getInvoicesForCustomerDeduplicatesProvidedCustomerNumbers() {
+		final var municipalityId = "municipalityId";
+		final var dedupedCustomerNumbers = List.of("216870");
+		final var parameters = CustomerInvoicesParameters.create().withCustomerNumbers(List.of("216870", "216870"));
+
+		when(dataWarehouseReaderClientMock.getInvoicesForCustomer(municipalityId, dedupedCustomerNumbers, null, null, null, null, null, null, Direction.ASC, 1, 100))
+			.thenReturn(new CustomerInvoiceResponse().invoices(emptyList()).meta(createPagingAndSortingMetaData()));
+
+		final var response = invoicesService.getInvoicesForCustomer(municipalityId, parameters);
+
+		assertThat(response).isNotNull();
+		verify(dataWarehouseReaderClientMock).getInvoicesForCustomer(municipalityId, dedupedCustomerNumbers, null, null, null, null, null, null, Direction.ASC, 1, 100);
+		verifyNoInteractions(invoiceCacheClientMock);
+	}
+
 	private InvoiceResponse createDataWarehouseReaderInvoiceResponse() {
 		final var invoiceName = "invoiceName";
 		return new InvoiceResponse()
