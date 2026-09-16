@@ -43,6 +43,11 @@ class InvoiceDetailTest {
 		final var quantity = BigDecimal.valueOf(10);
 		final var unit = "unit";
 		final var unitPrice = BigDecimal.valueOf(10);
+		final var unitPriceVatExcluded = BigDecimal.valueOf(8);
+		final var invoiceUnitPrice = BigDecimal.valueOf(1000);
+		final var invoiceUnitPriceVatExcluded = BigDecimal.valueOf(800);
+		final var invoiceUnitPriceCurrency = "invoiceUnitPriceCurrency";
+		final var invoiceUnitPriceUnit = "invoiceUnitPriceUnit";
 		final var description = "description";
 		final var productCode = "productCode";
 		final var productName = "productName";
@@ -59,6 +64,11 @@ class InvoiceDetailTest {
 			.withQuantity(quantity)
 			.withUnit(unit)
 			.withUnitPrice(unitPrice)
+			.withUnitPriceVatExcluded(unitPriceVatExcluded)
+			.withInvoiceUnitPrice(invoiceUnitPrice)
+			.withInvoiceUnitPriceVatExcluded(invoiceUnitPriceVatExcluded)
+			.withInvoiceUnitPriceCurrency(invoiceUnitPriceCurrency)
+			.withInvoiceUnitPriceUnit(invoiceUnitPriceUnit)
 			.withDescription(description)
 			.withProductCode(productCode)
 			.withProductName(productName)
@@ -75,6 +85,11 @@ class InvoiceDetailTest {
 		assertThat(invoiceDetail.getQuantity()).isEqualTo(quantity);
 		assertThat(invoiceDetail.getUnit()).isEqualTo(unit);
 		assertThat(invoiceDetail.getUnitPrice()).isEqualTo(unitPrice);
+		assertThat(invoiceDetail.getUnitPriceVatExcluded()).isEqualTo(unitPriceVatExcluded);
+		assertThat(invoiceDetail.getInvoiceUnitPrice()).isEqualTo(invoiceUnitPrice);
+		assertThat(invoiceDetail.getInvoiceUnitPriceVatExcluded()).isEqualTo(invoiceUnitPriceVatExcluded);
+		assertThat(invoiceDetail.getInvoiceUnitPriceCurrency()).isEqualTo(invoiceUnitPriceCurrency);
+		assertThat(invoiceDetail.getInvoiceUnitPriceUnit()).isEqualTo(invoiceUnitPriceUnit);
 		assertThat(invoiceDetail.getDescription()).isEqualTo(description);
 		assertThat(invoiceDetail.getProductCode()).isEqualTo(productCode);
 		assertThat(invoiceDetail.getProductName()).isEqualTo(productName);

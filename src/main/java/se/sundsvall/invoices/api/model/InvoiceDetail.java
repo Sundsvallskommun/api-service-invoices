@@ -29,6 +29,21 @@ public class InvoiceDetail {
 	@Schema(examples = "271.30", description = "Unit-price")
 	private BigDecimal unitPrice;
 
+	@Schema(examples = "217.04", description = "Unit-price excluding VAT")
+	private BigDecimal unitPriceVatExcluded;
+
+	@Schema(examples = "27130.00", description = "Unit-price as presented on the invoice, in the currency and unit given by invoiceUnitPriceCurrency and invoiceUnitPriceUnit")
+	private BigDecimal invoiceUnitPrice;
+
+	@Schema(examples = "21704.00", description = "Unit-price excluding VAT as presented on the invoice, in the currency and unit given by invoiceUnitPriceCurrency and invoiceUnitPriceUnit")
+	private BigDecimal invoiceUnitPriceVatExcluded;
+
+	@Schema(examples = "öre", description = "Currency that the invoice unit-prices are expressed in")
+	private String invoiceUnitPriceCurrency;
+
+	@Schema(examples = "kWh", description = "Unit that the invoice unit-prices are expressed per")
+	private String invoiceUnitPriceUnit;
+
 	@Schema(examples = "Förbrukning el", description = "Description of detail")
 	private String description;
 
@@ -171,6 +186,71 @@ public class InvoiceDetail {
 		return this;
 	}
 
+	public BigDecimal getUnitPriceVatExcluded() {
+		return unitPriceVatExcluded;
+	}
+
+	public void setUnitPriceVatExcluded(final BigDecimal unitPriceVatExcluded) {
+		this.unitPriceVatExcluded = unitPriceVatExcluded;
+	}
+
+	public InvoiceDetail withUnitPriceVatExcluded(final BigDecimal unitPriceVatExcluded) {
+		this.unitPriceVatExcluded = unitPriceVatExcluded;
+		return this;
+	}
+
+	public BigDecimal getInvoiceUnitPrice() {
+		return invoiceUnitPrice;
+	}
+
+	public void setInvoiceUnitPrice(final BigDecimal invoiceUnitPrice) {
+		this.invoiceUnitPrice = invoiceUnitPrice;
+	}
+
+	public InvoiceDetail withInvoiceUnitPrice(final BigDecimal invoiceUnitPrice) {
+		this.invoiceUnitPrice = invoiceUnitPrice;
+		return this;
+	}
+
+	public BigDecimal getInvoiceUnitPriceVatExcluded() {
+		return invoiceUnitPriceVatExcluded;
+	}
+
+	public void setInvoiceUnitPriceVatExcluded(final BigDecimal invoiceUnitPriceVatExcluded) {
+		this.invoiceUnitPriceVatExcluded = invoiceUnitPriceVatExcluded;
+	}
+
+	public InvoiceDetail withInvoiceUnitPriceVatExcluded(final BigDecimal invoiceUnitPriceVatExcluded) {
+		this.invoiceUnitPriceVatExcluded = invoiceUnitPriceVatExcluded;
+		return this;
+	}
+
+	public String getInvoiceUnitPriceCurrency() {
+		return invoiceUnitPriceCurrency;
+	}
+
+	public void setInvoiceUnitPriceCurrency(final String invoiceUnitPriceCurrency) {
+		this.invoiceUnitPriceCurrency = invoiceUnitPriceCurrency;
+	}
+
+	public InvoiceDetail withInvoiceUnitPriceCurrency(final String invoiceUnitPriceCurrency) {
+		this.invoiceUnitPriceCurrency = invoiceUnitPriceCurrency;
+		return this;
+	}
+
+	public String getInvoiceUnitPriceUnit() {
+		return invoiceUnitPriceUnit;
+	}
+
+	public void setInvoiceUnitPriceUnit(final String invoiceUnitPriceUnit) {
+		this.invoiceUnitPriceUnit = invoiceUnitPriceUnit;
+	}
+
+	public InvoiceDetail withInvoiceUnitPriceUnit(final String invoiceUnitPriceUnit) {
+		this.invoiceUnitPriceUnit = invoiceUnitPriceUnit;
+		return this;
+	}
+
 	public String getDescription() {
 		return description;
 	}
@@ -242,14 +322,17 @@ public class InvoiceDetail {
 			return false;
 		InvoiceDetail that = (InvoiceDetail) o;
 		return Objects.equals(amount, that.amount) && Objects.equals(amountVatExcluded, that.amountVatExcluded) && Objects.equals(vat, that.vat) && Objects.equals(vatRate, that.vatRate)
-			&& Objects.equals(quantity, that.quantity) && Objects.equals(unitPrice, that.unitPrice) && Objects.equals(unit, that.unit) && Objects.equals(description, that.description) && Objects.equals(
+			&& Objects.equals(quantity, that.quantity) && Objects.equals(unitPrice, that.unitPrice) && Objects.equals(unitPriceVatExcluded, that.unitPriceVatExcluded) && Objects.equals(invoiceUnitPrice, that.invoiceUnitPrice)
+			&& Objects.equals(invoiceUnitPriceVatExcluded, that.invoiceUnitPriceVatExcluded) && Objects.equals(invoiceUnitPriceCurrency, that.invoiceUnitPriceCurrency) && Objects.equals(invoiceUnitPriceUnit, that.invoiceUnitPriceUnit)
+			&& Objects.equals(unit, that.unit) && Objects.equals(description, that.description) && Objects.equals(
 				productCode, that.productCode) && Objects.equals(productName, that.productName) && Objects.equals(fromDate, that.fromDate) && Objects.equals(toDate, that.toDate) && Objects.equals(facilityId, that.facilityId)
 			&& Objects.equals(administration, that.administration);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(amount, amountVatExcluded, vat, vatRate, quantity, unit, unitPrice, description, productCode, productName, fromDate, toDate, facilityId, administration);
+		return Objects.hash(amount, amountVatExcluded, vat, vatRate, quantity, unit, unitPrice, unitPriceVatExcluded, invoiceUnitPrice, invoiceUnitPriceVatExcluded, invoiceUnitPriceCurrency, invoiceUnitPriceUnit, description,
+			productCode, productName, fromDate, toDate, facilityId, administration);
 	}
 
 	@Override
@@ -262,6 +345,11 @@ public class InvoiceDetail {
 			", quantity=" + quantity +
 			", unit='" + unit + '\'' +
 			", unitPrice=" + unitPrice +
+			", unitPriceVatExcluded=" + unitPriceVatExcluded +
+			", invoiceUnitPrice=" + invoiceUnitPrice +
+			", invoiceUnitPriceVatExcluded=" + invoiceUnitPriceVatExcluded +
+			", invoiceUnitPriceCurrency='" + invoiceUnitPriceCurrency + '\'' +
+			", invoiceUnitPriceUnit='" + invoiceUnitPriceUnit + '\'' +
 			", description='" + description + '\'' +
 			", productCode='" + productCode + '\'' +
 			", productName='" + productName + '\'' +
