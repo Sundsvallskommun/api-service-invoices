@@ -1,18 +1,18 @@
 package se.sundsvall.invoices.apptest.pdf;
 
-import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
-import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
-import static org.springframework.http.HttpMethod.GET;
-import static org.springframework.http.HttpStatus.BAD_GATEWAY;
-import static org.springframework.http.HttpStatus.OK;
-import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
-
 import java.io.IOException;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import se.sundsvall.dept44.test.AbstractAppTest;
 import se.sundsvall.dept44.test.annotation.wiremock.WireMockAppTestSuite;
 import se.sundsvall.invoices.Application;
+
+import static org.springframework.http.HttpHeaders.CONTENT_DISPOSITION;
+import static org.springframework.http.HttpHeaders.CONTENT_TYPE;
+import static org.springframework.http.HttpMethod.GET;
+import static org.springframework.http.HttpStatus.BAD_GATEWAY;
+import static org.springframework.http.HttpStatus.OK;
+import static org.springframework.http.MediaType.APPLICATION_PDF_VALUE;
 
 @WireMockAppTestSuite(files = "classpath:/GetInvoicePdf/", classes = Application.class)
 class GetInvoicePdfIT extends AbstractAppTest {
